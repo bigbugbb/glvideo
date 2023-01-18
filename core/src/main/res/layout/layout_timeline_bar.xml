@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@null"
+    tools:background="@android:color/black">
+
+    <ImageView
+        android:layout_width="40px"
+        android:layout_height="168px"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_timeline_left_bar" />
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="12px"
+        android:layout_height="105px"
+        android:layout_gravity="center"
+        app:cardBackgroundColor="@android:color/black"
+        app:cardCornerRadius="6dp" />
+
+</FrameLayout>
