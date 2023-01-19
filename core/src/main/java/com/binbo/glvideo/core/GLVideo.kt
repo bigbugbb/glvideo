@@ -3,7 +3,7 @@ package com.binbo.glvideo.core
 import android.content.Context
 import android.os.Build
 import android.os.Environment
-import com.binbo.glvideo.core.utils.activityManager
+import com.binbo.glvideo.core.ext.activityManager
 import java.io.File
 
 interface GLVideo {
@@ -13,7 +13,6 @@ interface GLVideo {
         internal val tagOfCapture = "glv_capture"
         internal val tagOfFace = "glv_face"
         internal val tagOfGraph = "glv_graph"
-        internal val tagOfThreadPool = "glv_thread_pool"
 
         internal val fileMainPath: String
             get() = Environment.getExternalStorageDirectory().toString() + File.separator + context.packageName

@@ -10,7 +10,7 @@ import android.view.View
 import com.binbo.glvideo.core.opengl.objects.LayoutObject
 import com.binbo.glvideo.core.opengl.program.TextureShaderProgram
 import com.binbo.glvideo.core.opengl.utils.OpenGLUtils
-import com.binbo.glvideo.core.utils.getViewBitmap
+import com.binbo.glvideo.core.ext.getViewBitmap
 
 
 open class LayoutDrawer(protected val context: Context, protected val layoutResId: Int) : Drawer() {

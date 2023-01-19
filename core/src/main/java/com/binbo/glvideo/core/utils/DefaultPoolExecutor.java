@@ -34,7 +34,7 @@ public class DefaultPoolExecutor extends ThreadPoolExecutor {
                             MAX_THREAD_COUNT,
                             SURPLUS_THREAD_LIFE,
                             TimeUnit.SECONDS,
-                            new ArrayBlockingQueue<Runnable>(8),
+                            new ArrayBlockingQueue<Runnable>(64),
                             new DefaultThreadFactory());
                 }
             }

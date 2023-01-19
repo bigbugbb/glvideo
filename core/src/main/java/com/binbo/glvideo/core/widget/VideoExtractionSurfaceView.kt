@@ -9,7 +9,7 @@ import android.view.ScaleGestureDetector
 import android.view.SurfaceView
 import android.view.animation.DecelerateInterpolator
 import com.binbo.glvideo.core.opengl.renderer.DefaultGLRenderer
-import com.binbo.glvideo.core.utils.dip
+import com.binbo.glvideo.core.ext.dip
 import kotlin.math.abs
 
 /**

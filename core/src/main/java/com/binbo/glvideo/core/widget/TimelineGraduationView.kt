@@ -6,8 +6,8 @@ import android.util.AttributeSet
 import android.util.Range
 import android.view.View
 import com.binbo.glvideo.core.R
-import com.binbo.glvideo.core.utils.dip
-import com.binbo.glvideo.core.utils.getTextBounds
+import com.binbo.glvideo.core.ext.dip
+import com.binbo.glvideo.core.ext.getTextBounds
 
 /**
  * @author bigbug

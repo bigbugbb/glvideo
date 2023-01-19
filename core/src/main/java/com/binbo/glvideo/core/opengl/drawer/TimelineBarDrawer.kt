@@ -15,9 +15,9 @@ import com.binbo.glvideo.core.R
 import com.binbo.glvideo.core.opengl.objects.Rectangle
 import com.binbo.glvideo.core.opengl.program.TextureShaderProgram
 import com.binbo.glvideo.core.opengl.utils.OpenGLUtils
-import com.binbo.glvideo.core.utils.dip
-import com.binbo.glvideo.core.utils.getViewBitmap
-import com.binbo.glvideo.core.utils.rotate
+import com.binbo.glvideo.core.ext.dip
+import com.binbo.glvideo.core.ext.getViewBitmap
+import com.binbo.glvideo.core.ext.rotate
 
 /**
  * @author bigbug

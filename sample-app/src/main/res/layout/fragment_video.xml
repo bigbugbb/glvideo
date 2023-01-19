@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingHorizontal="@dimen/activity_horizontal_margin"
+    android:paddingBottom="100dp"
+    tools:context=".ui.video.VideoFragment">
+
+    <Button
+        android:id="@+id/btn_video_decode"
+        style="@style/ButtonStyle"
+        android:text="@string/button_text_video_decode" />
+
+    <Button
+        android:id="@+id/btn_encode_from_gif"
+        style="@style/ButtonStyle"
+        android:text="@string/button_text_encode_from_gif" />
+
+    <Button
+        android:id="@+id/btn_add_video_bgm"
+        style="@style/ButtonStyle"
+        android:text="@string/button_text_add_video_bgm" />
+
+    <Button
+        android:id="@+id/btn_add_video_ending"
+        style="@style/ButtonStyle"
+        android:text="@string/button_text_add_video_ending" />
+
+    <Button
+        android:id="@+id/btn_add_watermark"
+        style="@style/ButtonStyle"
+        android:text="@string/button_text_add_watermark" />
+
+    <Button
+        android:id="@+id/btn_merge_video_files"
+        style="@style/ButtonStyle"
+        android:text="@string/button_text_merge_video_files" />
+
+    <Button
+        android:id="@+id/btn_video_crop"
+        style="@style/ButtonStyle"
+        android:text="@string/button_text_video_crop" />
+
+</LinearLayout>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingHorizontal="@dimen/activity_horizontal_margin"
+    android:paddingBottom="100dp"
+    tools:context=".ui.advanced.AdvancedFragment">
+
+    <Button
+        android:id="@+id/btn_namecard"
+        style="@style/ButtonStyle"
+        android:text="@string/button_text_3d_namecard" />
+
+    <Button
+        android:id="@+id/btn_namecard_with_video_bkg"
+        style="@style/ButtonStyle"
+        android:text="@string/button_text_3d_namecard_with_video_bkg" />
+
+    <Button
+        android:id="@+id/btn_video_cut_widget"
+        style="@style/ButtonStyle"
+        android:text="@string/button_text_video_cut_widget" />
+
+    <Button
+        android:id="@+id/btn_screen_sharing"
+        style="@style/ButtonStyle"
+        android:text="@string/button_text_screen_sharing" />
+
+</LinearLayout>
