@@ -1,20 +1,17 @@
 package com.binbo.glvideo.sample_app.ui.capture
 
 import android.Manifest
-import android.opengl.GLSurfaceView
 import android.os.Bundle
 import android.util.Size
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.camera.core.CameraSelector
+import androidx.fragment.app.Fragment
 import com.binbo.glvideo.core.camera.CameraController
-import com.binbo.glvideo.core.utils.DeviceUtil
-import com.binbo.glvideo.sample_app.ContextUtil
+import com.binbo.glvideo.sample_app.App
 import com.binbo.glvideo.sample_app.R
 import com.binbo.glvideo.sample_app.databinding.FragmentCameraPreviewBinding
-import com.binbo.glvideo.sample_app.databinding.FragmentCaptureBinding
 import com.binbo.glvideo.sample_app.ext.getColorCompat
 import com.binbo.glvideo.sample_app.ui.widget.CommonHintDialog
 import com.binbo.glvideo.sample_app.utils.PermissionUtils
@@ -35,7 +32,7 @@ class CameraPreviewFragment : Fragment() {
 
     private lateinit var cameraController: CameraController
 
-    internal val commonHintDialog by lazy { CommonHintDialog(ContextUtil.context) }
+    internal val commonHintDialog by lazy { CommonHintDialog(App.context) }
 
     private val targetResolution: Size
         get() = Size(720, 1280)
@@ -89,11 +86,11 @@ class CameraPreviewFragment : Fragment() {
     private fun onPermissionsNotGranted() {
         if (!commonHintDialog.isShowing) {
             commonHintDialog.showDialog(
-                titleStr = ContextUtil.context.getString(R.string.no_permission_toast),
-                noStr = ContextUtil.context.getString(R.string.common_cancel),
-                yesStr = ContextUtil.context.getString(R.string.settings_title),
-                noColor = ContextUtil.context.getColorCompat(R.color.dialog_color_white),
-                yesColor = ContextUtil.context.getColorCompat(R.color.dialog_color_62FD75)
+                titleStr = App.context.getString(R.string.no_permission_toast),
+                noStr = App.context.getString(R.string.common_cancel),
+                yesStr = App.context.getString(R.string.settings_title),
+                noColor = App.context.getColorCompat(R.color.dialog_color_white),
+                yesColor = App.context.getColorCompat(R.color.dialog_color_62FD75)
             ).apply {
                 onPositiveClick = {
                     kotlin.runCatching { PermissionUtils.toPermissionSetting(context) }

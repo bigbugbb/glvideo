@@ -8,11 +8,16 @@ class App : Application() {
 
     override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base)
-        ContextUtil.init(this)
+        context = this
     }
 
     override fun onCreate() {
         super.onCreate()
         GLVideo.initialize(this)
+    }
+
+    companion object {
+        lateinit var context: Context
+            private set
     }
 }

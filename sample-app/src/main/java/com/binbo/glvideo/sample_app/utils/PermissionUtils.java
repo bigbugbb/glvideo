@@ -31,36 +31,6 @@ public class PermissionUtils {
     public static final String TAG = "PermissionUtils";
 
     /**
-     * 检查悬浮窗权限
-     *
-     * @param context
-     * @return
-     */
-    public boolean checkFloatWindowPermission(Context context) {
-        //6.0 版本之后由于 google 增加了对悬浮窗权限的管理，所以方式就统一了
-        if (Build.VERSION.SDK_INT < 23) {
-            if (RomUtils.checkIsMiuiRom()) {
-                return MiuiUtils.checkFloatWindowPermission(context);
-            } else if (RomUtils.checkIsMeizuRom()) {
-                return MeizuUtils.checkFloatWindowPermission(context);
-            } else if (RomUtils.checkIsHuaweiRom()) {
-                return HuaweiUtils.checkFloatWindowPermission(context);
-            } else if (RomUtils.checkIs360Rom()) {
-                return QikuUtils.checkFloatWindowPermission(context);
-            } else if (RomUtils.checkIsOppoRom()) {
-                return OppoUtils.checkFloatWindowPermission(context);
-            }
-        }
-        return commonROMPermissionCheck(context);
-    }
-
-    public static boolean hasPermission(@NonNull Context context, @NonNull String permission) {
-        List<String> permisstions = new ArrayList<>();
-        permisstions.add(permission);
-        return hasPermission(context, permisstions);
-    }
-
-    /**
      * 系统层的权限判断
      *
      * @param context     上下文
@@ -121,25 +91,6 @@ public class PermissionUtils {
                     RomUtils.commonROMPermissionApplyInternal(context);
                 }
             }
-        }
-    }
-
-    private static boolean commonROMPermissionCheck(Context context) {
-        //最新发现魅族6.0的系统这种方式不好用，天杀的，只有你是奇葩，没办法，单独适配一下
-        if (RomUtils.checkIsMeizuRom()) {
-            return MeizuUtils.checkFloatWindowPermission(context);
-        } else {
-            Boolean result = true;
-            if (Build.VERSION.SDK_INT >= 23) {
-                try {
-                    Class clazz = Settings.class;
-                    Method canDrawOverlays = clazz.getDeclaredMethod("canDrawOverlays", Context.class);
-                    result = (Boolean) canDrawOverlays.invoke(null, context);
-                } catch (Exception e) {
-                    Log.e(TAG, Log.getStackTraceString(e));
-                }
-            }
-            return result;
         }
     }
 }
