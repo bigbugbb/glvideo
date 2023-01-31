@@ -22,4 +22,5 @@
         android:name="com.binbo.glvideo.sample_app.ui.advanced.AdvancedFragment"
         android:label="@string/title_advanced"
         tools:layout="@layout/fragment_advanced" />
+
 </navigation>

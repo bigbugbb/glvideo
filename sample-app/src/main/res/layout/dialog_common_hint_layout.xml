@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/viewRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.binbo.glvideo.sample_app.ui.widget.CoverView
+        android:id="@+id/viewDialogContent"
+        android:layout_width="@dimen/dialog_common_w"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_common_hint_dialog"
+        app:cover_radius="@dimen/dialog_common_corners_radius"
+        android:layout_gravity="center">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="16dp">
+
+            <TextView
+                android:id="@+id/textTitle"
+                style="@style/font_sf_compact_rounded_bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingHorizontal="12dp"
+                android:paddingBottom="@dimen/dialog_common_title_margin_bottom"
+                tools:text="tip"
+                android:textColor="@android:color/white"
+                android:textSize="16dp"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/dialogYesOrNoTitleTv"
+                style="@style/font_sf_compact_rounded_medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:minHeight="60dp"
+                android:paddingHorizontal="12dp"
+                android:paddingBottom="12dp"
+                android:text="this is a tip message"
+                android:textColor="@android:color/white"
+                android:textSize="16dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorWhite10" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dialog_common_bts_h"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/dialogNoTv"
+                    style="@style/font_sf_compact_rounded_medium"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/common_no"
+                    android:textColor="#0A84FF"
+                    android:textSize="16dp" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorWhite10" />
+
+                <TextView
+                    android:id="@+id/dialogYesTv"
+                    style="@style/font_sf_compact_rounded_black"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/common_yes"
+                    android:textColor="#0A84FF"
+                    android:textSize="16dp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </com.binbo.glvideo.sample_app.ui.widget.CoverView>
+
+</FrameLayout>

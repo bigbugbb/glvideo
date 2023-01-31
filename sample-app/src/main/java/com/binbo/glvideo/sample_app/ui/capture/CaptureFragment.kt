@@ -1,5 +1,6 @@
 package com.binbo.glvideo.sample_app.ui.capture
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +8,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import com.binbo.glvideo.core.ext.singleClick
+import com.binbo.glvideo.sample_app.R
 import com.binbo.glvideo.sample_app.databinding.FragmentCaptureBinding
 
 class CaptureFragment : Fragment() {
@@ -24,6 +28,30 @@ class CaptureFragment : Fragment() {
         val root: View = binding.root
 
         return root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.btnCameraPreview.singleClick {
+            startActivity(Intent(requireContext(), CameraPreviewActivity::class.java))
+        }
+
+        binding.btnCameraPreviewCustom.singleClick {
+
+        }
+
+        binding.btnCameraPreviewWithEffect.singleClick {
+
+        }
+
+        binding.btnPictureTaking.singleClick {
+
+        }
+
+        binding.btnVideoRecording.singleClick {
+
+        }
     }
 
     override fun onDestroyView() {

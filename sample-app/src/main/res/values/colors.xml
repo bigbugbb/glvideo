@@ -7,4 +7,47 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="dialog_color_white">@color/colorWhite</color>
+    <color name="dialog_color_62FD75">#62FD75</color>
+
+    <!--          白色透明度       -->
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorWhite5">#05FFFFFF</color>
+    <color name="colorWhite8">#14FFFFFF</color>
+    <color name="colorWhite10">#1AFFFFFF</color>
+    <color name="colorWhite15">#26FFFFFF</color>
+    <color name="colorWhite20">#33FFFFFF</color>
+    <color name="colorWhite25">#40FFFFFF</color>
+    <color name="colorWhite30">#4dFFFFFF</color>
+    <color name="colorWhite40">#66FFFFFF</color>
+    <color name="colorWhite50">#80FFFFFF</color>
+    <color name="colorWhite60">#99FFFFFF</color>
+    <color name="colorWhite70">#B3FFFFFF</color>
+    <color name="colorWhite80">#CCFFFFFF</color>
+    <color name="colorWhite90">#E6FFFFFF</color>
+    <color name="colorWhite95">#F2FFFFFF</color>
+
+    <!--          黑色透明度    -->
+    <color name="colorBlack">#000000</color>
+    <color name="colorBlack_2">#05000000</color>
+    <color name="colorBlack_4">#0A000000</color>
+    <color name="colorBlack_5">#0c000000</color>
+    <color name="colorBlack_8">#10000000</color>
+    <color name="colorBlack_10">#1A000000</color>
+    <color name="colorBlack_15">#26000000</color>
+    <color name="colorBlack_18">#2E000000</color>
+    <color name="colorBlack_20">#3e000000</color>
+    <color name="colorBlack_25">#40000000</color>
+    <color name="colorBlack_30">#4d000000</color>
+    <color name="colorBlack_40">#66000000</color>
+    <color name="colorBlack_45">#73000000</color>
+    <color name="colorBlack_50">#7F000000</color>
+    <color name="colorBlack_48">#7A000000</color>
+    <color name="colorBlack_60">#96000000</color>
+    <color name="colorBlack_70">#b3000000</color>
+    <color name="colorBlack_75">#C0000000</color>
+    <color name="colorBlack_80">#CC000000</color>
+    <color name="colorBlack_85">#D9000000</color>
+    <color name="colorBlack_90">#E6000000</color>
 </resources>

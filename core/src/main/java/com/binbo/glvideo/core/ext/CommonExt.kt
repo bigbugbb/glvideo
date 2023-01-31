@@ -56,9 +56,7 @@ fun View.isVisible(): Boolean {
     return visibility == View.VISIBLE
 }
 
-//兼容点击事件设置为this的情况
-@Deprecated("已经有个同样的方法了")
-fun <T : View> T.singleClick(onClickListener: View.OnClickListener, time: Long = 500) {
+fun <T : View> T.singleClick(time: Long = 500, onClickListener: View.OnClickListener) {
     setOnClickListener {
         val currentTimeMillis = System.currentTimeMillis()
         if (abs(currentTimeMillis - lastClickTime) > time || this is Checkable) {

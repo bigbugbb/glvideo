@@ -9,10 +9,10 @@ import java.io.File
 interface GLVideo {
 
     companion object Core {
-        internal val tagOfCamera = "glv_camera"
-        internal val tagOfCapture = "glv_capture"
-        internal val tagOfFace = "glv_face"
-        internal val tagOfGraph = "glv_graph"
+        val tagOfCamera = "glv_camera"
+        val tagOfCapture = "glv_capture"
+        val tagOfFace = "glv_face"
+        val tagOfGraph = "glv_graph"
 
         internal val fileMainPath: String
             get() = Environment.getExternalStorageDirectory().toString() + File.separator + context.packageName

@@ -12,4 +12,44 @@
         <item name="android:textColor">@android:color/white</item>
     </style>
 
+    <style name="commonConfirmDialog" parent="android:Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+    <declare-styleable name="CoverView">
+        <attr name="cover_radius" format="dimension" />
+        <attr name="cover_leftTopRadius" format="dimension" />
+        <attr name="cover_rightTopRadius" format="dimension" />
+        <attr name="cover_leftBottomRadius" format="dimension" />
+        <attr name="cover_rightBottomRadius" format="dimension" />
+    </declare-styleable>
+
+    <style name="font_sf_compact_rounded_black">
+        <item name="android:fontFamily">@font/sf_compact_rounded_black</item>
+    </style>
+
+    <style name="font_sf_compact_rounded_medium">
+        <item name="android:fontFamily">@font/sf_compact_rounded_medium</item>
+    </style>
+
+    <style name="font_sf_compact_rounded_bold">
+        <item name="android:fontFamily">@font/sf_compact_rounded_bold</item>
+    </style>
+
+    <style name="font_sf_sf_pro_text_black_italic">
+        <item name="android:fontFamily">@font/sf_pro_text_black_italic</item>
+    </style>
+
+    <style name="font_sf_compact_rounded_heavy">
+        <item name="android:fontFamily">@font/sf_compact_rounded_heavy</item>
+    </style>
+
+    <style name="font_sf_compact_rounded_regular">
+        <item name="android:fontFamily">@font/sf_compact_rounded_regular</item>
+    </style>
+
 </resources>
