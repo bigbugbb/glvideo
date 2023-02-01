@@ -8,12 +8,14 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.Glvideo">
-
+        <activity
+            android:name=".ui.capture.CameraPreviewCustomActivity"
+            android:exported="false"
+            android:launchMode="singleTop" />
         <activity
             android:name=".ui.capture.CameraPreviewActivity"
-            android:launchMode="singleTop"
-            android:exported="false" />
-
+            android:exported="false"
+            android:launchMode="singleTop" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

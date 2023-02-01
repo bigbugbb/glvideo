@@ -38,7 +38,7 @@ class CaptureFragment : Fragment() {
         }
 
         binding.btnCameraPreviewCustom.singleClick {
-
+            startActivity(Intent(requireContext(), CameraPreviewCustomActivity::class.java))
         }
 
         binding.btnCameraPreviewWithEffect.singleClick {

@@ -1,9 +1,5 @@
 package com.binbo.glvideo.core.ext
 
-import android.util.Log
-import com.binbo.glvideo.core.BuildConfig
-import com.binbo.glvideo.core.GLVideo.Core.context
-
 import android.app.ActivityManager
 import android.content.Context
 import android.content.res.Resources
@@ -13,7 +9,6 @@ import android.graphics.drawable.LayerDrawable
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.RoundRectShape
 import android.location.LocationManager
-import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
@@ -22,13 +17,13 @@ import android.text.TextUtils
 import android.view.*
 import android.view.View.LAYER_TYPE_SOFTWARE
 import android.widget.Checkable
-import android.widget.EditText
 import android.widget.Toast
 import androidx.annotation.*
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
-
+import com.binbo.glvideo.core.BuildConfig
+import com.binbo.glvideo.core.GLVideo.Core.context
 import java.io.*
 import java.util.*
 import kotlin.math.abs

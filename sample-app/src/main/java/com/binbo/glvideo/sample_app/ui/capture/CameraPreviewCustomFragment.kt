@@ -1,6 +1,8 @@
 package com.binbo.glvideo.sample_app.ui.capture
 
 import android.Manifest
+import android.graphics.SurfaceTexture
+import android.opengl.GLSurfaceView
 import android.os.Bundle
 import android.util.Size
 import android.view.LayoutInflater
@@ -9,9 +11,13 @@ import android.view.ViewGroup
 import androidx.camera.core.CameraSelector
 import androidx.fragment.app.Fragment
 import com.binbo.glvideo.core.camera.CameraController
+import com.binbo.glvideo.core.ext.nowSystemClock
+import com.binbo.glvideo.core.opengl.drawer.CameraDrawer
+import com.binbo.glvideo.core.opengl.drawer.FrameDrawer
+import com.binbo.glvideo.core.opengl.renderer.DefaultCameraRenderer
 import com.binbo.glvideo.sample_app.App
 import com.binbo.glvideo.sample_app.R
-import com.binbo.glvideo.sample_app.databinding.FragmentCameraPreviewBinding
+import com.binbo.glvideo.sample_app.databinding.FragmentCameraPreviewCustomBinding
 import com.binbo.glvideo.sample_app.ext.getColorCompat
 import com.binbo.glvideo.sample_app.ui.widget.CommonHintDialog
 import com.binbo.glvideo.sample_app.utils.PermissionUtils
@@ -19,18 +25,20 @@ import com.binbo.glvideo.sample_app.utils.permission.RxPermissions
 
 /**
  * A simple [Fragment] subclass.
- * Use the [CameraPreviewFragment.newInstance] factory method to
+ * Use the [CameraPreviewCustomFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class CameraPreviewFragment : Fragment() {
+class CameraPreviewCustomFragment : Fragment(), SurfaceTexture.OnFrameAvailableListener {
 
-    private var _binding: FragmentCameraPreviewBinding? = null
+    private var _binding: FragmentCameraPreviewCustomBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
 
     private lateinit var cameraController: CameraController
+
+    internal lateinit var cameraRenderer: DefaultCameraRenderer
 
     internal val commonHintDialog by lazy { CommonHintDialog(App.context) }
 
@@ -42,15 +50,25 @@ class CameraPreviewFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        _binding = FragmentCameraPreviewBinding.inflate(inflater, container, false)
+        _binding = FragmentCameraPreviewCustomBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         cameraController = CameraController(requireContext(), targetResolution, this)
-        lifecycle.addObserver(cameraController!!)
-        binding.viewCamera.setSurfaceTextureAvailableListener(cameraController!!)
+        cameraController.onFrameAvailableListener = this
+        lifecycle.addObserver(cameraController)
+
+        cameraRenderer = DefaultCameraRenderer().apply {
+            addDrawer(CameraDrawer().apply {
+                setSurfaceTextureAvailableListener(cameraController)
+            })
+            addDrawer(FrameDrawer())
+            setUseCustomRenderThread(true)
+            setSurface(binding.viewGLCamera)
+            setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY)
+        }
     }
 
     override fun onStart() {
@@ -68,20 +86,14 @@ class CameraPreviewFragment : Fragment() {
         cameraController.lensFacing = CameraSelector.LENS_FACING_FRONT
     }
 
-    override fun onResume() {
-        super.onResume()
-        binding.viewCamera.onResume()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        binding.viewCamera.onPause()
-    }
-
     override fun onStop() {
         super.onStop()
         cameraController.scheduleUnbindCamera()
     }
+
+    override fun onFrameAvailable(surfaceTexture: SurfaceTexture?) {
+        cameraRenderer.notifySwap(nowSystemClock * 1000)
+     }
 
     private fun onPermissionsNotGranted() {
         if (!commonHintDialog.isShowing) {
@@ -103,6 +115,6 @@ class CameraPreviewFragment : Fragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance() = CameraPreviewFragment()
+        fun newInstance() = CameraPreviewCustomFragment()
     }
 }
