@@ -1,8 +1,6 @@
 package com.binbo.glvideo.sample_app.ui.capture
 
 import android.Manifest
-import android.graphics.SurfaceTexture
-import android.opengl.GLSurfaceView
 import android.os.Bundle
 import android.util.Size
 import android.view.LayoutInflater
@@ -10,27 +8,24 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.camera.core.CameraSelector
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.binbo.glvideo.core.camera.CameraController
-import com.binbo.glvideo.core.ext.nowSystemClock
-import com.binbo.glvideo.core.opengl.drawer.CameraDrawer
-import com.binbo.glvideo.core.opengl.drawer.FrameDrawer
-import com.binbo.glvideo.core.opengl.renderer.DefaultCameraRenderer
+import com.binbo.glvideo.core.ext.nowString
+import com.binbo.glvideo.core.ext.singleClick
 import com.binbo.glvideo.sample_app.App
 import com.binbo.glvideo.sample_app.R
-import com.binbo.glvideo.sample_app.databinding.FragmentCameraPreviewCustomBinding
+import com.binbo.glvideo.sample_app.databinding.FragmentPictureTakingBinding
 import com.binbo.glvideo.sample_app.ext.getColorCompat
+import com.binbo.glvideo.sample_app.impl.capture.graph.picture_taking.PictureCaptureGraphManager
 import com.binbo.glvideo.sample_app.ui.widget.CommonHintDialog
 import com.binbo.glvideo.sample_app.utils.PermissionUtils
 import com.binbo.glvideo.sample_app.utils.permission.RxPermissions
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
-/**
- * A simple [Fragment] subclass.
- * Use the [CameraPreviewCustomFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class CameraPreviewCustomFragment : Fragment(), SurfaceTexture.OnFrameAvailableListener {
+class PictureTakingFragment : Fragment() {
 
-    private var _binding: FragmentCameraPreviewCustomBinding? = null
+    private var _binding: FragmentPictureTakingBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -38,7 +33,7 @@ class CameraPreviewCustomFragment : Fragment(), SurfaceTexture.OnFrameAvailableL
 
     private lateinit var cameraController: CameraController
 
-    private lateinit var cameraRenderer: DefaultCameraRenderer
+    private lateinit var graphManager: PictureCaptureGraphManager
 
     private val commonHintDialog by lazy { CommonHintDialog(requireContext()) }
 
@@ -50,24 +45,29 @@ class CameraPreviewCustomFragment : Fragment(), SurfaceTexture.OnFrameAvailableL
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        _binding = FragmentCameraPreviewCustomBinding.inflate(inflater, container, false)
+        _binding = FragmentPictureTakingBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         cameraController = CameraController(requireContext(), targetResolution, this)
-        cameraController.onFrameAvailableListener = this
+        graphManager = PictureCaptureGraphManager(binding.viewGLCamera, cameraController)
+
+        cameraController.onFrameAvailableListener = graphManager
         lifecycle.addObserver(cameraController)
 
-        cameraRenderer = DefaultCameraRenderer().apply {
-            addDrawer(CameraDrawer().apply {
-                setSurfaceTextureAvailableListener(cameraController)
-            })
-            addDrawer(FrameDrawer())
-            setUseCustomRenderThread(true)
-            setSurface(binding.viewGLCamera)
-            setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY)
+        binding.btnTakePicture.singleClick {
+            lifecycleScope.launch {
+                graphManager.takePicture()
+            }
+        }
+
+        // 不阻塞调用导致surfaceHolder回调失效
+        runBlocking {
+            graphManager.createMediaGraph()
+            graphManager.prepare()
+            graphManager.start()
         }
     }
 
@@ -93,13 +93,14 @@ class CameraPreviewCustomFragment : Fragment(), SurfaceTexture.OnFrameAvailableL
 
     override fun onDestroyView() {
         super.onDestroyView()
+        runBlocking {
+            graphManager.stop()
+            graphManager.release()
+            graphManager.destroyMediaGraph()
+        }
         commonHintDialog.dismiss()
         _binding = null
     }
-
-    override fun onFrameAvailable(surfaceTexture: SurfaceTexture?) {
-        cameraRenderer.notifySwap(nowSystemClock * 1000)
-     }
 
     private fun onPermissionsNotGranted() {
         if (!commonHintDialog.isShowing) {
@@ -121,6 +122,6 @@ class CameraPreviewCustomFragment : Fragment(), SurfaceTexture.OnFrameAvailableL
 
     companion object {
         @JvmStatic
-        fun newInstance() = CameraPreviewCustomFragment()
+        fun newInstance() = PictureTakingFragment()
     }
 }

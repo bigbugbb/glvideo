@@ -26,12 +26,15 @@
     <string name="button_text_video_cut_widget">video-cut widget</string>
     <string name="button_text_screen_sharing">screen sharing</string>
 
+    <string name="button_text_take_picture">Take Picture</string>
+    <string name="button_text_record_video">Record Video</string>
+
     <string name="common_yes">Yes</string>
     <string name="common_no">No</string>
     <string name="common_cancel">Cancel</string>
     <string name="settings_title">Settings</string>
 
-    <string name="system_need_photos_permission">We need access to your photos. Turn it on in Settings. </string>
+    <string name="system_need_photos_permission">App needs access to your photos. Turn it on in Settings. </string>
     <string name="camera_permission_popup_title">App needs camera permission. Go to settings and grant access.</string>
     <string name="no_permission_toast">Camera and Files permissions needed. Please turn them on in settings and try again.</string>
 

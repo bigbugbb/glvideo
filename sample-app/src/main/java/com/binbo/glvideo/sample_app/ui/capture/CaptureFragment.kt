@@ -46,7 +46,7 @@ class CaptureFragment : Fragment() {
         }
 
         binding.btnPictureTaking.singleClick {
-
+            startActivity(Intent(requireContext(), PictureTakingActivity::class.java))
         }
 
         binding.btnVideoRecording.singleClick {

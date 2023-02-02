@@ -32,7 +32,7 @@ class CameraPreviewFragment : Fragment() {
 
     private lateinit var cameraController: CameraController
 
-    internal val commonHintDialog by lazy { CommonHintDialog(App.context) }
+    private val commonHintDialog by lazy { CommonHintDialog(requireContext()) }
 
     private val targetResolution: Size
         get() = Size(720, 1280)
@@ -81,6 +81,12 @@ class CameraPreviewFragment : Fragment() {
     override fun onStop() {
         super.onStop()
         cameraController.scheduleUnbindCamera()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        commonHintDialog.dismiss()
+        _binding = null
     }
 
     private fun onPermissionsNotGranted() {

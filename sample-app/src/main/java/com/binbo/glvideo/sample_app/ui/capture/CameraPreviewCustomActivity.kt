@@ -12,6 +12,6 @@ class CameraPreviewCustomActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_camera_preview_custom)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-        replaceViewWithFragment(R.id.viewContainer, CameraPreviewCustomFragment::class.java, bundleOf(), "CameraPreviewCustomFragment")
+        replaceViewWithFragment(R.id.viewContainer, CameraPreviewCustomFragment::class.java)
     }
 }

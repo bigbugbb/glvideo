@@ -188,55 +188,6 @@ object FileToolUtils {
 
         }
     }
-
-    @JvmStatic
-    fun saveImageToGallery(
-        image: Bitmap,
-        compressFormat: Bitmap.CompressFormat,
-        mimeType: String,
-        onSuccess: (String) -> Unit,
-        fileExtension: String = ROOM_PHOTO_EXTENSION
-    ) {
-        val imageTime = System.currentTimeMillis()
-        val imageFileName = imageTime.toString() + fileExtension
-        val stringId = context.applicationInfo.labelRes
-        val appName = if (stringId == 0) context.applicationInfo.nonLocalizedLabel else context.getString(stringId)
-        val values = ContentValues()
-        values.put(
-            MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + File.separator + appName
-        ) // Environment.DIRECTORY_SCREENSHOTS: 截图, 图库中显示的文件夹名。"lobbyDownload"
-        values.put(MediaStore.MediaColumns.DISPLAY_NAME, imageFileName)
-        values.put(MediaStore.MediaColumns.MIME_TYPE, mimeType)
-        values.put(MediaStore.MediaColumns.DATE_ADDED, imageTime / 1000)
-        values.put(MediaStore.MediaColumns.DATE_MODIFIED, imageTime / 1000)
-        values.put(MediaStore.MediaColumns.DATE_EXPIRES, (imageTime + 86400000) / 1000)
-        values.put(MediaStore.MediaColumns.IS_PENDING, true)
-
-        if (MediaStore.Images.Media.EXTERNAL_CONTENT_URI != null) {
-            val resolver: ContentResolver = context.contentResolver
-
-            val uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
-            if (uri != null) {
-                kotlin.runCatching {
-                    // First, write the actual data for our screenshot
-                    resolver.openOutputStream(uri).use { out ->
-                        if (!image.compress(compressFormat, 100, out)) {
-                            Log.i(TAG, "saveImageToGallery()---  failure")
-                        }
-                    }
-                    // Everything went well above, publish it!
-                    values.clear()
-                    values.put(MediaStore.MediaColumns.IS_PENDING, 0)
-                    values.putNull(MediaStore.MediaColumns.DATE_EXPIRES)
-                    resolver.update(uri, values, null, null)
-                    onSuccess(imageFileName)
-                }.getOrElse {
-                    Log.i(TAG, "saveImageToGallery()---  exception = ${it.message}")
-                }
-            }
-
-        }
-    }
 }
 
 @IntDef(
