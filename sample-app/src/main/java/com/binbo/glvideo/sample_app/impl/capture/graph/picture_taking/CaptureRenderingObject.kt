@@ -18,6 +18,7 @@ import com.binbo.glvideo.sample_app.event.TakePictureEvent
 import kotlinx.coroutines.runBlocking
 import java.lang.ref.WeakReference
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
 
 class CaptureRenderingObject(
     private val surfaceViewRef: WeakReference<SurfaceView>,
@@ -61,14 +62,14 @@ class CaptureRenderingObject(
 
 class CaptureCameraRenderer(private val renderingObject: CaptureRenderingObject) : DefaultCameraRenderer() {
 
-    private var takePictureCompleted = AtomicBoolean(false)
+    private var takePictureCompleted = AtomicInteger(0)
 
     private val onPictureTakenSuccess: (String) -> Unit = {
         runBlocking { renderingObject.broadcast(TakePictureCompleteEvent(it)) }
     }
 
     fun takePicture() {
-        takePictureCompleted.set(false)
+        takePictureCompleted.set(1)
     }
 
     override var impl: RenderImpl = object : DefaultRenderImpl(this) {
@@ -77,7 +78,7 @@ class CaptureCameraRenderer(private val renderingObject: CaptureRenderingObject)
             OpenGLUtils.bindFBO(frameBuffers[0], frameBufferTextures[0])
             configFboViewport(renderer.width, renderer.height)
             drawers[CameraDrawer::class.java]?.draw()
-            if (takePictureCompleted.compareAndSet(false, true)) {
+            if (takePictureCompleted.compareAndSet(1, 2)) {
                 val bitmap = OpenGLUtils.savePixels(0, 0, renderer.width, renderer.height)
                 bitmap.writeToGallery(Bitmap.CompressFormat.JPEG, "image/jpeg", onSuccess = onPictureTakenSuccess)
             }

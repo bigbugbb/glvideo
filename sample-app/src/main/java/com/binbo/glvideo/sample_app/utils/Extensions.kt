@@ -1,4 +1,4 @@
-package com.binbo.glvideo.sample_app.ext
+package com.binbo.glvideo.sample_app.utils
 
 import android.content.Context
 import android.os.Bundle
@@ -13,8 +13,8 @@ import androidx.lifecycle.ViewModel
 import com.binbo.glvideo.core.ext.runOnMainThread
 import com.binbo.glvideo.sample_app.App
 
-fun Context.toast(message: String) {
-    Toast.makeText(applicationContext, message, Toast.LENGTH_LONG).show()
+fun Context.toast(message: String, duration: Int = Toast.LENGTH_LONG) {
+    Toast.makeText(applicationContext, message, duration).show()
 }
 
 fun Context.getColorCompat(@ColorRes resId: Int): Int {

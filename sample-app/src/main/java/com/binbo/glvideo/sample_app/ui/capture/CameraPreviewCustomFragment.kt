@@ -18,10 +18,10 @@ import com.binbo.glvideo.core.opengl.renderer.DefaultCameraRenderer
 import com.binbo.glvideo.sample_app.App
 import com.binbo.glvideo.sample_app.R
 import com.binbo.glvideo.sample_app.databinding.FragmentCameraPreviewCustomBinding
-import com.binbo.glvideo.sample_app.ext.getColorCompat
 import com.binbo.glvideo.sample_app.ui.widget.CommonHintDialog
 import com.binbo.glvideo.sample_app.utils.PermissionUtils
-import com.binbo.glvideo.sample_app.utils.permission.RxPermissions
+import com.binbo.glvideo.sample_app.utils.getColorCompat
+import com.tbruyelle.rxpermissions3.RxPermissions
 
 /**
  * A simple [Fragment] subclass.
@@ -73,12 +73,16 @@ class CameraPreviewCustomFragment : Fragment(), SurfaceTexture.OnFrameAvailableL
 
     override fun onStart() {
         super.onStart()
+
         RxPermissions(this)
-            .request(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            .request(Manifest.permission.CAMERA)
             .subscribe { granted ->
                 if (granted) {
+                    // All permissions are granted !
                     cameraController.scheduleBindCamera()
                 } else {
+                    // At least one denied permission with ask never again
+                    // Need to go to the settings
                     onPermissionsNotGranted()
                 }
             }
@@ -99,7 +103,7 @@ class CameraPreviewCustomFragment : Fragment(), SurfaceTexture.OnFrameAvailableL
 
     override fun onFrameAvailable(surfaceTexture: SurfaceTexture?) {
         cameraRenderer.notifySwap(nowSystemClock * 1000)
-     }
+    }
 
     private fun onPermissionsNotGranted() {
         if (!commonHintDialog.isShowing) {

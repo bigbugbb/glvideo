@@ -10,16 +10,15 @@ import androidx.camera.core.CameraSelector
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.binbo.glvideo.core.camera.CameraController
-import com.binbo.glvideo.core.ext.nowString
 import com.binbo.glvideo.core.ext.singleClick
 import com.binbo.glvideo.sample_app.App
 import com.binbo.glvideo.sample_app.R
 import com.binbo.glvideo.sample_app.databinding.FragmentPictureTakingBinding
-import com.binbo.glvideo.sample_app.ext.getColorCompat
 import com.binbo.glvideo.sample_app.impl.capture.graph.picture_taking.PictureCaptureGraphManager
 import com.binbo.glvideo.sample_app.ui.widget.CommonHintDialog
 import com.binbo.glvideo.sample_app.utils.PermissionUtils
-import com.binbo.glvideo.sample_app.utils.permission.RxPermissions
+import com.binbo.glvideo.sample_app.utils.getColorCompat
+import com.tbruyelle.rxpermissions3.RxPermissions
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
@@ -73,12 +72,16 @@ class PictureTakingFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
+
         RxPermissions(this)
-            .request(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            .request(Manifest.permission.CAMERA)
             .subscribe { granted ->
                 if (granted) {
+                    // All permissions are granted !
                     cameraController.scheduleBindCamera()
                 } else {
+                    // At least one denied permission with ask never again
+                    // Need to go to the settings
                     onPermissionsNotGranted()
                 }
             }
