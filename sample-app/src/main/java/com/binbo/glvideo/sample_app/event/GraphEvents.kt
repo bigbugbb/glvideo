@@ -5,3 +5,4 @@ import com.binbo.glvideo.core.graph.base.BaseGraphEvent
 
 class TakePictureEvent : BaseGraphEvent<MediaData>()
 class TakePictureCompleteEvent(url: String) : BaseGraphEvent<MediaData>()
+class RecordVideoEvent(val recording: Boolean) : BaseGraphEvent<MediaData>()

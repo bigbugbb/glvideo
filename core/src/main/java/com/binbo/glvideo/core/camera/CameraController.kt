@@ -163,7 +163,7 @@ class CameraController(
     }
 
     fun takePicture(onImageSaved: Uri.() -> Unit) {
-        val file = FileToolUtils.getFile(FileUseCase.TAKE_PICTURE, "$nowString.jpg")
+        val file = FileToolUtils.getFile(FileUseCase.PICTURE_TAKING, "$nowString.jpg")
         val metadata = ImageCapture.Metadata()
         metadata.isReversedHorizontal = config.lensFacing == CameraSelector.LENS_FACING_FRONT
         val outputFileOptions = ImageCapture.OutputFileOptions.Builder(file)

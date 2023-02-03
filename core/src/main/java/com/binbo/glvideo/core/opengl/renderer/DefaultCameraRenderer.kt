@@ -80,8 +80,8 @@ open class DefaultCameraRenderer : DefaultGLRenderer(), FaceTrackObserver {
             configFboViewport(renderer.width, renderer.height)
             drawers[CameraDrawer::class.java]?.draw()
 //            val bitmap = OpenGLUtils.savePixels(0, 0, renderer.width, renderer.height)
-            unbindFBO()
             configDefViewport()
+            unbindFBO()
         }
 
         open fun drawFrameToScreen() {

@@ -8,18 +8,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.Glvideo">
-        <activity
-            android:name=".ui.capture.PictureTakingActivity"
-            android:exported="false"
-            android:launchMode="singleTop" />
-        <activity
-            android:name=".ui.capture.CameraPreviewCustomActivity"
-            android:exported="false"
-            android:launchMode="singleTop" />
-        <activity
-            android:name=".ui.capture.CameraPreviewActivity"
-            android:exported="false"
-            android:launchMode="singleTop" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -30,6 +19,25 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- capture section -->
+        <activity
+            android:name=".ui.capture.CameraPreviewActivity"
+            android:exported="false"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".ui.capture.CameraPreviewCustomActivity"
+            android:exported="false"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".ui.capture.PictureTakingActivity"
+            android:exported="false"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".ui.capture.VideoRecordingActivity"
+            android:exported="false"
+            android:launchMode="singleTop" />
+
     </application>
 
 </manifest>

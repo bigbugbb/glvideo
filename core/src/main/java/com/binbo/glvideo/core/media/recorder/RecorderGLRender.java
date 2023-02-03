@@ -1,5 +1,7 @@
 package com.binbo.glvideo.core.media.recorder;
 
+import static com.binbo.glvideo.core.utils.Constants.RECORDER_INPUT_QUEUE_SIZE;
+
 import android.graphics.SurfaceTexture;
 import android.opengl.EGL14;
 import android.opengl.EGLContext;
@@ -27,7 +29,7 @@ public final class RecorderGLRender implements Runnable {
 
     private FrameDrawer mFrameDrawer;
     // 纹理id
-    private BlockingDeque<TextureToRecord> mTextures = new LinkedBlockingDeque<>(36);
+    private BlockingDeque<TextureToRecord> mTextures = new LinkedBlockingDeque<>(RECORDER_INPUT_QUEUE_SIZE);
 
     private Size mTextureSize;
     /**

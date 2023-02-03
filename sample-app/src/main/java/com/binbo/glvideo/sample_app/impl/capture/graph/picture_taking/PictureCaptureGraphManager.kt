@@ -12,7 +12,6 @@ import com.binbo.glvideo.core.graph.manager.BaseGraphManager
 import com.binbo.glvideo.core.graph.simple.SimpleSinkObject
 import com.binbo.glvideo.core.graph.simple.SimpleSourceObject
 import com.binbo.glvideo.core.opengl.drawer.SurfaceTextureAvailableListener
-import com.binbo.glvideo.sample_app.App
 import com.binbo.glvideo.sample_app.App.Companion.context
 import com.binbo.glvideo.sample_app.R
 import com.binbo.glvideo.sample_app.event.TakePictureCompleteEvent
@@ -30,7 +29,7 @@ class PictureCaptureGraphManager(
     private val surfaceViewRef: WeakReference<SurfaceView>
     private val textureAvailableListenerRef: WeakReference<SurfaceTextureAvailableListener>
 
-    private var renderingObject: CaptureRenderingObject? = null
+    private var renderingObject: PictureCaptureRenderingObject? = null
 
     init {
         surfaceViewRef = WeakReference(surfaceView)
@@ -47,7 +46,7 @@ class PictureCaptureGraphManager(
                 super.onCreate()
 
                 val mediaSource = SimpleSourceObject().apply { mediaGraph.addObject(this) }
-                val mediaObject = CaptureRenderingObject(surfaceViewRef, textureAvailableListenerRef).apply { mediaGraph.addObject(this) }
+                val mediaObject = PictureCaptureRenderingObject(surfaceViewRef, textureAvailableListenerRef).apply { mediaGraph.addObject(this) }
                 val mediaSink = SimpleSinkObject()
 
                 mediaSource to mediaObject to mediaSink

@@ -17,10 +17,9 @@ import com.binbo.glvideo.sample_app.event.TakePictureCompleteEvent
 import com.binbo.glvideo.sample_app.event.TakePictureEvent
 import kotlinx.coroutines.runBlocking
 import java.lang.ref.WeakReference
-import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
-class CaptureRenderingObject(
+class PictureCaptureRenderingObject(
     private val surfaceViewRef: WeakReference<SurfaceView>,
     private val textureAvailableListener: WeakReference<SurfaceTextureAvailableListener>
 ) : SimpleMediaObject() {
@@ -60,7 +59,7 @@ class CaptureRenderingObject(
     }
 }
 
-class CaptureCameraRenderer(private val renderingObject: CaptureRenderingObject) : DefaultCameraRenderer() {
+class CaptureCameraRenderer(private val renderingObject: PictureCaptureRenderingObject) : DefaultCameraRenderer() {
 
     private var takePictureCompleted = AtomicInteger(0)
 
