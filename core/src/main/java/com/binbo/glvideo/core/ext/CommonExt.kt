@@ -8,7 +8,6 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.RoundRectShape
-import android.location.LocationManager
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
@@ -21,7 +20,6 @@ import android.widget.Toast
 import androidx.annotation.*
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
-import androidx.recyclerview.widget.RecyclerView
 import com.binbo.glvideo.core.BuildConfig
 import com.binbo.glvideo.core.GLVideo.Core.context
 import java.io.*
@@ -82,15 +80,6 @@ fun dip(dpValue: Int): Int {
 fun dip(dpValue: Float): Float {
     val density = context.resources.displayMetrics.density
     return dpValue * density
-}
-
-fun isLocationServiceEnable(): Boolean {
-    val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-    // getting GPS uploadStatus
-    val isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-    // getting network uploadStatus
-    val isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
-    return isGPSEnabled || isNetworkEnabled
 }
 
 fun <T : Serializable> deepCopy(obj: T): T {
@@ -207,7 +196,7 @@ fun <T : View> T.generateBackgroundWithShadow(
 }
 
 fun debugToast(msg: String?) {
-    if (BuildConfig.DEBUG && msg != null) {
+    if (BuildConfig.DEBUG && !msg.isNullOrBlank()) {
         Toast.makeText(context.applicationContext, msg, Toast.LENGTH_SHORT).show()
     }
 }
@@ -269,16 +258,6 @@ fun <T> MutableLiveData<T>.default(value: T): MutableLiveData<T> {
     return this
 }
 
-fun <VH : RecyclerView.ViewHolder> RecyclerView.Adapter<VH>.notifyDataSetChangedInMain() {
-    if (isMainThread()) {
-        this.notifyDataSetChanged()
-    } else {
-        Handler(Looper.getMainLooper()).post {
-            this.notifyDataSetChanged()
-        }
-    }
-}
-
 val mainHandler = Handler(Looper.getMainLooper())
 
 fun threadName() = Thread.currentThread().name
@@ -290,112 +269,6 @@ fun isHarmony(context: Context): Boolean {
         osBrand == "harmony"
     } catch (e: Exception) {
         false
-    }
-}
-
-/**
- * @param currentCount:当前重复次数，等于-1时先放大再抖动，默认等于-1
- * @param repeatCount:抖动次数，抖动完成后把view.scaleX恢复成原来的倍数，默认抖动3次
- * @param animationEnd:动画结束回调
- * @param rotateEnd:抖动动画结束回调
- */
-fun View.shakeAnimation(currentCount: Int = -1, repeatCount: Int = 3, rotateEnd: () -> Unit = {}, animationEnd: () -> Unit = {}) {
-    var count = currentCount
-    if (count == -1) {
-        this.animate().scaleX(1.15f).scaleY(1.15f).withEndAction {
-            shakeAnimation(0, repeatCount = repeatCount, rotateEnd = rotateEnd, animationEnd = animationEnd)
-        }.start()
-        return
-    }
-    if (count < repeatCount) {
-        count++
-        this.animate().rotation(20f).setDuration(50).withEndAction {
-            this.animate().rotation(0f).setDuration(50).withEndAction {
-                this.animate().rotation(-20f).setDuration(50).withEndAction {
-                    this.animate().rotation(0f).setDuration(50).withStartAction {
-                        rotateEnd.invoke()
-                        shakeAnimation(currentCount = count, repeatCount = repeatCount, rotateEnd = {
-                            if (count == repeatCount - 1) {
-                                this.animate().scaleY(1.0f).scaleX(1.0f)
-                                    .withEndAction {
-                                        animationEnd.invoke()
-                                    }
-                                    .start()
-                            }
-                        }, animationEnd = animationEnd)
-                    }.start()
-                }.start()
-            }.start()
-        }.start()
-    }
-}
-
-/**
- * 手指戳一戳动画
- */
-fun View.pokeAnimation(animationStart: () -> Unit = {}, animationEnd: () -> Unit = {}, pokeRange: Float = 1f) {
-    val translationValue = 10 * pokeRange
-    this.animate().translationX(-translationValue).setDuration(100).withStartAction { animationStart.invoke() }.withEndAction {
-        this.animate().translationX(0f).setDuration(100).withEndAction {
-            this.animate().translationX(-translationValue).setDuration(100).withEndAction {
-                this.animate().translationX(0f).setDuration(100).withEndAction {
-                    animationEnd.invoke()
-                }.start()
-            }.start()
-        }.start()
-    }.start()
-}
-
-/**
- * 跟随手指戳一戳旋转动画
- */
-fun View.pokeRotateAnimation(animationStart: () -> Unit = {}, animationEnd: () -> Unit = {}) {
-    this.animate().rotation(30f).setDuration(80).withStartAction { animationStart.invoke() }.withEndAction {
-        this.animate().rotation(0f).setDuration(80).withEndAction {
-            this.animate().rotation(30f).setDuration(80).withEndAction {
-                this.animate().rotation(0f).setDuration(80).withEndAction {
-                    animationEnd.invoke()
-                }.start()
-            }.start()
-        }.start()
-    }.start()
-}
-
-fun View.shutterAnimation(currentCount: Int = -1, repeatCount: Int = 5, rotateEnd: () -> Unit = {}, animationEnd: () -> Unit = {}) {
-    var count = currentCount
-
-    if (currentCount == -1) {
-        // 第一次的效果
-        this.animate().alpha(1f).setDuration(100)
-            .withEndAction {
-                this.animate().alpha(0f).setDuration(300)
-                    .withEndAction {
-                        shutterAnimation(0, repeatCount = repeatCount, rotateEnd = rotateEnd, animationEnd = animationEnd)
-                    }.start()
-            }
-            .start()
-        return
-    }
-
-    if (count < repeatCount) {
-        count++
-        this.animate().alpha(1f).setDuration(50)
-            .withEndAction {
-                this.animate().alpha(0f).setDuration(50)
-                    .withEndAction {
-                        rotateEnd.invoke()
-                        shutterAnimation(currentCount = count, repeatCount = repeatCount, rotateEnd = {
-                            if (count == repeatCount - 1) {
-                                this.animate().scaleY(1.0f).scaleX(1.0f)
-                                    .withEndAction {
-                                        animationEnd.invoke()
-                                    }
-                                    .start()
-                            }
-                        }, animationEnd = animationEnd)
-                    }.start()
-            }
-            .start()
     }
 }
 

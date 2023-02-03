@@ -3,6 +3,7 @@ package com.binbo.glvideo.sample_app.impl.capture.graph.video_recording
 import android.graphics.SurfaceTexture
 import android.os.SystemClock
 import android.view.SurfaceView
+import android.widget.Toast
 import com.binbo.glvideo.core.graph.MediaData
 import com.binbo.glvideo.core.graph.MediaGraph
 import com.binbo.glvideo.core.graph.base.BaseGraphEvent
@@ -18,14 +19,17 @@ import com.binbo.glvideo.core.utils.FileToolUtils
 import com.binbo.glvideo.core.utils.FileUseCase
 import com.binbo.glvideo.sample_app.App.Companion.context
 import com.binbo.glvideo.sample_app.AppConsts
+import com.binbo.glvideo.sample_app.R
 import com.binbo.glvideo.sample_app.event.RecordVideoEvent
+import com.binbo.glvideo.sample_app.utils.toast
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.withContext
 import java.lang.ref.WeakReference
 import java.util.concurrent.atomic.AtomicBoolean
 
 class VideoCaptureGraphManager(
-    val capturedFilename: String,
+    private val capturedFilename: String,
     surfaceView: SurfaceView,
     textureAvailableListener: SurfaceTextureAvailableListener
 ) : BaseGraphManager(), SurfaceTexture.OnFrameAvailableListener {
@@ -57,15 +61,8 @@ class VideoCaptureGraphManager(
         FileToolUtils.getFile(FileUseCase.VIDEO_RECORDING).deleteRecursively()
     }
 
-    suspend fun startRecording() {
-        mediaGraph.broadcast(RecordVideoEvent(true))
-    }
-
-    suspend fun stopRecording() {
-        mediaGraph.broadcast(RecordVideoEvent(false))
-        withContext(GraphExecutor.dispatchers) {
-            waitUntilDone()
-        }
+    suspend fun recordVideo(recording: Boolean) {
+        mediaGraph.broadcast(RecordVideoEvent(recording))
     }
 
     override fun createMediaGraph(): BaseMediaGraph<MediaData> {
@@ -102,6 +99,9 @@ class VideoCaptureGraphManager(
 
     suspend fun waitUntilDone() {
         recordingCompleted.receive()
-        FileToolUtils.writeVideoToGallery(FileToolUtils.getFile(FileUseCase.VIDEO_RECORDING), "video/mp4")
+        FileToolUtils.writeVideoToGallery(FileToolUtils.getFile(FileUseCase.VIDEO_RECORDING, capturedFilename + AppConsts.recordVideoExt), "video/mp4")
+        withContext(Dispatchers.Main) {
+            context.toast(context.getString(R.string.video_recording_successful_message), Toast.LENGTH_SHORT)
+        }
     }
 }

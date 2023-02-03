@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/navigation_capture"
-        android:name="com.binbo.glvideo.sample_app.ui.capture.CaptureFragment"
+        android:name="com.binbo.glvideo.sample_app.ui.capture.fragment.CaptureFragment"
         android:label="@string/title_capture"
         tools:layout="@layout/fragment_capture" />
 

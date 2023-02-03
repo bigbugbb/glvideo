@@ -1,4 +1,4 @@
-package com.binbo.glvideo.sample_app.ui.capture
+package com.binbo.glvideo.sample_app.ui.capture.fragment
 
 import android.Manifest
 import android.os.Bundle
@@ -8,32 +8,29 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.camera.core.CameraSelector
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import com.binbo.glvideo.core.camera.CameraController
-import com.binbo.glvideo.core.ext.nowString
-import com.binbo.glvideo.core.ext.singleClick
 import com.binbo.glvideo.sample_app.App
 import com.binbo.glvideo.sample_app.R
-import com.binbo.glvideo.sample_app.databinding.FragmentVideoRecordingBinding
-import com.binbo.glvideo.sample_app.impl.capture.graph.video_recording.VideoCaptureGraphManager
+import com.binbo.glvideo.sample_app.databinding.FragmentCameraPreviewBinding
 import com.binbo.glvideo.sample_app.ui.widget.CommonHintDialog
 import com.binbo.glvideo.sample_app.utils.PermissionUtils
 import com.binbo.glvideo.sample_app.utils.getColorCompat
 import com.tbruyelle.rxpermissions3.RxPermissions
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
-class VideoRecordingFragment : Fragment() {
+/**
+ * A simple [Fragment] subclass.
+ * Use the [CameraPreviewFragment.newInstance] factory method to
+ * create an instance of this fragment.
+ */
+class CameraPreviewFragment : Fragment() {
 
-    private var _binding: FragmentVideoRecordingBinding? = null
+    private var _binding: FragmentCameraPreviewBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
 
     private lateinit var cameraController: CameraController
-
-    private lateinit var graphManager: VideoCaptureGraphManager
 
     private val commonHintDialog by lazy { CommonHintDialog(requireContext()) }
 
@@ -45,34 +42,15 @@ class VideoRecordingFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        _binding = FragmentVideoRecordingBinding.inflate(inflater, container, false)
+        _binding = FragmentCameraPreviewBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         cameraController = CameraController(requireContext(), targetResolution, this)
-        graphManager = VideoCaptureGraphManager(nowString, binding.viewGLCamera, cameraController)
-
-        cameraController.onFrameAvailableListener = graphManager
-        lifecycle.addObserver(cameraController)
-
-        binding.btnRecordVideo.singleClick {
-            lifecycleScope.launch {
-                if (graphManager.isRecording) {
-                    graphManager.stopRecording()
-                } else {
-                    graphManager.startRecording()
-                }
-            }
-        }
-
-        // 不阻塞调用导致surfaceHolder回调失效
-        runBlocking {
-            graphManager.createMediaGraph()
-            graphManager.prepare()
-            graphManager.start()
-        }
+        lifecycle.addObserver(cameraController!!)
+        binding.viewCamera.setSurfaceTextureAvailableListener(cameraController!!)
     }
 
     override fun onStart() {
@@ -94,23 +72,23 @@ class VideoRecordingFragment : Fragment() {
         cameraController.lensFacing = CameraSelector.LENS_FACING_FRONT
     }
 
+    override fun onResume() {
+        super.onResume()
+        binding.viewCamera.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        binding.viewCamera.onPause()
+    }
+
     override fun onStop() {
         super.onStop()
-        lifecycleScope.launch {
-            if (graphManager.isRecording) {
-                graphManager.stopRecording()
-            }
-        }
         cameraController.scheduleUnbindCamera()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        runBlocking {
-            graphManager.stop()
-            graphManager.release()
-            graphManager.destroyMediaGraph()
-        }
         commonHintDialog.dismiss()
         _binding = null
     }
@@ -135,6 +113,6 @@ class VideoRecordingFragment : Fragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance() = VideoRecordingFragment()
+        fun newInstance() = CameraPreviewFragment()
     }
 }

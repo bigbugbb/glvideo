@@ -4,6 +4,7 @@ import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.binbo.glvideo.sample_app.R
+import com.binbo.glvideo.sample_app.ui.capture.fragment.PictureTakingFragment
 import com.binbo.glvideo.sample_app.utils.replaceViewWithFragment
 
 class PictureTakingActivity : AppCompatActivity() {

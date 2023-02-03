@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/black"
-    tools:context=".ui.capture.CameraPreviewFragment">
+    tools:context=".ui.capture.fragment.CameraPreviewFragment">
 
     <SurfaceView
         android:id="@+id/viewGLCamera"
@@ -18,12 +18,24 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/btnRecordVideo"
+        android:id="@+id/btnStartRecording"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="64dp"
         android:textSize="15sp"
-        android:text="@string/button_text_record_video"
+        android:text="@string/button_text_start_recording"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/btnStopRecording"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="64dp"
+        android:textSize="15sp"
+        android:text="@string/button_text_stop_recording"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

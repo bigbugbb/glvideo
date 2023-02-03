@@ -1,17 +1,16 @@
-package com.binbo.glvideo.sample_app.ui.capture
+package com.binbo.glvideo.sample_app.ui.capture.fragment
 
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import com.binbo.glvideo.core.ext.singleClick
-import com.binbo.glvideo.sample_app.R
 import com.binbo.glvideo.sample_app.databinding.FragmentCaptureBinding
+import com.binbo.glvideo.sample_app.ui.capture.*
+import com.binbo.glvideo.sample_app.ui.capture.viewmodel.CaptureViewModel
 
 class CaptureFragment : Fragment() {
 

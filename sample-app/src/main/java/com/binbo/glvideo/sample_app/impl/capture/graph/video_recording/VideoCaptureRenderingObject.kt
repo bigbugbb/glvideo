@@ -10,6 +10,7 @@ import com.binbo.glvideo.core.graph.MediaData
 import com.binbo.glvideo.core.graph.base.BaseGraphEvent
 import com.binbo.glvideo.core.graph.base.BaseMediaQueue
 import com.binbo.glvideo.core.graph.component.FrameRecorder
+import com.binbo.glvideo.core.graph.event.RenderingCompleted
 import com.binbo.glvideo.core.graph.simple.SimpleMediaObject
 import com.binbo.glvideo.core.graph.simple.SimpleMediaQueue
 import com.binbo.glvideo.core.media.encoder.MediaVideoEncoder
@@ -24,6 +25,7 @@ import com.binbo.glvideo.core.opengl.utils.OpenGLUtils
 import com.binbo.glvideo.core.utils.Constants.RECORDER_INPUT_QUEUE_SIZE
 import com.binbo.glvideo.sample_app.AppConsts
 import com.binbo.glvideo.sample_app.event.RecordVideoEvent
+import kotlinx.coroutines.runBlocking
 import java.lang.ref.WeakReference
 import kotlin.math.abs
 
@@ -116,6 +118,11 @@ class CaptureCameraRenderer(private val renderingObject: VideoCaptureRenderingOb
                         frames++
                     }
                 } else {
+                    if (frames > 0) {
+                        runBlocking {
+                            renderingObject.broadcast(RenderingCompleted()) // 触发recorder的stopRecording
+                        }
+                    }
                     frames = 0
                     lastCaptureTime = 0L
                 }

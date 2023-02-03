@@ -1,4 +1,4 @@
-package com.binbo.glvideo.sample_app.ui.capture
+package com.binbo.glvideo.sample_app.ui.capture.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

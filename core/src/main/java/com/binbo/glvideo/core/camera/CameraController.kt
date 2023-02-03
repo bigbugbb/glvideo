@@ -159,7 +159,7 @@ class CameraController(
     fun scheduleReBindCamera() {
         handler.removeCallbacksAndMessages(null)
         handler.sendEmptyMessageDelayed(MSG_UNBIND_CAMERA, 0)
-        handler.sendEmptyMessageDelayed(MSG_BIND_CAMERA, 50)
+        handler.sendEmptyMessageDelayed(MSG_BIND_CAMERA, 500)
     }
 
     fun takePicture(onImageSaved: Uri.() -> Unit) {

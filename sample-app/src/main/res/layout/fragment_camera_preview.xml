@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/black"
-    tools:context=".ui.capture.CameraPreviewFragment">
+    tools:context=".ui.capture.fragment.CameraPreviewFragment">
 
     <com.binbo.glvideo.sample_app.ui.widget.SimpleCameraView
         android:id="@+id/viewCamera"
