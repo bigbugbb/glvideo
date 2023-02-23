@@ -30,6 +30,10 @@
             android:exported="false"
             android:launchMode="singleTop" />
         <activity
+            android:name=".ui.capture.CameraPreviewEffectsActivity"
+            android:exported="false"
+            android:launchMode="singleTop" />
+        <activity
             android:name=".ui.capture.PictureTakingActivity"
             android:exported="false"
             android:launchMode="singleTop" />
