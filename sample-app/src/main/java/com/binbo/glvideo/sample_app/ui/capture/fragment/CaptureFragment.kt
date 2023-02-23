@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.binbo.glvideo.core.ext.singleClick
 import com.binbo.glvideo.sample_app.databinding.FragmentCaptureBinding
-import com.binbo.glvideo.sample_app.ui.capture.*
+import com.binbo.glvideo.sample_app.ui.capture.activity.*
 import com.binbo.glvideo.sample_app.ui.capture.viewmodel.CaptureViewModel
 
 class CaptureFragment : Fragment() {

@@ -1,6 +1,5 @@
 package com.binbo.glvideo.core.utils
 
-import android.content.ContentResolver
 import android.content.ContentValues
 import android.os.Build
 import android.os.Environment
@@ -17,6 +16,7 @@ import com.binbo.glvideo.core.utils.FileUseCase.Companion.NAME_CARD_VIDEO
 import com.binbo.glvideo.core.utils.FileUseCase.Companion.PICTURE_TAKING
 import com.binbo.glvideo.core.utils.FileUseCase.Companion.TEST_ONLY
 import com.binbo.glvideo.core.utils.FileUseCase.Companion.VIDEO_RECORDING
+import com.binbo.glvideo.core.utils.FileUseCase.Companion.VIDEO_TO_DECODE
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -74,6 +74,7 @@ object FileToolUtils {
             FACE_TRACKER_SEETA -> "face_tracker/seeta"
             PICTURE_TAKING -> "picture_taking"
             VIDEO_RECORDING -> "video_recording"
+            VIDEO_TO_DECODE -> "video_to_decode"
             else -> "test"
         }
         return if (useNewSdk) path else "$fileMainPath/$path"
@@ -136,6 +137,7 @@ object FileToolUtils {
     NAME_CARD_VIDEO, MISSION_CARD_VIDEO,
     PICTURE_TAKING,
     VIDEO_RECORDING,
+    VIDEO_TO_DECODE,
     TEST_ONLY
 )
 @Retention(AnnotationRetention.SOURCE)
@@ -148,6 +150,7 @@ annotation class FileUseCase {
         const val MISSION_CARD_VIDEO = 20
         const val PICTURE_TAKING = 30
         const val VIDEO_RECORDING = 40
-        const val TEST_ONLY = 50
+        const val VIDEO_TO_DECODE = 50
+        const val TEST_ONLY = 60
     }
 }

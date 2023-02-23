@@ -1,6 +1,8 @@
 package com.binbo.glvideo.sample_app
 
+import android.Manifest
 import android.os.Bundle
+import android.util.Log
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -8,6 +10,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.binbo.glvideo.sample_app.databinding.ActivityMainBinding
+import com.tbruyelle.rxpermissions3.RxPermissions
 
 class MainActivity : AppCompatActivity() {
 
@@ -29,5 +32,19 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        RxPermissions(this)
+            .request(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            .subscribe { granted ->
+                if (granted) {
+                    Log.i(TAG, "permission granted")
+                } else {
+                    finish()
+                }
+            }
+    }
+
+    companion object {
+        private const val TAG = "MainActivity"
     }
 }

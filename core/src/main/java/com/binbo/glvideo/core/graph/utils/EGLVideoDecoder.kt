@@ -53,6 +53,8 @@ class EGLVideoDecoder(
     private val videoMetaData: VideoMetaData,
     private val frameWindowSize: Int,
     private val startPos: Long,
+    private val withSync: Boolean,
+    private val stopAfterWindowFilled: Boolean,
     private val videoDrawerMode: Int,
     private val clippingEnabled: Boolean = false,
     private val clippingTimeline: Range<Long> = Range(0L, Long.MAX_VALUE)
@@ -85,7 +87,9 @@ class EGLVideoDecoder(
     private val stateListener = VideoSourceDecoderStateListener()
 
     init {
-        withoutSync() // 以最快速度完成解码
+        if (!withSync) {
+            withoutSync() // 以最快速度完成解码
+        }
         setStateListener(stateListener)
     }
 
@@ -160,10 +164,12 @@ class EGLVideoDecoder(
                     return
                 }
 
-                if (frames >= frameWindowSize) {
-                    Log.d(tagOfGraph, "onDecodeFrameWindowCompleted")
-                    helper.onDecodeFrameWindowCompleted()
-                    return
+                if (stopAfterWindowFilled) {
+                    if (frames >= frameWindowSize) {
+                        Log.d(tagOfGraph, "onDecodeFrameWindowCompleted")
+                        helper.onDecodeFrameWindowCompleted()
+                        return
+                    }
                 }
 
                 if (clippingEnabled) {
@@ -187,8 +193,8 @@ class EGLVideoDecoder(
                     videoDrawer?.draw()
                     GLES20.glFinish()
 
-//                        val bitmap = OpenGLUtils.savePixels(0, 0, vpw, vph)
-//                        LogUtil.d(tagOfGraph, "")
+                    val bitmap = OpenGLUtils.savePixels(0, 0, vpw, vph)
+                    Log.d(tagOfGraph, "")
                 }
 
                 /**

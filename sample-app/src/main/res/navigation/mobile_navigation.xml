@@ -13,7 +13,7 @@
 
     <fragment
         android:id="@+id/navigation_video"
-        android:name="com.binbo.glvideo.sample_app.ui.video.VideoFragment"
+        android:name="com.binbo.glvideo.sample_app.ui.video.fragment.VideoFragment"
         android:label="@string/title_video"
         tools:layout="@layout/fragment_video" />
 

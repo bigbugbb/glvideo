@@ -57,9 +57,6 @@ class SimpleCameraRenderer : DefaultGLRenderer() {
         private val cameraDrawer: CameraDrawer?
             get() = drawers[CameraDrawer::class.java] as? CameraDrawer?
 
-        private val blurDrawer: BlurDrawer?
-            get() = drawers[BlurDrawer::class.java] as? BlurDrawer?
-
         private val frameDrawer: FrameDrawer?
             get() = drawers[FrameDrawer::class.java] as? FrameDrawer?
 
@@ -80,8 +77,6 @@ class SimpleCameraRenderer : DefaultGLRenderer() {
         override fun onDrawFrame() {
             kotlin.runCatching {
                 renderCameraTexture()
-//                renderVerticalBlurTexture()
-//                renderHorizontalBlurTexture()
                 drawFrameToScreen()
             }.getOrElse {
                 unbindFBO()
@@ -96,32 +91,6 @@ class SimpleCameraRenderer : DefaultGLRenderer() {
             unbindFBO()
             configDefViewport()
         }
-
-        private fun renderVerticalBlurTexture() {
-            bindFBO(horizontalBlurBuffers[0], horizontalBlurBufferTextures[0])
-            configFboViewport(renderer.width, renderer.height)
-            blurDrawer?.run {
-                drawVertical = true
-                setTextureID(verticalBlurBufferTextures[0])
-                draw()
-            }
-            unbindFBO()
-            configDefViewport()
-        }
-
-
-        private fun renderHorizontalBlurTexture() {
-            bindFBO(frameBuffers[0], frameBufferTextures[0])
-            configFboViewport(renderer.width, renderer.height)
-            blurDrawer?.run {
-                drawVertical = false
-                setTextureID(horizontalBlurBufferTextures[0])
-                draw()
-            }
-            unbindFBO()
-            configDefViewport()
-        }
-
 
         open fun drawFrameToScreen() {
             frameDrawer?.setTextureID(frameBufferTextures[0])

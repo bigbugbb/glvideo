@@ -71,9 +71,11 @@ open class VideoSource(
     override val outputQueue: BaseMediaQueue<MediaData>
         get() = outputQueues[0]
 
-    override fun sendEvent(event: BaseGraphEvent<MediaData>) {
-        runBlocking { broadcast(event) }
-    }
+    protected open val withSync: Boolean
+        get() = false
+
+    protected open val stopAfterWindowFilled: Boolean
+        get() = true
 
     protected open val videoDrawerMode: Int
         get() = 0
@@ -105,11 +107,14 @@ open class VideoSource(
     override val viewportHeight: Int
         get() = textureHeight
 
+    override fun sendEvent(event: BaseGraphEvent<MediaData>) {
+        runBlocking { broadcast(event) }
+    }
     override suspend fun onPrepare() {
         super.onPrepare()
         videoMetaData = videoMetaDataProvider.getVideoMetaData(videoUri.path ?: "")
         Log.d(TAG, "video fps: ${videoMetaData.frameRate}")
-        videoDecoder = EGLVideoDecoder(this, videoUri, videoMetaData, frameWindowSize, startPos, videoDrawerMode, clippingEnabled, clippingTimeline)
+        videoDecoder = EGLVideoDecoder(this, videoUri, videoMetaData, frameWindowSize, startPos, withSync, stopAfterWindowFilled, videoDrawerMode, clippingEnabled, clippingTimeline)
         broadcast(VideoMetaDataRetrieved(videoMetaData)) // 其他组件需要metadata信息，这里发个广播告诉其他组件，使它们能够有足够的初始化信息
         // pre allocate shared texture to use
         eglResource?.createMediaTextures(textureWidth, textureHeight, textureCount)

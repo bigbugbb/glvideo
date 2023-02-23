@@ -4,6 +4,7 @@
     <application
         android:name=".App"
         android:allowBackup="true"
+        android:requestLegacyExternalStorage="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
@@ -22,23 +23,29 @@
 
         <!-- capture section -->
         <activity
-            android:name=".ui.capture.CameraPreviewActivity"
+            android:name=".ui.capture.activity.CameraPreviewActivity"
             android:exported="false"
             android:launchMode="singleTop" />
         <activity
-            android:name=".ui.capture.CameraPreviewCustomActivity"
+            android:name=".ui.capture.activity.CameraPreviewCustomActivity"
             android:exported="false"
             android:launchMode="singleTop" />
         <activity
-            android:name=".ui.capture.CameraPreviewEffectsActivity"
+            android:name=".ui.capture.activity.CameraPreviewEffectsActivity"
             android:exported="false"
             android:launchMode="singleTop" />
         <activity
-            android:name=".ui.capture.PictureTakingActivity"
+            android:name=".ui.capture.activity.PictureTakingActivity"
             android:exported="false"
             android:launchMode="singleTop" />
         <activity
-            android:name=".ui.capture.VideoRecordingActivity"
+            android:name=".ui.capture.activity.VideoRecordingActivity"
+            android:exported="false"
+            android:launchMode="singleTop" />
+
+        <!-- video section -->
+        <activity
+            android:name=".ui.video.activity.VideoDecodeActivity"
             android:exported="false"
             android:launchMode="singleTop" />
 
