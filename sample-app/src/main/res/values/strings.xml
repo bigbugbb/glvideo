@@ -13,7 +13,7 @@
 
     <!-- Section Video -->
     <string name="button_text_video_decode">video decode + CustomSurfaceView</string>
-    <string name="button_text_encode_from_gif">video encode from gif</string>
+    <string name="button_text_gif_to_mp4">gif to mp4</string>
     <string name="button_text_add_video_bgm">add video bgm</string>
     <string name="button_text_add_video_ending">add video ending</string>
     <string name="button_text_add_watermark">add watermark overlay</string>

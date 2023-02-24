@@ -38,13 +38,6 @@ public class CoverView extends FrameLayout {
     private boolean hasSet;
     private int leftTopRadius, leftBottomRadius, rightTopRadius, rightBottomRadius;
 
-    public void setRadius(int leftTopRadius, int leftBottomRadius,int rightBottomRadius, int rightTopRadius) {
-        this.leftTopRadius = leftTopRadius;
-        this.leftBottomRadius = leftBottomRadius;
-        this.rightBottomRadius = rightBottomRadius;
-        this.rightTopRadius = rightTopRadius;
-    }
-
     public CoverView(@NonNull Context context) {
         super(context);
         init(context, null);
@@ -67,6 +60,13 @@ public class CoverView extends FrameLayout {
     public CoverView(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr, @StyleRes int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init(context, attrs);
+    }
+
+    public void setRadius(int leftTopRadius, int leftBottomRadius, int rightBottomRadius, int rightTopRadius) {
+        this.leftTopRadius = leftTopRadius;
+        this.leftBottomRadius = leftBottomRadius;
+        this.rightBottomRadius = rightBottomRadius;
+        this.rightTopRadius = rightTopRadius;
     }
 
     private void init(@NonNull Context context, @Nullable AttributeSet attrs) {

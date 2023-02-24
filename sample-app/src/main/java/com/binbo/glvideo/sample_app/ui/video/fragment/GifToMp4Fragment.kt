@@ -17,7 +17,7 @@ import com.binbo.glvideo.sample_app.utils.FileUtil
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
-class VideoDecodeFragment : Fragment() {
+class GifToMp4Fragment : Fragment() {
 
     private var _binding: FragmentVideoDecodeBinding? = null
 

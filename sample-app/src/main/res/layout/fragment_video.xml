@@ -15,9 +15,9 @@
         android:text="@string/button_text_video_decode" />
 
     <Button
-        android:id="@+id/btn_encode_from_gif"
+        android:id="@+id/btn_gif_to_mp4"
         style="@style/ButtonStyle"
-        android:text="@string/button_text_encode_from_gif" />
+        android:text="@string/button_text_gif_to_mp4" />
 
     <Button
         android:id="@+id/btn_add_video_bgm"

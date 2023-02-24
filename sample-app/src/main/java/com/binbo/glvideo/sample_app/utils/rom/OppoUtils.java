@@ -62,9 +62,8 @@ public class OppoUtils {
             ComponentName comp = new ComponentName("com.coloros.safecenter", "com.coloros.safecenter.sysfloatwindow.FloatWindowListActivity");//悬浮窗管理页面
             intent.setComponent(comp);
             context.startActivity(intent);
-        }
-        catch(Exception e){
-            Log.e(TAG, "",e);
+        } catch (Exception e) {
+            Log.e(TAG, "", e);
         }
     }
 }

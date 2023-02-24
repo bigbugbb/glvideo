@@ -2,7 +2,6 @@ package com.binbo.glvideo.sample_app.utils
 
 import android.content.Context
 import android.os.Bundle
-import android.view.Gravity
 import android.widget.Toast
 import androidx.annotation.AnyThread
 import androidx.annotation.ColorRes
@@ -10,10 +9,11 @@ import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.*
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import com.binbo.glvideo.core.ext.isMainThread
-import com.binbo.glvideo.core.ext.runOnMainThread
-import com.binbo.glvideo.sample_app.App
 
 fun Context.toast(message: String, duration: Int = Toast.LENGTH_LONG) {
     Toast.makeText(applicationContext, message, duration).show()

@@ -2,8 +2,6 @@ package com.binbo.glvideo.sample_app.impl.capture
 
 import android.opengl.GLES20
 import android.util.ArrayMap
-import android.util.Log
-import com.binbo.glvideo.core.GLVideo.Core.tagOfCamera
 import com.binbo.glvideo.core.opengl.drawer.BlurDrawer
 import com.binbo.glvideo.core.opengl.drawer.CameraDrawer
 import com.binbo.glvideo.core.opengl.drawer.Drawer
@@ -14,8 +12,6 @@ import com.binbo.glvideo.core.opengl.utils.OpenGLUtils.bindFBO
 import com.binbo.glvideo.core.opengl.utils.OpenGLUtils.createFBO
 import com.binbo.glvideo.core.opengl.utils.OpenGLUtils.deleteFBO
 import com.binbo.glvideo.core.opengl.utils.OpenGLUtils.unbindFBO
-import javax.microedition.khronos.egl.EGLConfig
-import javax.microedition.khronos.opengles.GL10
 
 
 class EffectsCameraRenderer : DefaultGLRenderer() {
@@ -48,8 +44,8 @@ class EffectsCameraRenderer : DefaultGLRenderer() {
 
         override fun onSurfaceChange(width: Int, height: Int) {
             createFBO(frameBuffers, frameBufferTextures, width, height)
-            createFBO(verticalBlurBuffers, verticalBlurBufferTextures, width,height)
-            createFBO(horizontalBlurBuffers, horizontalBlurBufferTextures,width,height)
+            createFBO(verticalBlurBuffers, verticalBlurBufferTextures, width, height)
+            createFBO(horizontalBlurBuffers, horizontalBlurBufferTextures, width, height)
         }
 
         override fun onSurfaceDestroy() {

@@ -15,10 +15,8 @@ import com.binbo.glvideo.core.ext.nowSystemClock
 import com.binbo.glvideo.core.opengl.drawer.BlurDrawer
 import com.binbo.glvideo.core.opengl.drawer.CameraDrawer
 import com.binbo.glvideo.core.opengl.drawer.FrameDrawer
-import com.binbo.glvideo.core.opengl.renderer.DefaultCameraRenderer
 import com.binbo.glvideo.sample_app.App
 import com.binbo.glvideo.sample_app.R
-import com.binbo.glvideo.sample_app.databinding.FragmentCameraPreviewCustomBinding
 import com.binbo.glvideo.sample_app.databinding.FragmentCameraPreviewEffectsBinding
 import com.binbo.glvideo.sample_app.impl.capture.EffectsCameraRenderer
 import com.binbo.glvideo.sample_app.ui.widget.CommonHintDialog

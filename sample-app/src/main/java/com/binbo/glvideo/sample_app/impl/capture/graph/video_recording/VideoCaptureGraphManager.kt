@@ -10,7 +10,6 @@ import com.binbo.glvideo.core.graph.base.BaseGraphEvent
 import com.binbo.glvideo.core.graph.base.BaseMediaGraph
 import com.binbo.glvideo.core.graph.component.FrameRecorder
 import com.binbo.glvideo.core.graph.event.RecordingCompleted
-import com.binbo.glvideo.core.graph.executor.GraphExecutor
 import com.binbo.glvideo.core.graph.manager.BaseGraphManager
 import com.binbo.glvideo.core.graph.simple.SimpleSourceObject
 import com.binbo.glvideo.core.media.recorder.GLRecorderConfig

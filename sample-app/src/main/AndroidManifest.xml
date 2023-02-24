@@ -48,6 +48,10 @@
             android:name=".ui.video.activity.VideoDecodeActivity"
             android:exported="false"
             android:launchMode="singleTop" />
+        <activity
+            android:name=".ui.video.activity.GifToMp4Activity"
+            android:exported="false"
+            android:launchMode="singleTop" />
 
     </application>
 

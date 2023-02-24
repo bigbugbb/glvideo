@@ -5,14 +5,12 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Binder;
 import android.os.Build;
-import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.AppOpsManagerCompat;
 import androidx.core.content.ContextCompat;
-
 
 import com.binbo.glvideo.sample_app.utils.rom.HuaweiUtils;
 import com.binbo.glvideo.sample_app.utils.rom.MeizuUtils;
@@ -21,8 +19,6 @@ import com.binbo.glvideo.sample_app.utils.rom.OppoUtils;
 import com.binbo.glvideo.sample_app.utils.rom.QikuUtils;
 import com.binbo.glvideo.sample_app.utils.rom.RomUtils;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.List;
 
 

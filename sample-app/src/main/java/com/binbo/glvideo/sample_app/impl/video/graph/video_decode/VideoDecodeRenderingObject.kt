@@ -3,7 +3,6 @@ package com.binbo.glvideo.sample_app.impl.video.graph.video_decode
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import android.util.Log
-import android.util.Size
 import android.view.SurfaceView
 import com.binbo.glvideo.core.graph.EndOfStream
 import com.binbo.glvideo.core.graph.MediaData
@@ -16,10 +15,6 @@ import com.binbo.glvideo.core.graph.simple.SimpleMediaQueue
 import com.binbo.glvideo.core.opengl.drawer.FrameDrawer
 import com.binbo.glvideo.core.opengl.renderer.DefaultGLRenderer
 import com.binbo.glvideo.core.opengl.renderer.RenderImpl
-import com.binbo.glvideo.core.opengl.utils.OpenGLUtils
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 import java.lang.ref.WeakReference
 import java.util.concurrent.TimeUnit
 
