@@ -86,8 +86,7 @@
                 android:id="@+id/viewGraduation"
                 android:layout_width="match_parent"
                 android:layout_height="36dp"
-                android:paddingHorizontal="24dp"
-                android:visibility="gone" />
+                android:paddingHorizontal="24dp" />
 
             <com.binbo.glvideo.core.widget.VideoExtractionSurfaceView
                 android:id="@+id/viewFrames"

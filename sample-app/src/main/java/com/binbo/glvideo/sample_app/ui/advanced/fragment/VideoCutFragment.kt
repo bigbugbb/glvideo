@@ -172,9 +172,9 @@ class VideoCutFragment : Fragment() {
     }
 
     private fun onHeartBeatEvent(event: HeartBeatEvent) {
-//    extractGraphManager?.let {
-//        binding.viewGraduation.timeRange = it.visibleTimeRange
-//    }
+        extractGraphManager?.let {
+            binding.viewGraduation.timeRange = it.visibleTimeRange
+        }
     }
 
     private fun onCreatePfpFilesSuccess(event: CreateVideoCutFileSuccess) {
