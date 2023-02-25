@@ -25,6 +25,8 @@ import com.binbo.glvideo.sample_app.utils.RxBus
 import com.binbo.glvideo.sample_app.utils.VideoPlayerDelegate
 import com.kk.taurus.playerbase.assist.RelationAssist
 import com.kk.taurus.playerbase.player.IPlayer.STATE_STARTED
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.lang.ref.WeakReference
@@ -55,6 +57,8 @@ class VideoExtractionGraphManager(
     private val surfaceViewRef: WeakReference<VideoExtractionSurfaceView>
 
     private var renderingObject: VideoExtractionRenderingObject? = null
+
+    private val mainScope by lazy { CoroutineScope(Dispatchers.Main) }
 
     init {
         surfaceViewRef = WeakReference(surfaceView)
@@ -120,15 +124,15 @@ class VideoExtractionGraphManager(
     }
 
     override fun doFrame(frameTimeNanos: Long) {
-        mediaGraph.eventCoroutineScope.launch {
-            player?.let {
-                if (it.getState() == STATE_STARTED) {
-                    val position = it.getCurrentPosition() * 1000L
-                    if (position > timeline.upper) {
+        player?.let {
+            if (it.getState() == STATE_STARTED) {
+                val position = it.getCurrentPosition() * 1000L
+                if (position > timeline.upper) {
 //                        Log.d(tagOfExtract, "video playing seek to lower")
-                        it.seekTo((timeline.lower / 1000L).toInt())
-                    }
+                    it.seekTo((timeline.lower / 1000L).toInt())
+                }
 //                    Log.d(tagOfExtract, "update video playing pos $position")
+                mediaGraph.eventCoroutineScope.launch {
                     mediaGraph.broadcast(VideoPlayingPosUpdated(position))
                 }
             }
@@ -151,7 +155,7 @@ class VideoExtractionGraphManager(
     private fun onTimelineUpdated(event: TimelineUpdatedEvent) {
         timeline = event.timeline
         if (!event.suspendFrameLoading) {
-            debounce(250, GraphExecutor.coroutineScope) { pos: Int ->
+            debounce(250, mainScope) { pos: Int ->
                 player.seekTo(pos)
             }((timeline.lower / 1000f).toInt())
         }

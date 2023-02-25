@@ -1,5 +1,6 @@
 package com.binbo.glvideo.sample_app.ui.advanced.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,7 +9,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.binbo.glvideo.core.ext.singleClick
 import com.binbo.glvideo.sample_app.databinding.FragmentAdvancedBinding
+import com.binbo.glvideo.sample_app.ui.advanced.activity.VideoCutSelectActivity
 import com.binbo.glvideo.sample_app.ui.advanced.viewmodel.AdvancedViewModel
+import com.binbo.glvideo.sample_app.ui.video.activity.VideoDecodeActivity
 
 class AdvancedFragment : Fragment() {
 
@@ -29,7 +32,7 @@ class AdvancedFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.btnVideoCutWidget.singleClick {
-
+            startActivity(Intent(requireContext(), VideoCutSelectActivity::class.java))
         }
     }
 
