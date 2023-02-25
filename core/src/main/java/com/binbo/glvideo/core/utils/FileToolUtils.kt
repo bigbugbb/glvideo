@@ -11,6 +11,7 @@ import com.binbo.glvideo.core.GLVideo.Core.fileMainPath
 import com.binbo.glvideo.core.ext.now
 import com.binbo.glvideo.core.utils.FileUseCase.Companion.FACE_TRACKER_MODEL
 import com.binbo.glvideo.core.utils.FileUseCase.Companion.FACE_TRACKER_SEETA
+import com.binbo.glvideo.core.utils.FileUseCase.Companion.GIF_TO_MP4
 import com.binbo.glvideo.core.utils.FileUseCase.Companion.MISSION_CARD_VIDEO
 import com.binbo.glvideo.core.utils.FileUseCase.Companion.NAME_CARD_VIDEO
 import com.binbo.glvideo.core.utils.FileUseCase.Companion.PICTURE_TAKING
@@ -25,8 +26,8 @@ object FileToolUtils {
 
     const val TAG = "FileToolUtils"
 
-    const val ROOM_PHOTO_EXTENSION = ".jpg"
-    const val ROOM_VIDEO_EXTENSION = ".mp4"
+    const val DEFAULT_PHOTO_EXTENSION = ".jpg"
+    const val DEFAULT_VIDEO_EXTENSION = ".mp4"
 
     @JvmStatic
     fun generateTempFile(fileName: String): File {
@@ -75,6 +76,7 @@ object FileToolUtils {
             PICTURE_TAKING -> "picture_taking"
             VIDEO_RECORDING -> "video_recording"
             VIDEO_TO_DECODE -> "video_to_decode"
+            GIF_TO_MP4 -> "gif_to_mp4"
             else -> "test"
         }
         return if (useNewSdk) path else "$fileMainPath/$path"
@@ -85,7 +87,7 @@ object FileToolUtils {
         videoFile: File,
         mimeType: String,
         onSuccess: (String) -> Unit = {},
-        fileExtension: String = ROOM_VIDEO_EXTENSION
+        fileExtension: String = DEFAULT_VIDEO_EXTENSION
     ) {
         val videoTime = now
         val videoFileName = videoTime.toString() + fileExtension
@@ -138,6 +140,7 @@ object FileToolUtils {
     PICTURE_TAKING,
     VIDEO_RECORDING,
     VIDEO_TO_DECODE,
+    GIF_TO_MP4,
     TEST_ONLY
 )
 @Retention(AnnotationRetention.SOURCE)
@@ -151,6 +154,7 @@ annotation class FileUseCase {
         const val PICTURE_TAKING = 30
         const val VIDEO_RECORDING = 40
         const val VIDEO_TO_DECODE = 50
-        const val TEST_ONLY = 60
+        const val GIF_TO_MP4 = 60
+        const val TEST_ONLY = 70
     }
 }

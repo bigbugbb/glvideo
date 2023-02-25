@@ -11,7 +11,6 @@ import com.binbo.glvideo.core.graph.base.BaseMediaQueue
 import com.binbo.glvideo.core.graph.base.GraphState
 import com.binbo.glvideo.core.graph.event.DecodedVideoFrame
 import com.binbo.glvideo.core.graph.simple.SimpleMediaObject
-import com.binbo.glvideo.core.graph.simple.SimpleMediaQueue
 import com.binbo.glvideo.core.opengl.drawer.FrameDrawer
 import com.binbo.glvideo.core.opengl.renderer.DefaultGLRenderer
 import com.binbo.glvideo.core.opengl.renderer.RenderImpl
@@ -50,10 +49,6 @@ class VideoDecodeRenderingObject(
 
     override suspend fun onReceiveEvent(event: BaseGraphEvent<MediaData>) {
         super.onReceiveEvent(event)
-    }
-
-    override fun createDefaultQueue(dirType: Int): BaseMediaQueue<MediaData> {
-        return SimpleMediaQueue()
     }
 }
 

@@ -30,6 +30,8 @@
     <string name="button_text_start_recording">Start Recording</string>
     <string name="button_text_stop_recording">Stop Recording</string>
 
+    <string name="button_text_convert">Convert</string>
+
     <string name="common_yes">Yes</string>
     <string name="common_no">No</string>
     <string name="common_cancel">Cancel</string>

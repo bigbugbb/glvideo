@@ -26,7 +26,7 @@ fun Bitmap.flip(source: Bitmap, xFlip: Boolean, yFlip: Boolean): Bitmap {
 fun Bitmap.writeToGallery(
     compressFormat: Bitmap.CompressFormat,
     mimeType: String,
-    fileExtension: String = FileToolUtils.ROOM_PHOTO_EXTENSION,
+    fileExtension: String = FileToolUtils.DEFAULT_PHOTO_EXTENSION,
     onSuccess: (String) -> Unit
 ) {
     val currentTime = now

@@ -39,3 +39,5 @@ data class DecodedVideoFrame(val videoUri: Uri, val videoMetaData: VideoMetaData
 }
 
 data class DecodeMoreFrames(val startPos: Long) : BaseGraphEvent<MediaData>()
+
+data class DecodedGifFrame(val sharedTexture: MediaTexturePool.SharedMediaTexture) : MediaData()

@@ -24,14 +24,14 @@ class FrameDrawer : Drawer() {
     private var clipX: Float = 0f
     private var clipY: Float = 0f
 
-    init {
-        Matrix.setIdentityM(projectionMatrix, 0)
-    }
-
     fun setFrameSize(width: Int, height: Int) {
         frameWidth = width
         frameHeight = height
         updateClipParams()
+    }
+
+    fun rotateByX(degree: Float) {
+        Matrix.rotateM(modelViewProjectionMatrix, 0, degree, 1f, 0f, 0f)
     }
 
     override fun onWorldCreated() {
@@ -52,7 +52,7 @@ class FrameDrawer : Drawer() {
         super.draw()
 
         textureProgram?.useProgram()
-        textureProgram?.setUniforms(projectionMatrix, textureId, 1f)
+        textureProgram?.setUniforms(modelViewProjectionMatrix, textureId, 1f)
         frame?.updateVertexWithClipping(clipX, clipY)
         frame?.bindData(textureProgram)
         frame?.draw()

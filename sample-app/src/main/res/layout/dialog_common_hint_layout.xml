@@ -10,9 +10,9 @@
         android:id="@+id/viewDialogContent"
         android:layout_width="@dimen/dialog_common_w"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:background="@drawable/bg_common_hint_dialog"
-        app:cover_radius="@dimen/dialog_common_corners_radius"
-        android:layout_gravity="center">
+        app:cover_radius="@dimen/dialog_common_corners_radius">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -28,10 +28,10 @@
                 android:gravity="center"
                 android:paddingHorizontal="12dp"
                 android:paddingBottom="@dimen/dialog_common_title_margin_bottom"
-                tools:text="tip"
                 android:textColor="@android:color/white"
                 android:textSize="16dp"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                tools:text="tip" />
 
             <TextView
                 android:id="@+id/dialogYesOrNoTitleTv"
