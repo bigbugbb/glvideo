@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -54,6 +57,16 @@
             android:launchMode="singleTop" />
         <activity
             android:name=".ui.video.activity.AddVideoBgmActivity"
+            android:exported="false"
+            android:launchMode="singleTop" />
+
+        <!-- advanced section -->
+        <activity
+            android:name=".ui.advanced.activity.VideoCutSelectActivity"
+            android:exported="false"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".ui.advanced.activity.VideoCutActivity"
             android:exported="false"
             android:launchMode="singleTop" />
 

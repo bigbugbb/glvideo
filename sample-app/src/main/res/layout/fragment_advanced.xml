@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:paddingHorizontal="@dimen/activity_horizontal_margin"
     android:paddingBottom="100dp"
-    tools:context=".ui.advanced.AdvancedFragment">
+    tools:context=".ui.advanced.fragment.AdvancedFragment">
 
     <Button
         android:id="@+id/btn_namecard"

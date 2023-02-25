@@ -1,4 +1,4 @@
-package com.binbo.glvideo.sample_app.ui.advanced
+package com.binbo.glvideo.sample_app.ui.advanced.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

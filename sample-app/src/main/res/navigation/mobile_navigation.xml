@@ -19,7 +19,7 @@
 
     <fragment
         android:id="@+id/navigation_advanced"
-        android:name="com.binbo.glvideo.sample_app.ui.advanced.AdvancedFragment"
+        android:name="com.binbo.glvideo.sample_app.ui.advanced.fragment.AdvancedFragment"
         android:label="@string/title_advanced"
         tools:layout="@layout/fragment_advanced" />
 

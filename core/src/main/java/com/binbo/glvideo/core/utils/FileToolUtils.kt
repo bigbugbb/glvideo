@@ -17,6 +17,7 @@ import com.binbo.glvideo.core.utils.FileUseCase.Companion.NAME_CARD_VIDEO
 import com.binbo.glvideo.core.utils.FileUseCase.Companion.PICTURE_TAKING
 import com.binbo.glvideo.core.utils.FileUseCase.Companion.TEST_ONLY
 import com.binbo.glvideo.core.utils.FileUseCase.Companion.VIDEO_BGM
+import com.binbo.glvideo.core.utils.FileUseCase.Companion.VIDEO_CUT
 import com.binbo.glvideo.core.utils.FileUseCase.Companion.VIDEO_RECORDING
 import com.binbo.glvideo.core.utils.FileUseCase.Companion.VIDEO_TO_DECODE
 import com.binbo.glvideo.core.utils.FileUseCase.Companion.VIDEO_WITHOUT_BGM
@@ -83,6 +84,7 @@ object FileToolUtils {
             VIDEO_BGM -> "video_bgm"
             VIDEO_WITHOUT_BGM -> "video_without_bgm"
             VIDEO_WITH_BGM -> "video_with_bgm"
+            VIDEO_CUT -> "video_cut"
             else -> "test"
         }
         return if (useNewSdk) path else "$fileMainPath/$path"
@@ -150,6 +152,7 @@ object FileToolUtils {
     VIDEO_BGM,
     VIDEO_WITHOUT_BGM,
     VIDEO_WITH_BGM,
+    VIDEO_CUT,
     TEST_ONLY
 )
 @Retention(AnnotationRetention.SOURCE)
@@ -167,6 +170,7 @@ annotation class FileUseCase {
         const val VIDEO_BGM = 70
         const val VIDEO_WITHOUT_BGM = 71
         const val VIDEO_WITH_BGM = 72
-        const val TEST_ONLY = 80
+        const val VIDEO_CUT = 100
+        const val TEST_ONLY = 200
     }
 }

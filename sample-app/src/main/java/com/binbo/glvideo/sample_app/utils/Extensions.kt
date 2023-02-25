@@ -1,7 +1,11 @@
 package com.binbo.glvideo.sample_app.utils
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
+import android.os.VibrationEffect
+import android.os.Vibrator
+import android.util.Log
 import android.widget.Toast
 import androidx.annotation.AnyThread
 import androidx.annotation.ColorRes
@@ -14,6 +18,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.binbo.glvideo.core.ext.isMainThread
+import com.binbo.glvideo.sample_app.App
+import io.reactivex.rxjava3.disposables.Disposable
 
 fun Context.toast(message: String, duration: Int = Toast.LENGTH_LONG) {
     Toast.makeText(applicationContext, message, duration).show()
@@ -71,4 +77,31 @@ fun <T> LifecycleOwner.observe(liveData: LiveData<T>, observer: (t: T) -> Unit) 
 
 fun <T> LifecycleOwner.observeOnce(liveData: LiveData<T>, observer: (t: T) -> Unit) {
     liveData.observeOnce(this, Observer { it?.let { t -> observer(t) } })
+}
+
+fun Disposable.bindToLifecycleOwner(owner: LifecycleOwner) {
+    object : BaseSimpleLifecycleObserver(owner) {
+        override fun onDestroy(owner: LifecycleOwner) {
+            super.onDestroy(owner)
+            Log.e("bindToRxBusLifecycle", "onDestroy")
+            dispose()
+        }
+    }
+}
+
+fun doClickVibrator(millis: Long = 120L, effectId: Int = VibrationEffect.EFFECT_HEAVY_CLICK, amplitude: Int = 50) {
+    runCatching {
+        val vibrator = App.context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        when {
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q -> {
+                vibrator.vibrate(VibrationEffect.createPredefined(effectId))
+            }
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.O -> {
+                vibrator.vibrate(VibrationEffect.createOneShot(millis, amplitude))
+            }
+            else -> {
+                vibrator.vibrate(millis)
+            }
+        }
+    }
 }
