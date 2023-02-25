@@ -51,9 +51,6 @@ class VideoFragment : Fragment() {
         binding.btnAddWatermark.singleClick {
         }
 
-        binding.btnMergeVideoFiles.singleClick {
-        }
-
         binding.btnVideoCrop.singleClick {
         }
     }

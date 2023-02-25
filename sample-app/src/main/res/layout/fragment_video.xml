@@ -35,11 +35,6 @@
         android:text="@string/button_text_add_watermark" />
 
     <Button
-        android:id="@+id/btn_merge_video_files"
-        style="@style/ButtonStyle"
-        android:text="@string/button_text_merge_video_files" />
-
-    <Button
         android:id="@+id/btn_video_crop"
         style="@style/ButtonStyle"
         android:text="@string/button_text_video_crop" />
