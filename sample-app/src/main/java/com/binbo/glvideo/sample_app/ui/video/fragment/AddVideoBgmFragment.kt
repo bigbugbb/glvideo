@@ -11,8 +11,8 @@ import com.binbo.glvideo.core.ext.singleClick
 import com.binbo.glvideo.core.graph.component.GifSource
 import com.binbo.glvideo.core.graph.executor.GraphExecutor
 import com.binbo.glvideo.sample_app.R
-import com.binbo.glvideo.sample_app.databinding.FragmentGifToMp4Binding
-import com.binbo.glvideo.sample_app.impl.video.graph.gif_to_mp4.GifToMp4GraphManager
+import com.binbo.glvideo.sample_app.databinding.FragmentAddVideoBgmBinding
+import com.binbo.glvideo.sample_app.impl.video.graph.add_video_bgm.AddVideoBgmGraphManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.gifdecoder.StandardGifDecoder
 import com.bumptech.glide.load.resource.gif.GifDrawable
@@ -26,20 +26,20 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
 /**
- * 解析出gif的每一帧，再逐帧编码成mp4
+ * 基于gif to mp4，给生成的视频加上音轨
  */
-class GifToMp4Fragment : Fragment() {
+class AddVideoBgmFragment : Fragment() {
 
-    private var _binding: FragmentGifToMp4Binding? = null
+    private var _binding: FragmentAddVideoBgmBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
 
-    private lateinit var graphManager: GifToMp4GraphManager
+    private lateinit var graphManager: AddVideoBgmGraphManager
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        _binding = FragmentGifToMp4Binding.inflate(inflater, container, false)
+        _binding = FragmentAddVideoBgmBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -51,7 +51,7 @@ class GifToMp4Fragment : Fragment() {
             .load(R.raw.sample_gif)
             .into(binding.imageGif)
 
-        graphManager = GifToMp4GraphManager("converted", 285, 500, createGifFrameProvider(this))
+        graphManager = AddVideoBgmGraphManager("converted", 285, 500, createGifFrameProvider(this))
 
         binding.btnConvert.singleClick {
             lifecycleScope.launch(GraphExecutor.dispatchers) {
@@ -120,6 +120,6 @@ class GifToMp4Fragment : Fragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance() = GifToMp4Fragment()
+        fun newInstance() = AddVideoBgmFragment()
     }
 }

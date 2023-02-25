@@ -20,28 +20,30 @@ abstract class VideoBgmPostProcessor(override val arguments: Bundle = bundleOf()
 
     private val TAG = "VideoBgmPostProcessor"
 
-    suspend fun addBgmToVideo(srcFile: File, audioFile: File, dstFile: File) = suspendCancellableCoroutine<String> { continuation ->
-        kotlin.runCatching {
-            val ffmpegCmd = "-i ${srcFile.absolutePath} -i ${audioFile.absolutePath} -map 0:v -map 1:a -c copy -shortest ${dstFile.absolutePath}"
-            Log.d(TAG, "ffmpeg cmd: $ffmpegCmd")
+    suspend fun addBgmToVideo(srcFile: File, audioFile: File, dstFile: File, useShortestTrack: Boolean = true) =
+        suspendCancellableCoroutine<String> { continuation ->
+            kotlin.runCatching {
+                val shortest = if (useShortestTrack) "-shortest" else ""
+                val ffmpegCmd = "-i ${srcFile.absolutePath} -i ${audioFile.absolutePath} -map 0:v -map 1:a -c copy $shortest ${dstFile.absolutePath}"
+                Log.d(TAG, "ffmpeg cmd: $ffmpegCmd")
 
-            val session = FFmpegKit.execute(ffmpegCmd)
-            if (ReturnCode.isSuccess(session.returnCode)) {
-                Log.i(TAG, "Command execution completed successfully.")
-                continuation.resume(dstFile.absolutePath, null)
-            } else if (ReturnCode.isCancel(session.returnCode)) {
-                Log.i(TAG, "Command execution cancelled by user.")
-                continuation.resumeWithException(Exception("canceled"))
-            } else {
-                // FAILURE
-                val msg = String.format("Command failed with state %s and rc %s.%s", session.state, session.returnCode, session.failStackTrace)
-                Log.d(TAG, msg)
-                continuation.resumeWithException(Exception(msg))
+                val session = FFmpegKit.execute(ffmpegCmd)
+                if (ReturnCode.isSuccess(session.returnCode)) {
+                    Log.i(TAG, "Command execution completed successfully.")
+                    continuation.resume(dstFile.absolutePath, null)
+                } else if (ReturnCode.isCancel(session.returnCode)) {
+                    Log.i(TAG, "Command execution cancelled by user.")
+                    continuation.resumeWithException(Exception("canceled"))
+                } else {
+                    // FAILURE
+                    val msg = String.format("Command failed with state %s and rc %s.%s", session.state, session.returnCode, session.failStackTrace)
+                    Log.d(TAG, msg)
+                    continuation.resumeWithException(Exception(msg))
+                }
+            }.getOrElse {
+                continuation.resumeWithException(it)
             }
-        }.getOrElse {
-            continuation.resumeWithException(it)
         }
-    }
 
     suspend fun addBgmToVideoFromAnother(srcFile: File, videoFileWithBgm: File, dstFile: File) = suspendCancellableCoroutine<String> { continuation ->
         kotlin.runCatching {

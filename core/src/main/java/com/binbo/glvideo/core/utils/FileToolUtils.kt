@@ -16,8 +16,11 @@ import com.binbo.glvideo.core.utils.FileUseCase.Companion.MISSION_CARD_VIDEO
 import com.binbo.glvideo.core.utils.FileUseCase.Companion.NAME_CARD_VIDEO
 import com.binbo.glvideo.core.utils.FileUseCase.Companion.PICTURE_TAKING
 import com.binbo.glvideo.core.utils.FileUseCase.Companion.TEST_ONLY
+import com.binbo.glvideo.core.utils.FileUseCase.Companion.VIDEO_BGM
 import com.binbo.glvideo.core.utils.FileUseCase.Companion.VIDEO_RECORDING
 import com.binbo.glvideo.core.utils.FileUseCase.Companion.VIDEO_TO_DECODE
+import com.binbo.glvideo.core.utils.FileUseCase.Companion.VIDEO_WITHOUT_BGM
+import com.binbo.glvideo.core.utils.FileUseCase.Companion.VIDEO_WITH_BGM
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -77,6 +80,9 @@ object FileToolUtils {
             VIDEO_RECORDING -> "video_recording"
             VIDEO_TO_DECODE -> "video_to_decode"
             GIF_TO_MP4 -> "gif_to_mp4"
+            VIDEO_BGM -> "video_bgm"
+            VIDEO_WITHOUT_BGM -> "video_without_bgm"
+            VIDEO_WITH_BGM -> "video_with_bgm"
             else -> "test"
         }
         return if (useNewSdk) path else "$fileMainPath/$path"
@@ -141,6 +147,9 @@ object FileToolUtils {
     VIDEO_RECORDING,
     VIDEO_TO_DECODE,
     GIF_TO_MP4,
+    VIDEO_BGM,
+    VIDEO_WITHOUT_BGM,
+    VIDEO_WITH_BGM,
     TEST_ONLY
 )
 @Retention(AnnotationRetention.SOURCE)
@@ -155,6 +164,9 @@ annotation class FileUseCase {
         const val VIDEO_RECORDING = 40
         const val VIDEO_TO_DECODE = 50
         const val GIF_TO_MP4 = 60
-        const val TEST_ONLY = 70
+        const val VIDEO_BGM = 70
+        const val VIDEO_WITHOUT_BGM = 71
+        const val VIDEO_WITH_BGM = 72
+        const val TEST_ONLY = 80
     }
 }
