@@ -8,7 +8,6 @@ import android.util.Log
 import com.binbo.glvideo.core.GLVideo
 import com.binbo.glvideo.core.graph.MediaData
 import com.binbo.glvideo.core.graph.MediaSource
-import com.binbo.glvideo.core.graph.base.BaseGraphEvent
 import com.binbo.glvideo.core.graph.base.BaseMediaQueue
 import com.binbo.glvideo.core.graph.event.DecodedGifFrame
 import com.binbo.glvideo.core.graph.simple.SimpleMediaQueue
@@ -41,7 +40,7 @@ class GifSource(
     private lateinit var handlerThread: HandlerThread
     private lateinit var handlerDispatcher: CoroutineDispatcher
 
-    private val ioScope = CoroutineScope(Dispatchers.IO)
+    private val defaultScope = CoroutineScope(Dispatchers.Default)
 
     private val outputQueue: BaseMediaQueue<MediaData>
         get() = outputQueues[0]
@@ -78,7 +77,7 @@ class GifSource(
             frameDrawer.setViewportSize(vpw, vph)
         }
 
-        ioScope.launch {
+        defaultScope.launch {
             frames = 0
             lastFramePresentationTimeUs = 0L
 

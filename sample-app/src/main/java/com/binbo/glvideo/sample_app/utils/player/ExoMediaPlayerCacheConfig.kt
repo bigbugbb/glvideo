@@ -12,10 +12,16 @@ object ExoMediaPlayerCacheConfig {
     var exoPlayerCacheSize: Long = 512 * 1024 * 1024
 
     fun init() {
-        leastRecentlyUsedCacheEvictor = leastRecentlyUsedCacheEvictor ?: LeastRecentlyUsedCacheEvictor(exoPlayerCacheSize)
+        if (leastRecentlyUsedCacheEvictor == null) {
+            leastRecentlyUsedCacheEvictor = LeastRecentlyUsedCacheEvictor(exoPlayerCacheSize)
+        }
 
-        exoDatabaseProvider = exoDatabaseProvider ?: ExoDatabaseProvider(context)
+        if (exoDatabaseProvider == null) {
+            exoDatabaseProvider = ExoDatabaseProvider(context)
+        }
 
-        simpleCache = simpleCache ?: SimpleCache(context.cacheDir, leastRecentlyUsedCacheEvictor!!, exoDatabaseProvider!!)
+        if (simpleCache == null) {
+            simpleCache = SimpleCache(context.cacheDir, leastRecentlyUsedCacheEvictor!!, exoDatabaseProvider!!)
+        }
     }
 }
