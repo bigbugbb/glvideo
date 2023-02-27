@@ -32,21 +32,15 @@ object FileUtil {
             }
         } catch (e: FileNotFoundException) {
             Log.i(TAG, "copyAssets() FileNotFoundException")
-            if (copyFileBack != null) {
-                copyFileBack.fail()
-            }
+            copyFileBack?.fail()
             e.printStackTrace()
         } catch (e: IOException) {
             Log.i(TAG, "copyAssets() IOException")
-            if (copyFileBack != null) {
-                copyFileBack.fail()
-            }
+            copyFileBack?.fail()
             e.printStackTrace()
         } catch (e: Exception) {
             Log.i(TAG, "copyAssets() Exception")
-            if (copyFileBack != null) {
-                copyFileBack.fail()
-            }
+            copyFileBack?.fail()
         } finally {
             if (input != null) {
                 try {

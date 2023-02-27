@@ -22,7 +22,7 @@ import com.binbo.glvideo.core.widget.VideoExtractionSurfaceView
 import com.binbo.glvideo.sample_app.App.Companion.context
 import com.binbo.glvideo.sample_app.event.TimelineUpdatedEvent
 import com.binbo.glvideo.sample_app.utils.RxBus
-import com.binbo.glvideo.sample_app.utils.VideoPlayerDelegate
+import com.binbo.glvideo.sample_app.utils.player.VideoPlayerDelegate
 import com.kk.taurus.playerbase.assist.RelationAssist
 import com.kk.taurus.playerbase.player.IPlayer.STATE_STARTED
 import kotlinx.coroutines.CoroutineScope

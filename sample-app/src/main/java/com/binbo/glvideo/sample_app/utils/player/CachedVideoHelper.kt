@@ -1,4 +1,4 @@
-package com.binbo.glvideo.sample_app.utils.player;
+package com.binbo.glvideo.sample_app.utils.player
 
 import android.content.Context
 import android.net.Uri

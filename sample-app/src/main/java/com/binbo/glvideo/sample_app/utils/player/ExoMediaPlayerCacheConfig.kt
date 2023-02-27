@@ -1,4 +1,4 @@
-package com.binbo.glvideo.sample_app.utils.player;
+package com.binbo.glvideo.sample_app.utils.player
 
 import com.binbo.glvideo.sample_app.App.Companion.context
 import com.google.android.exoplayer2.database.ExoDatabaseProvider

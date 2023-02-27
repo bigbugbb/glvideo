@@ -6,8 +6,6 @@ import java.util.concurrent.TimeUnit
 
 data class HeartBeatEvent(val timing: Int) { // millisecond
     inline fun isSecondInterval() = (timing % 1000 == 0 && timing > 0)
-    inline fun isTwoSecondsInterval() = (timing % 2000 == 0 && timing > 0)
-    inline fun isHalfSecondInterval() = (timing % 500 == 0 && timing > 0)
     inline fun isMinuteInterval() = (timing % 60000 == 0 && timing > 0)
     inline fun isTargetInterval(interval: Int) = (timing % interval == 0 && timing > 0)
 }
