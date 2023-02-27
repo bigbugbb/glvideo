@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
                 if (granted) {
                     Log.i(TAG, "permission granted")
                 } else {
-                    finish()
+                    Log.i(TAG, "permission NOT granted")
                 }
             }
     }

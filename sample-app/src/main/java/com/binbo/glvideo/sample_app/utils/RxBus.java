@@ -2,11 +2,6 @@ package com.binbo.glvideo.sample_app.utils;
 
 import android.util.Log;
 
-import androidx.annotation.CallSuper;
-import androidx.annotation.NonNull;
-import androidx.lifecycle.DefaultLifecycleObserver;
-import androidx.lifecycle.LifecycleOwner;
-
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 

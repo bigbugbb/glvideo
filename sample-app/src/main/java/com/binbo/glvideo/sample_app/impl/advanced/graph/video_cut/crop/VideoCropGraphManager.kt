@@ -43,12 +43,9 @@ class VideoCropGraphManager(val videoUri: Uri, val timeline: Range<Long> = Range
             videoBitRate(600000)
             videoFrameRate(30)
             targetFileDir(FileToolUtils.getFile(FileUseCase.VIDEO_CUT))
-            targetFilename("pfp_crop_video")
+            targetFilename("video_cut")
             clearFiles(false)
         }
-
-    val fileOfFirstFrame: File
-        get() = FileToolUtils.getFile(FileUseCase.VIDEO_CUT, recorderConfig.targetFilename + VideoCutConfig.pictureExt)
 
     val webpFilePath: String
         get() = recorderConfig.targetFileDir.absolutePath + File.separator + recorderConfig.targetFilename + ".webp"
@@ -63,7 +60,7 @@ class VideoCropGraphManager(val videoUri: Uri, val timeline: Range<Long> = Range
                 super.onCreate()
 
                 val mediaSource = VideoCropSource(videoUri, timeline).apply { mediaGraph.addObject(this) }
-                val mediaObject = VideoCropRenderingObject(VideoCutConfig.cropVideoSize, fileOfFirstFrame, videoRotation).apply { mediaGraph.addObject(this) }
+                val mediaObject = VideoCropRenderingObject(VideoCutConfig.cropVideoSize, videoRotation).apply { mediaGraph.addObject(this) }
                 val mediaSink = FrameRecorder(context, recorderConfig).apply { mediaGraph.addObject(this) }
 
                 mediaSource to mediaObject to mediaSink
@@ -112,6 +109,6 @@ class VideoCropGraphManager(val videoUri: Uri, val timeline: Range<Long> = Range
 
     suspend fun waitUntilDone() {
         recordingCompleted.receive()
-        RxBus.getDefault().send(CreateVideoCutFileSuccess(webpFilePath, fileOfFirstFrame.absolutePath))
+        RxBus.getDefault().send(CreateVideoCutFileSuccess(webpFilePath))
     }
 }

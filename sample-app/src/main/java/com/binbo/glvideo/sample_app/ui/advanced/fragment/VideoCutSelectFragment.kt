@@ -10,28 +10,32 @@ import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.binbo.glvideo.core.ext.nowString
 import com.binbo.glvideo.core.ext.singleClick
 import com.binbo.glvideo.sample_app.App
 import com.binbo.glvideo.sample_app.R
-import com.binbo.glvideo.sample_app.databinding.FragmentVideoCutBinding
 import com.binbo.glvideo.sample_app.databinding.FragmentVideoCutSelectBinding
+import com.binbo.glvideo.sample_app.event.CreateVideoCutFileSuccess
 import com.binbo.glvideo.sample_app.ui.advanced.activity.VideoCutActivity
 import com.binbo.glvideo.sample_app.ui.advanced.activity.VideoCutActivity.Companion.ARG_SELECT_VIDEO_KEY
 import com.binbo.glvideo.sample_app.ui.advanced.fragment.VideoCutFragment.Companion.ARG_VIDEO_PATH_KEY
-import com.binbo.glvideo.sample_app.ui.video.activity.VideoDecodeActivity
+import com.binbo.glvideo.sample_app.utils.GlideApp
+import com.binbo.glvideo.sample_app.utils.RxBus
+import com.binbo.glvideo.sample_app.utils.bindToLifecycleOwner
 import com.binbo.glvideo.sample_app.utils.toast
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.signature.ObjectKey
 import com.luck.picture.lib.basic.PictureSelector
 import com.luck.picture.lib.config.PictureMimeType
 import com.luck.picture.lib.config.SelectMimeType
 import com.luck.picture.lib.config.SelectModeConfig
 import com.luck.picture.lib.entity.LocalMedia
 import com.luck.picture.lib.interfaces.OnResultCallbackListener
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-/**
- * 基于gif to mp4，给生成的视频加上音轨
- */
 class VideoCutSelectFragment : Fragment() {
 
     private var _binding: FragmentVideoCutSelectBinding? = null
@@ -76,11 +80,28 @@ class VideoCutSelectFragment : Fragment() {
                 .setSelectionMode(SelectModeConfig.SINGLE)
                 .forSystemResult(resultCallback)
         }
+
+        RxBus.getDefault().onEvent(CreateVideoCutFileSuccess::class.java)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { onCreateVideoCutFileSuccess(it) }
+            .bindToLifecycleOwner(this)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun onCreateVideoCutFileSuccess(event: CreateVideoCutFileSuccess) {
+        GlideApp.with(this)
+            .load(event.webpPath)
+            .apply(
+                RequestOptions()
+                    .placeholder(R.drawable.default_user_avatar)
+                    .error(R.drawable.default_user_avatar)
+            )
+            .signature(ObjectKey(event.webpPath + nowString))
+            .into(binding.imageResult)
     }
 
     companion object {

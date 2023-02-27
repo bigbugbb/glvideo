@@ -13,6 +13,7 @@ import com.binbo.glvideo.core.graph.executor.GraphExecutor
 import com.binbo.glvideo.sample_app.R
 import com.binbo.glvideo.sample_app.databinding.FragmentAddVideoBgmBinding
 import com.binbo.glvideo.sample_app.impl.video.graph.add_video_bgm.AddVideoBgmGraphManager
+import com.binbo.glvideo.sample_app.utils.GlideApp
 import com.bumptech.glide.Glide
 import com.bumptech.glide.gifdecoder.StandardGifDecoder
 import com.bumptech.glide.load.resource.gif.GifDrawable
@@ -46,7 +47,7 @@ class AddVideoBgmFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        Glide.with(this)
+        GlideApp.with(this)
             .asGif()
             .load(R.raw.sample_gif)
             .into(binding.imageGif)
@@ -79,7 +80,7 @@ class AddVideoBgmFragment : Fragment() {
 
     private fun createGifFrameProvider(fragment: Fragment) = object : GifSource.GifFrameProvider {
         override fun getFrames(): Flow<GifSource.GifFrame> = callbackFlow {
-            val target = Glide.with(fragment)
+            val target = GlideApp.with(fragment)
                 .asGif()
                 .load(R.raw.sample_gif)
                 .into(object : CustomTarget<GifDrawable>() {
@@ -114,7 +115,7 @@ class AddVideoBgmFragment : Fragment() {
                     }
                 })
 
-            awaitClose { Glide.with(fragment).clear(target) }
+            awaitClose { GlideApp.with(fragment).clear(target) }
         }
     }
 

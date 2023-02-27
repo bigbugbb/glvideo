@@ -153,6 +153,11 @@ class EGLVideoDecoder(
             kotlin.runCatching {
                 val flags = frame.bufferInfo.flags
                 var keyFrame = false
+
+                if (clippingEnabled) {
+                    Log.d(tagOfGraph, "clippingEnabled")
+                }
+
                 if ((flags and MediaCodec.BUFFER_FLAG_KEY_FRAME) != 0) {
                     keyFrame = true
                 } else if ((flags and MediaCodec.BUFFER_FLAG_CODEC_CONFIG) != 0) {

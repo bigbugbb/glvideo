@@ -39,7 +39,7 @@ import kotlin.math.min
  * @date 2022/12/8
  * @time 19:37
  */
-class VideoCropRenderingObject(val viewportSize: Size, val fileOfFirstFrame: File, val videoRotation: Int = 0) : SimpleMediaObject() {
+class VideoCropRenderingObject(val viewportSize: Size, val videoRotation: Int = 0) : SimpleMediaObject() {
 
     private var renderer: VideoCropRenderer? = null
 
@@ -132,13 +132,8 @@ class VideoCropRenderingObject(val viewportSize: Size, val fileOfFirstFrame: Fil
                                             draw()
                                         }
 
-//                                        val bitmap = OpenGLUtils.savePixels(0, 0, width, height)
+                                        val bitmap = OpenGLUtils.savePixels(0, 0, width, height)
                                         GLES20.glFinish()
-
-                                        if (frames == 0) {
-                                            val bitmap = OpenGLUtils.savePixels(0, 0, width, height)
-                                            saveVideoFrame(bitmap)
-                                        }
                                     }
 
                                     encoder?.let { encoder ->

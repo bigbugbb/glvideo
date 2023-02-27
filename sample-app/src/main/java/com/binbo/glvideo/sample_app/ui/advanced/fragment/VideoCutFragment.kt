@@ -13,7 +13,6 @@ import com.binbo.glvideo.core.ext.singleClick
 import com.binbo.glvideo.core.graph.event.StartFrameBuffering
 import com.binbo.glvideo.core.graph.event.StopFrameBuffering
 import com.binbo.glvideo.core.graph.executor.GraphExecutor
-import com.binbo.glvideo.sample_app.databinding.FragmentAdvancedBinding
 import com.binbo.glvideo.sample_app.databinding.FragmentVideoCutBinding
 import com.binbo.glvideo.sample_app.event.CreateVideoCutFileFailed
 import com.binbo.glvideo.sample_app.event.CreateVideoCutFileSuccess
@@ -22,29 +21,28 @@ import com.binbo.glvideo.sample_app.impl.advanced.graph.video_cut.crop.VideoCrop
 import com.binbo.glvideo.sample_app.impl.advanced.graph.video_cut.extract.VideoExtractionConfig
 import com.binbo.glvideo.sample_app.impl.advanced.graph.video_cut.extract.VideoExtractionGraphManager
 import com.binbo.glvideo.sample_app.impl.advanced.graph.video_cut.extract.tagOfExtract
-import com.binbo.glvideo.sample_app.utils.*
+import com.binbo.glvideo.sample_app.utils.HeartBeatEvent
+import com.binbo.glvideo.sample_app.utils.RxBus
+import com.binbo.glvideo.sample_app.utils.bindToLifecycleOwner
+import com.binbo.glvideo.sample_app.utils.doClickVibrator
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.io.File
 
-/**
- * 基于gif to mp4，给生成的视频加上音轨
- */
 class VideoCutFragment : Fragment() {
 
     private var job: Job? = null
 
     private var webpPath = ""
-    private var firstFramePath = ""
     private var degree = 0
     private var loading = false
 
     private var cropGraphManager: VideoCropGraphManager? = null
     private var extractGraphManager: VideoExtractionGraphManager? = null
 
-    private val pfpVideoUri: Uri
+    private val videoUri: Uri
         get() = Uri.fromFile(File(arguments?.getString(ARG_VIDEO_PATH_KEY) ?: ""))
 
     private val timeline: Range<Long>
@@ -65,7 +63,7 @@ class VideoCutFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        extractGraphManager = VideoExtractionGraphManager(pfpVideoUri, binding.viewVideoContainer, binding.viewFrames).apply {
+        extractGraphManager = VideoExtractionGraphManager(videoUri, binding.viewVideoContainer, binding.viewFrames).apply {
             lifecycle.addObserver(this)
         }
 
@@ -105,12 +103,12 @@ class VideoCutFragment : Fragment() {
 
         RxBus.getDefault().onEvent(CreateVideoCutFileSuccess::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { onCreatePfpFilesSuccess(it) }
+            .subscribe { onCreateVideoCutFileSuccess(it) }
             .bindToLifecycleOwner(this)
 
         RxBus.getDefault().onEvent(CreateVideoCutFileFailed::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { onCreatePfpFilesFailed(it) }
+            .subscribe { onCreateVideoCutFileFailed(it) }
             .bindToLifecycleOwner(this)
     }
 
@@ -125,14 +123,14 @@ class VideoCutFragment : Fragment() {
         job?.cancel()
         job = null
     }
-    
+
     private fun onConfirmed() {
         if (job == null) {
             binding.viewLoading.setVisible(true)
 
             job = GraphExecutor.coroutineScope.launch {
                 Log.d(tagOfExtract, "onConfirmed timeline(${timeline.lower}, ${timeline.upper}, $degree)")
-                cropGraphManager = VideoCropGraphManager(pfpVideoUri, timeline, degree)
+                cropGraphManager = VideoCropGraphManager(videoUri, timeline, degree)
                 cropGraphManager?.run {
                     createMediaGraph()
                     prepare()
@@ -177,17 +175,15 @@ class VideoCutFragment : Fragment() {
         }
     }
 
-    private fun onCreatePfpFilesSuccess(event: CreateVideoCutFileSuccess) {
+    private fun onCreateVideoCutFileSuccess(event: CreateVideoCutFileSuccess) {
         binding.viewLoading.setVisible(false)
         webpPath = event.webpPath
-        firstFramePath = event.firstFramePath
         activity?.finish()
     }
 
-    private fun onCreatePfpFilesFailed(event: CreateVideoCutFileFailed) {
+    private fun onCreateVideoCutFileFailed(event: CreateVideoCutFileFailed) {
         binding.viewLoading.setVisible(false)
         webpPath = ""
-        firstFramePath = ""
     }
 
     companion object {

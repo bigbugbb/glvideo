@@ -13,7 +13,7 @@ import com.binbo.glvideo.core.graph.executor.GraphExecutor
 import com.binbo.glvideo.sample_app.R
 import com.binbo.glvideo.sample_app.databinding.FragmentGifToMp4Binding
 import com.binbo.glvideo.sample_app.impl.video.graph.gif_to_mp4.GifToMp4GraphManager
-import com.bumptech.glide.Glide
+import com.binbo.glvideo.sample_app.utils.GlideApp
 import com.bumptech.glide.gifdecoder.StandardGifDecoder
 import com.bumptech.glide.load.resource.gif.GifDrawable
 import com.bumptech.glide.request.target.CustomTarget
@@ -46,7 +46,7 @@ class GifToMp4Fragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        Glide.with(this)
+        GlideApp.with(this)
             .asGif()
             .load(R.raw.sample_gif)
             .into(binding.imageGif)
@@ -79,7 +79,7 @@ class GifToMp4Fragment : Fragment() {
 
     private fun createGifFrameProvider(fragment: Fragment) = object : GifSource.GifFrameProvider {
         override fun getFrames(): Flow<GifSource.GifFrame> = callbackFlow {
-            val target = Glide.with(fragment)
+            val target = GlideApp.with(fragment)
                 .asGif()
                 .load(R.raw.sample_gif)
                 .into(object : CustomTarget<GifDrawable>() {
@@ -89,7 +89,6 @@ class GifToMp4Fragment : Fragment() {
                             val frameLoader = gifState.javaClass.getDeclaredField("frameLoader");
                             frameLoader.isAccessible = true
                             val gifFrameLoader = frameLoader.get(gifState)
-
                             val gifDecoder = gifFrameLoader.javaClass.getDeclaredField("gifDecoder");
                             gifDecoder.isAccessible = true
                             val standardGifDecoder = gifDecoder.get(gifFrameLoader) as StandardGifDecoder
@@ -114,7 +113,7 @@ class GifToMp4Fragment : Fragment() {
                     }
                 })
 
-            awaitClose { Glide.with(fragment).clear(target) }
+            awaitClose { GlideApp.with(fragment).clear(target) }
         }
     }
 

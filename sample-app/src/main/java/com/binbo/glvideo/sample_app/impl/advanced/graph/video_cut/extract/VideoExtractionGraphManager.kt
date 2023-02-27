@@ -15,7 +15,6 @@ import com.binbo.glvideo.core.graph.base.BaseMediaGraph
 import com.binbo.glvideo.core.graph.event.StartFrameBuffering
 import com.binbo.glvideo.core.graph.event.StopFrameBuffering
 import com.binbo.glvideo.core.graph.event.VideoDecodingCompleted
-import com.binbo.glvideo.core.graph.executor.GraphExecutor
 import com.binbo.glvideo.core.graph.manager.BaseGraphManager
 import com.binbo.glvideo.core.graph.simple.SimpleSinkObject
 import com.binbo.glvideo.core.widget.VideoExtractionSurfaceView
@@ -46,13 +45,13 @@ class VideoExtractionGraphManager(
     surfaceView: VideoExtractionSurfaceView
 ) : BaseGraphManager(), Choreographer.FrameCallback, DefaultLifecycleObserver {
 
-    internal var player: VideoPlayerDelegate
-
     var timeline: Range<Long> = Range(1000000L, 6000000L)
         private set
 
     val visibleTimeRange: Range<Long>
         get() = renderingObject?.visibleTimeRange ?: Range(0L, 10000000L)
+
+    private var player: VideoPlayerDelegate
 
     private val surfaceViewRef: WeakReference<VideoExtractionSurfaceView>
 

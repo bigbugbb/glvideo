@@ -17,6 +17,7 @@ public abstract class BaseSimpleLifecycleObserver implements DefaultLifecycleObs
         mLifecycleOwner = owner;
         owner.getLifecycle().addObserver(this);
     }
+
     @CallSuper
     @Override
     public void onDestroy(@NonNull LifecycleOwner owner) {

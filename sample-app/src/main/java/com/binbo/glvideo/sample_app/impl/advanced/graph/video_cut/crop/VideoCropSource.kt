@@ -4,6 +4,7 @@ import android.net.Uri
 import android.util.Range
 import com.binbo.glvideo.core.graph.component.VideoSource
 import com.binbo.glvideo.core.media.Frame
+import kotlin.math.min
 
 /**
  * @author bigbug
@@ -17,7 +18,7 @@ class VideoCropSource(videoUri: Uri, timeline: Range<Long>) :
     override val textureWidth: Int
         get() {
             var n = 1
-            while (Math.min(videoWidth, videoHeight) / n >= 800) {
+            while (min(videoWidth, videoHeight) / n >= 800) {
                 n *= 2
             }
             return videoWidth / n
@@ -26,7 +27,7 @@ class VideoCropSource(videoUri: Uri, timeline: Range<Long>) :
     override val textureHeight: Int
         get() {
             var n = 1
-            while (Math.min(videoWidth, videoHeight) / n >= 800) {
+            while (min(videoWidth, videoHeight) / n >= 800) {
                 n *= 2
             }
             return videoHeight / n

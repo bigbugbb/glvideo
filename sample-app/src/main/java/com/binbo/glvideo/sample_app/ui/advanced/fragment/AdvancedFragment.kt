@@ -11,7 +11,6 @@ import com.binbo.glvideo.core.ext.singleClick
 import com.binbo.glvideo.sample_app.databinding.FragmentAdvancedBinding
 import com.binbo.glvideo.sample_app.ui.advanced.activity.VideoCutSelectActivity
 import com.binbo.glvideo.sample_app.ui.advanced.viewmodel.AdvancedViewModel
-import com.binbo.glvideo.sample_app.ui.video.activity.VideoDecodeActivity
 
 class AdvancedFragment : Fragment() {
 

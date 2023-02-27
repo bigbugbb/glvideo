@@ -37,7 +37,6 @@ import kotlinx.coroutines.withContext
  */
 open class VideoSource(
     val videoUri: Uri,
-    val rawId: Int = 0,
     val startPos: Long = 0L,
     val clippingEnabled: Boolean = false,
     val clippingTimeline: Range<Long> = Range(0L, Long.MAX_VALUE)
