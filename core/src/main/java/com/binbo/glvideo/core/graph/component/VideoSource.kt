@@ -37,6 +37,7 @@ import kotlinx.coroutines.withContext
  */
 open class VideoSource(
     val videoUri: Uri,
+    val videoRawId: Int = 0,
     val startPos: Long = 0L,
     val clippingEnabled: Boolean = false,
     val clippingTimeline: Range<Long> = Range(0L, Long.MAX_VALUE)
@@ -111,7 +112,11 @@ open class VideoSource(
     }
     override suspend fun onPrepare() {
         super.onPrepare()
-        videoMetaData = videoMetaDataProvider.getVideoMetaData(videoUri.path ?: "")
+        videoMetaData = if (videoRawId != 0) {
+            videoMetaDataProvider.getVideoMetaData(videoRawId)
+        } else {
+            videoMetaDataProvider.getVideoMetaData(videoUri.path ?: "")
+        }
         Log.d(TAG, "video fps: ${videoMetaData.frameRate}")
         videoDecoder = EGLVideoDecoder(this, videoUri, videoMetaData, frameWindowSize, startPos, withSync, stopAfterWindowFilled, videoDrawerMode, clippingEnabled, clippingTimeline)
         broadcast(VideoMetaDataRetrieved(videoMetaData)) // 其他组件需要metadata信息，这里发个广播告诉其他组件，使它们能够有足够的初始化信息

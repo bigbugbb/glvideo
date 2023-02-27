@@ -10,23 +10,23 @@
     tools:context=".ui.advanced.fragment.AdvancedFragment">
 
     <Button
-        android:id="@+id/btn_namecard"
+        android:id="@+id/btnNamecard"
         style="@style/ButtonStyle"
         android:text="@string/button_text_3d_namecard" />
 
     <Button
-        android:id="@+id/btn_namecard_with_video_bkg"
+        android:id="@+id/btnNamecardWithVideoBkg"
         style="@style/ButtonStyle"
         android:text="@string/button_text_3d_namecard_with_video_bkg" />
 
     <Button
-        android:id="@+id/btn_video_cut_widget"
+        android:id="@+id/btnVideoCutWidget"
         style="@style/ButtonStyle"
         android:text="@string/button_text_video_cut_widget" />
 
-    <Button
-        android:id="@+id/btn_screen_sharing"
-        style="@style/ButtonStyle"
-        android:text="@string/button_text_screen_sharing" />
+<!--    <Button-->
+<!--        android:id="@+id/btnScreenSharing"-->
+<!--        style="@style/ButtonStyle"-->
+<!--        android:text="@string/button_text_screen_sharing" />-->
 
 </LinearLayout>

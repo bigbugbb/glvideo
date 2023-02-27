@@ -9,6 +9,7 @@ import androidx.annotation.IntDef
 import com.binbo.glvideo.core.GLVideo.Core.context
 import com.binbo.glvideo.core.GLVideo.Core.fileMainPath
 import com.binbo.glvideo.core.ext.now
+import com.binbo.glvideo.core.utils.FileUseCase.Companion.ADD_WATERMARK
 import com.binbo.glvideo.core.utils.FileUseCase.Companion.FACE_TRACKER_MODEL
 import com.binbo.glvideo.core.utils.FileUseCase.Companion.FACE_TRACKER_SEETA
 import com.binbo.glvideo.core.utils.FileUseCase.Companion.GIF_TO_MP4
@@ -19,7 +20,6 @@ import com.binbo.glvideo.core.utils.FileUseCase.Companion.TEST_ONLY
 import com.binbo.glvideo.core.utils.FileUseCase.Companion.VIDEO_BGM
 import com.binbo.glvideo.core.utils.FileUseCase.Companion.VIDEO_CUT
 import com.binbo.glvideo.core.utils.FileUseCase.Companion.VIDEO_RECORDING
-import com.binbo.glvideo.core.utils.FileUseCase.Companion.VIDEO_TO_DECODE
 import com.binbo.glvideo.core.utils.FileUseCase.Companion.VIDEO_WITHOUT_BGM
 import com.binbo.glvideo.core.utils.FileUseCase.Companion.VIDEO_WITH_BGM
 import java.io.File
@@ -79,11 +79,11 @@ object FileToolUtils {
             FACE_TRACKER_SEETA -> "face_tracker/seeta"
             PICTURE_TAKING -> "picture_taking"
             VIDEO_RECORDING -> "video_recording"
-            VIDEO_TO_DECODE -> "video_to_decode"
             GIF_TO_MP4 -> "gif_to_mp4"
             VIDEO_BGM -> "video_bgm"
             VIDEO_WITHOUT_BGM -> "video_without_bgm"
             VIDEO_WITH_BGM -> "video_with_bgm"
+            ADD_WATERMARK -> "add_watermark"
             VIDEO_CUT -> "video_cut"
             else -> "test"
         }
@@ -147,11 +147,11 @@ object FileToolUtils {
     NAME_CARD_VIDEO, MISSION_CARD_VIDEO,
     PICTURE_TAKING,
     VIDEO_RECORDING,
-    VIDEO_TO_DECODE,
     GIF_TO_MP4,
     VIDEO_BGM,
     VIDEO_WITHOUT_BGM,
     VIDEO_WITH_BGM,
+    ADD_WATERMARK,
     VIDEO_CUT,
     TEST_ONLY
 )
@@ -165,11 +165,11 @@ annotation class FileUseCase {
         const val MISSION_CARD_VIDEO = 20
         const val PICTURE_TAKING = 30
         const val VIDEO_RECORDING = 40
-        const val VIDEO_TO_DECODE = 50
         const val GIF_TO_MP4 = 60
         const val VIDEO_BGM = 70
         const val VIDEO_WITHOUT_BGM = 71
         const val VIDEO_WITH_BGM = 72
+        const val ADD_WATERMARK = 80
         const val VIDEO_CUT = 100
         const val TEST_ONLY = 200
     }

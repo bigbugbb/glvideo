@@ -11,6 +11,7 @@ import com.binbo.glvideo.core.ext.singleClick
 import com.binbo.glvideo.sample_app.databinding.FragmentVideoBinding
 import com.binbo.glvideo.sample_app.ui.capture.viewmodel.CaptureViewModel
 import com.binbo.glvideo.sample_app.ui.video.activity.AddVideoBgmActivity
+import com.binbo.glvideo.sample_app.ui.video.activity.AddWatermarkActivity
 import com.binbo.glvideo.sample_app.ui.video.activity.GifToMp4Activity
 import com.binbo.glvideo.sample_app.ui.video.activity.VideoDecodeActivity
 
@@ -49,6 +50,7 @@ class VideoFragment : Fragment() {
         }
 
         binding.btnAddWatermark.singleClick {
+            startActivity(Intent(requireContext(), AddWatermarkActivity::class.java))
         }
 
         binding.btnVideoCrop.singleClick {

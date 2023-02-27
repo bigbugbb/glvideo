@@ -15,7 +15,7 @@ class VideoCutActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_video_cut)
+        setContentView(R.layout.activity_common_container)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         replaceViewWithFragment(R.id.viewContainer, VideoCutFragment::class.java, arguments)
     }

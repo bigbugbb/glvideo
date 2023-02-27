@@ -68,9 +68,11 @@ class GifToMp4Fragment : Fragment() {
 
         runBlocking {
             withContext(GraphExecutor.dispatchers) {
-                graphManager.stop()
-                graphManager.release()
-                graphManager.destroyMediaGraph()
+                kotlin.runCatching {
+                    graphManager.stop()
+                    graphManager.release()
+                    graphManager.destroyMediaGraph()
+                }
             }
         }
 
@@ -120,5 +122,46 @@ class GifToMp4Fragment : Fragment() {
     companion object {
         @JvmStatic
         fun newInstance() = GifToMp4Fragment()
+    }
+}
+
+fun createGifFrameProvider(fragment: Fragment) = object : GifSource.GifFrameProvider {
+    override fun getFrames(): Flow<GifSource.GifFrame> = callbackFlow {
+        val target = GlideApp.with(fragment)
+            .asGif()
+            .load(R.raw.sample_gif)
+            .into(object : CustomTarget<GifDrawable>() {
+                override fun onResourceReady(resource: GifDrawable, transition: Transition<in GifDrawable>?) {
+                    kotlin.runCatching {
+                        val gifState = resource.constantState!!
+                        val frameLoader = gifState.javaClass.getDeclaredField("frameLoader");
+                        frameLoader.isAccessible = true
+                        val gifFrameLoader = frameLoader.get(gifState)
+
+                        val gifDecoder = gifFrameLoader.javaClass.getDeclaredField("gifDecoder");
+                        gifDecoder.isAccessible = true
+                        val standardGifDecoder = gifDecoder.get(gifFrameLoader) as StandardGifDecoder
+                        (0 until standardGifDecoder.frameCount).forEach { _ ->
+                            standardGifDecoder.advance()
+                            standardGifDecoder.nextFrame?.let { bitmap ->
+                                trySend(GifSource.GifFrame(bitmap, standardGifDecoder.nextDelay))
+                            }
+                        }
+                    }.getOrElse {
+                        it.printStackTrace()
+                    }
+
+                    close()
+                }
+
+                override fun onLoadFailed(errorDrawable: Drawable?) {
+                    close()
+                }
+
+                override fun onLoadCleared(placeholder: Drawable?) {
+                }
+            })
+
+        awaitClose { GlideApp.with(fragment).clear(target) }
     }
 }

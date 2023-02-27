@@ -10,27 +10,27 @@
     tools:context=".ui.capture.fragment.CaptureFragment">
 
     <Button
-        android:id="@+id/btn_camera_preview"
+        android:id="@+id/btnCameraPreview"
         style="@style/ButtonStyle"
         android:text="@string/button_text_camera_preview" />
 
     <Button
-        android:id="@+id/btn_camera_preview_custom"
+        android:id="@+id/btnCameraPreviewCustom"
         style="@style/ButtonStyle"
         android:text="@string/button_text_camera_preview_custom" />
 
     <Button
-        android:id="@+id/btn_camera_preview_with_effect"
+        android:id="@+id/btnCameraPreviewWithEffect"
         style="@style/ButtonStyle"
         android:text="@string/button_text_camera_preview_with_effects" />
 
     <Button
-        android:id="@+id/btn_picture_taking"
+        android:id="@+id/btnPictureTaking"
         style="@style/ButtonStyle"
         android:text="@string/button_text_picture_taking" />
 
     <Button
-        android:id="@+id/btn_video_recording"
+        android:id="@+id/btnVideoRecording"
         style="@style/ButtonStyle"
         android:text="@string/button_text_video_recording" />
 

@@ -10,7 +10,7 @@ import com.binbo.glvideo.sample_app.utils.replaceViewWithFragment
 class GifToMp4Activity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_gif_to_mp4)
+        setContentView(R.layout.activity_common_container)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         replaceViewWithFragment(R.id.viewContainer, GifToMp4Fragment::class.java)
     }

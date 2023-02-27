@@ -65,6 +65,10 @@
             android:name=".ui.video.activity.AddVideoBgmActivity"
             android:exported="false"
             android:launchMode="singleTop" />
+        <activity
+            android:name=".ui.video.activity.AddWatermarkActivity"
+            android:exported="false"
+            android:launchMode="singleTop" />
 
         <!-- advanced section -->
         <activity

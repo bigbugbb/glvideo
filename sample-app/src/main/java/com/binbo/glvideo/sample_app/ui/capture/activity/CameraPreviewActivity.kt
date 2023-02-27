@@ -10,7 +10,7 @@ import com.binbo.glvideo.sample_app.utils.replaceViewWithFragment
 class CameraPreviewActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_camera_preview)
+        setContentView(R.layout.activity_common_container)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         replaceViewWithFragment(R.id.viewContainer, CameraPreviewFragment::class.java)
     }

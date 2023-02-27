@@ -10,32 +10,32 @@
     tools:context=".ui.video.fragment.VideoFragment">
 
     <Button
-        android:id="@+id/btn_video_decode"
+        android:id="@+id/btnVideoDecode"
         style="@style/ButtonStyle"
         android:text="@string/button_text_video_decode" />
 
     <Button
-        android:id="@+id/btn_gif_to_mp4"
+        android:id="@+id/btnGifToMp4"
         style="@style/ButtonStyle"
         android:text="@string/button_text_gif_to_mp4" />
 
     <Button
-        android:id="@+id/btn_add_video_bgm"
+        android:id="@+id/btnAddVideoBgm"
         style="@style/ButtonStyle"
         android:text="@string/button_text_add_video_bgm" />
 
     <Button
-        android:id="@+id/btn_add_video_ending"
+        android:id="@+id/btnAddVideoEnding"
         style="@style/ButtonStyle"
         android:text="@string/button_text_add_video_ending" />
 
     <Button
-        android:id="@+id/btn_add_watermark"
+        android:id="@+id/btnAddWatermark"
         style="@style/ButtonStyle"
         android:text="@string/button_text_add_watermark" />
 
     <Button
-        android:id="@+id/btn_video_crop"
+        android:id="@+id/btnVideoCrop"
         style="@style/ButtonStyle"
         android:text="@string/button_text_video_crop" />
 

@@ -12,6 +12,7 @@ import java.lang.ref.WeakReference
 
 class VideoDecodeGraphManager(
     val videoUri: Uri,
+    val videoRawId: Int,
     surfaceView: SurfaceView
 ) : BaseGraphManager() {
 
@@ -28,7 +29,7 @@ class VideoDecodeGraphManager(
             override fun onCreate() {
                 super.onCreate()
 
-                val mediaSource = VideoDecodeSource(videoUri).apply { mediaGraph.addObject(this) }
+                val mediaSource = VideoDecodeSource(videoUri, videoRawId).apply { mediaGraph.addObject(this) }
                 val mediaObject = VideoDecodeRenderingObject(surfaceViewRef).apply { mediaGraph.addObject(this) }
                 val mediaSink = SimpleSinkObject().apply { mediaGraph.addObject(this) }
 

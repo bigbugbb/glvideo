@@ -1,19 +1,16 @@
 package com.binbo.glvideo.sample_app.ui.video.fragment
 
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.binbo.glvideo.core.graph.executor.GraphExecutor
-import com.binbo.glvideo.core.utils.FileToolUtils
-import com.binbo.glvideo.core.utils.FileUseCase
-import com.binbo.glvideo.sample_app.App
+import com.binbo.glvideo.sample_app.AppConsts.sampleVideoUri
+import com.binbo.glvideo.sample_app.R
 import com.binbo.glvideo.sample_app.databinding.FragmentVideoDecodeBinding
 import com.binbo.glvideo.sample_app.impl.video.graph.video_decode.VideoDecodeGraphManager
 import com.binbo.glvideo.sample_app.ui.capture.fragment.CameraPreviewCustomFragment
-import com.binbo.glvideo.sample_app.utils.FileUtil
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
@@ -35,11 +32,7 @@ class VideoDecodeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val dir = FileToolUtils.getFile(FileUseCase.VIDEO_TO_DECODE, "").apply { deleteRecursively() }
-        FileUtil.copyAssets(App.context, "maksim.mp4", "video", dir.absolutePath, null)
-        val file = FileToolUtils.getFile(FileUseCase.VIDEO_TO_DECODE, "maksim.mp4")
-
-        graphManager = VideoDecodeGraphManager(Uri.fromFile(file), binding.viewSurface)
+        graphManager = VideoDecodeGraphManager(sampleVideoUri, R.raw.sample_video, binding.viewSurface)
 
         runBlocking {
             withContext(GraphExecutor.dispatchers) {

@@ -10,7 +10,7 @@ import com.binbo.glvideo.sample_app.utils.replaceViewWithFragment
 class AddVideoBgmActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_video_bgm)
+        setContentView(R.layout.activity_common_container)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         replaceViewWithFragment(R.id.viewContainer, AddVideoBgmFragment::class.java)
     }
