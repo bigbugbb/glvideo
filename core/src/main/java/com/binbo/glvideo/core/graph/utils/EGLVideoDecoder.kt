@@ -198,7 +198,7 @@ class EGLVideoDecoder(
                     videoDrawer?.draw()
                     GLES20.glFinish()
 
-                    val bitmap = OpenGLUtils.savePixels(0, 0, vpw, vph)
+//                    val bitmap = OpenGLUtils.savePixels(0, 0, vpw, vph)
                     Log.d(tagOfGraph, "")
                 }
 
@@ -217,9 +217,13 @@ class EGLVideoDecoder(
                     if (!helper.outputQueue.offer(mediaData, 5, TimeUnit.SECONDS)) {
                         sharedTexture.close()
                     }
-                    Log.d("debug", "decoder offer frame $frames for $videoUri, ts ${mediaData.timestampUs}")
+                    Log.d("decoding", "decoder offer frame $frames for $videoUri, ts ${mediaData.timestampUs}")
 
                     lastCapturedFramePtsUs = frame.bufferInfo.presentationTimeUs
+
+                    if (frames == 38) {
+                        Log.d("decoding", "bbb")
+                    }
 
                     frames++
                 } else {

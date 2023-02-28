@@ -26,7 +26,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.withContext
 
-class AddWatermarkGraphManager(val videoUri: Uri) : BaseGraphManager() {
+class AddWatermarkGraphManager(val videoUri: Uri, val videoRawId: Int) : BaseGraphManager() {
 
     private var recordingCompleted = Channel<Boolean>()
 
@@ -49,7 +49,7 @@ class AddWatermarkGraphManager(val videoUri: Uri) : BaseGraphManager() {
             override fun onCreate() {
                 super.onCreate()
 
-                val mediaSource = VideoSource(videoUri).apply { mediaGraph.addObject(this) }
+                val mediaSource = AddWatermarkVideoSource(videoUri, videoRawId).apply { mediaGraph.addObject(this) }
                 val mediaObject = AddWatermarkRenderingObject(recordVideoSize).apply { mediaGraph.addObject(this) }
                 val mediaSink = FrameRecorder(context, recorderConfig).apply { mediaGraph.addObject(this) }
 

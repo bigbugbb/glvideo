@@ -12,15 +12,19 @@ import com.binbo.glvideo.core.graph.base.BaseMediaQueue
 import com.binbo.glvideo.core.graph.base.GraphState
 import com.binbo.glvideo.core.graph.component.FrameRecorder
 import com.binbo.glvideo.core.graph.event.DecodedGifFrame
+import com.binbo.glvideo.core.graph.event.DecodedVideoFrame
 import com.binbo.glvideo.core.graph.event.RenderingCompleted
 import com.binbo.glvideo.core.graph.simple.SimpleMediaObject
 import com.binbo.glvideo.core.media.encoder.MediaVideoEncoder
 import com.binbo.glvideo.core.media.ext.setupEncoderSurfaceRender
 import com.binbo.glvideo.core.media.recorder.TextureToRecord
 import com.binbo.glvideo.core.opengl.drawer.FrameDrawer
+import com.binbo.glvideo.core.opengl.drawer.LayoutDrawer
 import com.binbo.glvideo.core.opengl.renderer.DefaultGLRenderer
 import com.binbo.glvideo.core.opengl.renderer.RenderImpl
 import com.binbo.glvideo.core.opengl.utils.OpenGLUtils
+import com.binbo.glvideo.sample_app.App.Companion.context
+import com.binbo.glvideo.sample_app.R
 import kotlinx.coroutines.runBlocking
 import java.util.concurrent.TimeUnit
 
@@ -31,9 +35,8 @@ class AddWatermarkRenderingObject(val viewportSize: Size) : SimpleMediaObject() 
     override suspend fun onPrepare() {
         super.onPrepare()
         renderer = AddWatermarkRenderer(this).apply {
-            addDrawer(FrameDrawer().apply {
-                rotateByX(180f) // 通过FBO绘制到纹理会上下颠倒，需要修正一下
-            })
+            addDrawer(FrameDrawer())
+            addDrawer(LayoutDrawer(context, R.layout.layout_add_watermark))
         }
     }
 
@@ -60,7 +63,7 @@ class AddWatermarkRenderingObject(val viewportSize: Size) : SimpleMediaObject() 
 
 private class AddWatermarkRenderer(val renderingObject: AddWatermarkRenderingObject) : DefaultGLRenderer() {
 
-    override var impl: RenderImpl = GifToMp4RendererRenderImpl()
+    override var impl: RenderImpl = CustomRenderImpl()
 
     private val textureQueue: BaseMediaQueue<MediaData>
         get() = renderingObject.inputQueues[0]
@@ -68,10 +71,13 @@ private class AddWatermarkRenderer(val renderingObject: AddWatermarkRenderingObj
     private val frameDrawer: FrameDrawer?
         get() = drawers[FrameDrawer::class.java] as? FrameDrawer?
 
+    private val layoutDrawer: LayoutDrawer?
+        get() = drawers[LayoutDrawer::class.java] as? LayoutDrawer
+
     private val encoder: MediaVideoEncoder?
         get() = (renderingObject.outputQueues.elementAtOrNull(0)?.to as? FrameRecorder?)?.recorder?.getVideoEncoder()
 
-    inner class GifToMp4RendererRenderImpl : RenderImpl {
+    inner class CustomRenderImpl : RenderImpl {
         private val frameBuffers = IntArray(64)
         private val frameBufferTextures = IntArray(64)
 
@@ -97,7 +103,7 @@ private class AddWatermarkRenderer(val renderingObject: AddWatermarkRenderingObj
                 while (renderingObject.state == GraphState.STARTED) {
                     textureQueue.poll(100, TimeUnit.MILLISECONDS)?.let { mediaData ->
                         when (mediaData) {
-                            is DecodedGifFrame -> {
+                            is DecodedVideoFrame -> {
 //                                val bitmap = OpenGLUtils.captureRenderBitmap(mediaData.textureId, mediaData.mediaWidth, mediaData.mediaHeight)
                                 val i = frames++ % frameBuffers.size
 
@@ -105,6 +111,13 @@ private class AddWatermarkRenderer(val renderingObject: AddWatermarkRenderingObj
                                 configFboViewport(width, height)
                                 frameDrawer?.setTextureID(mediaData.textureId)
                                 frameDrawer?.draw()
+
+                                // 添加水印
+                                layoutDrawer?.apply {
+                                    GLES20.glViewport((width - bitmapWidth) / 2, bitmapHeight + 18, bitmapWidth, bitmapHeight)
+                                    draw()
+                                    GLES20.glViewport(0, 0, width, height)
+                                }
                                 GLES20.glFinish()
 //                                val bitmap2 = OpenGLUtils.savePixels(0, 0, width, height)
                                 configDefViewport()

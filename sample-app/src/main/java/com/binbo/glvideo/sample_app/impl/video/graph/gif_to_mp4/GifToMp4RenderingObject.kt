@@ -60,7 +60,7 @@ class GifToMp4RenderingObject(val viewportSize: Size) : SimpleMediaObject() {
 
 private class GifToMp4Renderer(val renderingObject: GifToMp4RenderingObject) : DefaultGLRenderer() {
 
-    override var impl: RenderImpl = GifToMp4RendererRenderImpl()
+    override var impl: RenderImpl = CustomRenderImpl()
 
     private val textureQueue: BaseMediaQueue<MediaData>
         get() = renderingObject.inputQueues[0]
@@ -71,7 +71,7 @@ private class GifToMp4Renderer(val renderingObject: GifToMp4RenderingObject) : D
     private val encoder: MediaVideoEncoder?
         get() = (renderingObject.outputQueues.elementAtOrNull(0)?.to as? FrameRecorder?)?.recorder?.getVideoEncoder()
 
-    inner class GifToMp4RendererRenderImpl : RenderImpl {
+    inner class CustomRenderImpl : RenderImpl {
         private val frameBuffers = IntArray(64)
         private val frameBufferTextures = IntArray(64)
 
