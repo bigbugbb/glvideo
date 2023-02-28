@@ -19,15 +19,14 @@ import com.binbo.glvideo.sample_app.R
 import com.binbo.glvideo.sample_app.impl.video.graph.gif_to_mp4.GifToMp4RenderingObject
 import com.binbo.glvideo.sample_app.utils.FileToolUtils
 import com.binbo.glvideo.sample_app.utils.FileToolUtils.getFile
-import com.binbo.glvideo.sample_app.utils.FileUseCase
+import com.binbo.glvideo.sample_app.utils.FileToolUtils.writeVideoToGallery
+import com.binbo.glvideo.sample_app.utils.FileUseCase.Companion.ADD_WATERMARK
 import com.binbo.glvideo.sample_app.utils.toast
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.withContext
 
-class AddWatermarkGraphManager(
-    val videoUri: Uri
-) : BaseGraphManager() {
+class AddWatermarkGraphManager(val videoUri: Uri) : BaseGraphManager() {
 
     private var recordingCompleted = Channel<Boolean>()
 
@@ -36,13 +35,13 @@ class AddWatermarkGraphManager(
             width(recordVideoSize.width)
             height(recordVideoSize.height)
             videoFrameRate(frameRate)
-            targetFileDir(getFile(FileUseCase.ADD_WATERMARK))
+            targetFileDir(getFile(ADD_WATERMARK))
             targetFilename("video_with_watermark")
             targetFileExt(recordVideoExt)
         }
 
     init {
-        getFile(FileUseCase.ADD_WATERMARK).deleteRecursively()
+        getFile(ADD_WATERMARK).deleteRecursively()
     }
 
     override fun createMediaGraph(): BaseMediaGraph<MediaData> {
@@ -51,7 +50,7 @@ class AddWatermarkGraphManager(
                 super.onCreate()
 
                 val mediaSource = VideoSource(videoUri).apply { mediaGraph.addObject(this) }
-                val mediaObject = GifToMp4RenderingObject(recordVideoSize).apply { mediaGraph.addObject(this) }
+                val mediaObject = AddWatermarkRenderingObject(recordVideoSize).apply { mediaGraph.addObject(this) }
                 val mediaSink = FrameRecorder(context, recorderConfig).apply { mediaGraph.addObject(this) }
 
                 mediaSource to mediaObject to mediaSink
@@ -72,7 +71,7 @@ class AddWatermarkGraphManager(
 
     suspend fun waitUntilDone() {
         recordingCompleted.receive()
-        FileToolUtils.writeVideoToGallery(getFile(FileUseCase.ADD_WATERMARK, recorderConfig.targetFilename + recordVideoExt), "video/mp4")
+        writeVideoToGallery(getFile(ADD_WATERMARK, recorderConfig.targetFilename + recordVideoExt), "video/mp4")
         withContext(Dispatchers.Main) {
             context.toast(context.getString(R.string.video_recording_successful_message), Toast.LENGTH_SHORT)
         }

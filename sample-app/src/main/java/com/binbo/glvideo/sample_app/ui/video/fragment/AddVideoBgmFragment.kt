@@ -42,11 +42,12 @@ class AddVideoBgmFragment : Fragment() {
             .load(R.raw.sample_gif)
             .into(binding.imageGif)
 
-        graphManager = AddVideoBgmGraphManager("video_with_bgm", 285, 500, createGifFrameProvider(this))
+        graphManager = AddVideoBgmGraphManager("video_with_bgm", 285, 500, createGifFrameProvider(this)).apply {
+            createMediaGraph()
+        }
 
         binding.btnConvert.singleClick {
             lifecycleScope.launch(GraphExecutor.dispatchers) {
-                graphManager.createMediaGraph()
                 graphManager.prepare()
                 graphManager.start()
                 graphManager.waitUntilDone()
@@ -59,11 +60,9 @@ class AddVideoBgmFragment : Fragment() {
 
         runBlocking {
             withContext(GraphExecutor.dispatchers) {
-                kotlin.runCatching {
-                    graphManager.stop()
-                    graphManager.release()
-                    graphManager.destroyMediaGraph()
-                }
+                graphManager.stop()
+                graphManager.release()
+                graphManager.destroyMediaGraph()
             }
         }
 

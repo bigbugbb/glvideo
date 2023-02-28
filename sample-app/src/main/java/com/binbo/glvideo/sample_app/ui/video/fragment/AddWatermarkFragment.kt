@@ -60,11 +60,12 @@ class AddWatermarkFragment : Fragment() {
             }
         }
 
-        graphManager = AddWatermarkGraphManager(sampleVideoUri)
+        graphManager = AddWatermarkGraphManager(sampleVideoUri).apply {
+            createMediaGraph()
+        }
 
         binding.btnConvert.singleClick {
             lifecycleScope.launch(GraphExecutor.dispatchers) {
-                graphManager.createMediaGraph()
                 graphManager.prepare()
                 graphManager.start()
                 graphManager.waitUntilDone()
@@ -87,11 +88,9 @@ class AddWatermarkFragment : Fragment() {
 
         runBlocking {
             withContext(GraphExecutor.dispatchers) {
-                kotlin.runCatching {
-                    graphManager.stop()
-                    graphManager.release()
-                    graphManager.destroyMediaGraph()
-                }
+                graphManager.stop()
+                graphManager.release()
+                graphManager.destroyMediaGraph()
             }
         }
 

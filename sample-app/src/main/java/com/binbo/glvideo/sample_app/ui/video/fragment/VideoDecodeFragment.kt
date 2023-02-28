@@ -32,11 +32,12 @@ class VideoDecodeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        graphManager = VideoDecodeGraphManager(sampleVideoUri, R.raw.sample_video, binding.viewSurface)
+        graphManager = VideoDecodeGraphManager(sampleVideoUri, R.raw.sample_video, binding.viewSurface).apply {
+            createMediaGraph()
+        }
 
         runBlocking {
             withContext(GraphExecutor.dispatchers) {
-                graphManager.createMediaGraph()
                 graphManager.prepare()
                 graphManager.start()
             }

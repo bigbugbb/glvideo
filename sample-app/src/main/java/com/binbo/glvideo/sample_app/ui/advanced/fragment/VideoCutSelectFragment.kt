@@ -94,11 +94,8 @@ class VideoCutSelectFragment : Fragment() {
     private fun onCreateVideoCutFileSuccess(event: CreateVideoCutFileSuccess) {
         GlideApp.with(this)
             .load(event.webpPath)
-            .apply(
-                RequestOptions()
-                    .placeholder(R.drawable.default_user_avatar)
-                    .error(R.drawable.default_user_avatar)
-            )
+            .placeholder(R.drawable.default_user_avatar)
+            .error(R.drawable.default_user_avatar)
             .signature(ObjectKey(event.webpPath + nowString))
             .into(binding.imageResult)
     }

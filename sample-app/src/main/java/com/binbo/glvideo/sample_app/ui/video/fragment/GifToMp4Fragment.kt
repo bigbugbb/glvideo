@@ -51,11 +51,12 @@ class GifToMp4Fragment : Fragment() {
             .load(R.raw.sample_gif)
             .into(binding.imageGif)
 
-        graphManager = GifToMp4GraphManager("converted", 285, 500, createGifFrameProvider(this))
+        graphManager = GifToMp4GraphManager("converted", 285, 500, createGifFrameProvider(this)).apply {
+            createMediaGraph()
+        }
 
         binding.btnConvert.singleClick {
             lifecycleScope.launch(GraphExecutor.dispatchers) {
-                graphManager.createMediaGraph()
                 graphManager.prepare()
                 graphManager.start()
                 graphManager.waitUntilDone()
@@ -68,11 +69,9 @@ class GifToMp4Fragment : Fragment() {
 
         runBlocking {
             withContext(GraphExecutor.dispatchers) {
-                kotlin.runCatching {
-                    graphManager.stop()
-                    graphManager.release()
-                    graphManager.destroyMediaGraph()
-                }
+                graphManager.stop()
+                graphManager.release()
+                graphManager.destroyMediaGraph()
             }
         }
 
