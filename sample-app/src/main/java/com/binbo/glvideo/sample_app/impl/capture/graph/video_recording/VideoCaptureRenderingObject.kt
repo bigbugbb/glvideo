@@ -23,7 +23,7 @@ import com.binbo.glvideo.core.opengl.renderer.DefaultCameraRenderer
 import com.binbo.glvideo.core.opengl.renderer.RenderImpl
 import com.binbo.glvideo.core.opengl.utils.OpenGLUtils
 import com.binbo.glvideo.core.utils.Constants.RECORDER_INPUT_QUEUE_SIZE
-import com.binbo.glvideo.sample_app.AppConsts
+import com.binbo.glvideo.sample_app.App.Const.frameRate
 import com.binbo.glvideo.sample_app.event.RecordVideoEvent
 import kotlinx.coroutines.runBlocking
 import java.lang.ref.WeakReference
@@ -89,7 +89,7 @@ class CaptureCameraRenderer(private val renderingObject: VideoCaptureRenderingOb
         private val recordingFrameBufferTextures = IntArray(RECORDER_INPUT_QUEUE_SIZE * 2)
 
         private var frames = 0
-        private val ptsDelta = 1000000000L / AppConsts.frameRate
+        private val ptsDelta = 1000000000L / frameRate
 
         override fun onSurfaceChange(width: Int, height: Int) {
             super.onSurfaceChange(width, height)
@@ -108,7 +108,7 @@ class CaptureCameraRenderer(private val renderingObject: VideoCaptureRenderingOb
                 drawFrameToScreen()
 
                 if (renderingObject.recording) {
-                    if (abs(SystemClock.uptimeMillis() - lastCaptureTime) >= 1000 / AppConsts.frameRate) {
+                    if (abs(SystemClock.uptimeMillis() - lastCaptureTime) >= 1000 / frameRate) {
                         Log.d("capture video frames", "onDrawFrame capture frames: $frames")
                         lastCaptureTime = SystemClock.uptimeMillis()
                         val i = frames % recordingFrameBuffers.size

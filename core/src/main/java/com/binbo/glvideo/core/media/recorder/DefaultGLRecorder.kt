@@ -2,12 +2,12 @@ package com.binbo.glvideo.core.media.recorder
 
 import android.content.Context
 import android.util.Log
+import com.binbo.glvideo.core.ext.getTempFile
 import com.binbo.glvideo.core.media.BaseMediaEncoder
 import com.binbo.glvideo.core.media.config.MediaEncoderConfig
 import com.binbo.glvideo.core.media.encoder.MediaAudioEncoder
 import com.binbo.glvideo.core.media.encoder.MediaVideoEncoder
 import com.binbo.glvideo.core.media.muxer.MediaMuxerManager
-import com.binbo.glvideo.core.utils.FileToolUtils
 import java.io.File
 
 
@@ -125,7 +125,7 @@ data class GLRecorderConfig private constructor(
         private var videoBitRate: Int = 800000,
         private var audioBitRate: Int = 64000,
         private var videoFrameRate: Int = 25,
-        private var targetFileDir: File = FileToolUtils.generateTempFile(""),
+        private var targetFileDir: File = getTempFile(""),
         private var targetFilename: String = "test_file",
         private var targetFileExt: String = ".mp4",
         private var videoEncoderName: String = defaultVideoEncoderName,

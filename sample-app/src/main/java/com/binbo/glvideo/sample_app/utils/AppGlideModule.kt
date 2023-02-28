@@ -5,6 +5,7 @@ import com.bumptech.glide.GlideBuilder
 import com.bumptech.glide.annotation.GlideModule
 import com.bumptech.glide.load.engine.cache.DiskLruCacheWrapper
 import com.bumptech.glide.load.engine.cache.ExternalCacheDiskCacheFactory
+import com.bumptech.glide.load.engine.cache.ExternalPreferredCacheDiskCacheFactory
 import com.bumptech.glide.load.engine.cache.InternalCacheDiskCacheFactory
 import java.io.File
 
@@ -13,14 +14,14 @@ class AppGlideModule : com.bumptech.glide.module.AppGlideModule() {
 
     override fun applyOptions(context: Context, builder: GlideBuilder) {
 //        builder.setLogLevel(Log.VERBOSE)
-        // 磁盘缓存
-        builder.setDiskCache(InternalCacheDiskCacheFactory(context, 500 * 1024 * 1024)) // 内部磁盘缓存
-        builder.setDiskCache(ExternalCacheDiskCacheFactory(context, 500 * 1024 * 1024)) // 磁盘缓存到外部存储
-        // 指定缓存目录
+        // disk cache
+        builder.setDiskCache(InternalCacheDiskCacheFactory(context, 500L * 1024 * 1024))
+        builder.setDiskCache(ExternalPreferredCacheDiskCacheFactory(context, 500L * 1024 * 1024))
+        // disk cache folder
         builder.setDiskCache {
-            val cacheLocation = File(context.externalCacheDir, "PgGildeCache")
+            val cacheLocation = File(context.externalCacheDir, "glvideo_glide_cache")
             cacheLocation.mkdirs()
-            DiskLruCacheWrapper.get(cacheLocation, 1024 * 1024 * 500.toLong())
+            DiskLruCacheWrapper.create(cacheLocation, 500L * 1024 * 1024)
         }
         super.applyOptions(context, builder)
     }

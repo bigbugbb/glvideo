@@ -29,8 +29,6 @@ import com.binbo.glvideo.core.ext.no
 import com.binbo.glvideo.core.ext.nowString
 import com.binbo.glvideo.core.opengl.drawer.SurfaceTextureAvailableListener
 import com.binbo.glvideo.core.opengl.utils.OpenGLUtils
-import com.binbo.glvideo.core.utils.FileToolUtils
-import com.binbo.glvideo.core.utils.FileUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.ref.WeakReference
@@ -162,40 +160,40 @@ class CameraController(
         handler.sendEmptyMessageDelayed(MSG_BIND_CAMERA, 500)
     }
 
-    fun takePicture(onImageSaved: Uri.() -> Unit) {
-        val file = FileToolUtils.getFile(FileUseCase.PICTURE_TAKING, "$nowString.jpg")
-        val metadata = ImageCapture.Metadata()
-        metadata.isReversedHorizontal = config.lensFacing == CameraSelector.LENS_FACING_FRONT
-        val outputFileOptions = ImageCapture.OutputFileOptions.Builder(file)
-            .setMetadata(metadata)
-            .build()
-
-        imageCapture?.takePicture(cameraExecutor, object : ImageCapture.OnImageCapturedCallback() {
-            override fun onCaptureSuccess(image: ImageProxy) {
-                super.onCaptureSuccess(image)
-                ioExecutor.execute(
-                    CameraImageSaver(file.absolutePath, image, outputFileOptions, config.rotation, 50, cameraExecutor, sequentialIoExecutor,
-                        object : CameraImageSaver.OnImageSavedCallback {
-                            override fun onImageSaved(uri: Uri) {
-                                onImageSaved.invoke(uri)
-                            }
-
-                            override fun onError(saveError: CameraImageSaver.SaveError, message: String, cause: Throwable?) {
-                                Log.e(tagOfCamera, "saveError: $saveError, message: $message, cause: $cause")
-                            }
-                        }
-                    )
-                )
-            }
-
-            override fun onError(exception: ImageCaptureException) {
-                super.onError(exception)
-                if (!exception.localizedMessage.isNullOrBlank()) {
-                    Toast.makeText(GLVideo.context, exception.localizedMessage, Toast.LENGTH_SHORT).show()
-                }
-            }
-        })
-    }
+//    fun takePicture(onImageSaved: Uri.() -> Unit) {
+//        val file = FileToolUtils.getFile(FileUseCase.PICTURE_TAKING, "$nowString.jpg")
+//        val metadata = ImageCapture.Metadata()
+//        metadata.isReversedHorizontal = config.lensFacing == CameraSelector.LENS_FACING_FRONT
+//        val outputFileOptions = ImageCapture.OutputFileOptions.Builder(file)
+//            .setMetadata(metadata)
+//            .build()
+//
+//        imageCapture?.takePicture(cameraExecutor, object : ImageCapture.OnImageCapturedCallback() {
+//            override fun onCaptureSuccess(image: ImageProxy) {
+//                super.onCaptureSuccess(image)
+//                ioExecutor.execute(
+//                    CameraImageSaver(file.absolutePath, image, outputFileOptions, config.rotation, 50, cameraExecutor, sequentialIoExecutor,
+//                        object : CameraImageSaver.OnImageSavedCallback {
+//                            override fun onImageSaved(uri: Uri) {
+//                                onImageSaved.invoke(uri)
+//                            }
+//
+//                            override fun onError(saveError: CameraImageSaver.SaveError, message: String, cause: Throwable?) {
+//                                Log.e(tagOfCamera, "saveError: $saveError, message: $message, cause: $cause")
+//                            }
+//                        }
+//                    )
+//                )
+//            }
+//
+//            override fun onError(exception: ImageCaptureException) {
+//                super.onError(exception)
+//                if (!exception.localizedMessage.isNullOrBlank()) {
+//                    Toast.makeText(GLVideo.context, exception.localizedMessage, Toast.LENGTH_SHORT).show()
+//                }
+//            }
+//        })
+//    }
 
     fun setImageAnalyzer(analyzer: ImageAnalysis.Analyzer?) {
         imageAnalyzer = analyzer
@@ -369,12 +367,12 @@ class CameraController(
 
     override fun onCreate(owner: LifecycleOwner) {
         super.onCreate(owner)
-        lifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-            val modelFile = FileToolUtils.getFile(FileUseCase.FACE_TRACKER_MODEL, "lbpcascade_frontalface.xml")
-            OpenGLUtils.copyAssets2SdCard(context, "face_tracker/lbpcascade_frontalface_improved.xml", modelFile.absolutePath)
-            val seetaFile = FileToolUtils.getFile(FileUseCase.FACE_TRACKER_SEETA, "seeta_fa_v1.1.bin")
-            OpenGLUtils.copyAssets2SdCard(context, "face_tracker/seeta_fa_v1.1.bin", seetaFile.absolutePath)
-        }
+//        lifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+//            val modelFile = FileToolUtils.getFile(FileUseCase.FACE_TRACKER_MODEL, "lbpcascade_frontalface.xml")
+//            OpenGLUtils.copyAssets2SdCard(context, "face_tracker/lbpcascade_frontalface_improved.xml", modelFile.absolutePath)
+//            val seetaFile = FileToolUtils.getFile(FileUseCase.FACE_TRACKER_SEETA, "seeta_fa_v1.1.bin")
+//            OpenGLUtils.copyAssets2SdCard(context, "face_tracker/seeta_fa_v1.1.bin", seetaFile.absolutePath)
+//        }
     }
 
     override fun onDestroy(owner: LifecycleOwner) {

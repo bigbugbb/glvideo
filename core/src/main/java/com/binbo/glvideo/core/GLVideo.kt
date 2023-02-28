@@ -2,9 +2,7 @@ package com.binbo.glvideo.core
 
 import android.content.Context
 import android.os.Build
-import android.os.Environment
 import com.binbo.glvideo.core.ext.activityManager
-import java.io.File
 
 interface GLVideo {
 
@@ -14,12 +12,9 @@ interface GLVideo {
         val tagOfFace = "glv_face"
         val tagOfGraph = "glv_graph"
 
-        internal val fileMainPath: String
-            get() = Environment.getExternalStorageDirectory().toString() + File.separator + context.packageName
-
         internal lateinit var context: Context
 
-        fun initialize(ctx: Context) {
+        fun init(ctx: Context) {
             context = ctx.applicationContext
         }
 

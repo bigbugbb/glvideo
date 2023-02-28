@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.binbo.glvideo.core.graph.executor.GraphExecutor
-import com.binbo.glvideo.sample_app.AppConsts.sampleVideoUri
+import com.binbo.glvideo.sample_app.App.Const.sampleVideoUri
 import com.binbo.glvideo.sample_app.R
 import com.binbo.glvideo.sample_app.databinding.FragmentVideoDecodeBinding
 import com.binbo.glvideo.sample_app.impl.video.graph.video_decode.VideoDecodeGraphManager

@@ -9,7 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import com.binbo.glvideo.core.ext.singleClick
 import com.binbo.glvideo.core.graph.executor.GraphExecutor
 import com.binbo.glvideo.sample_app.App
-import com.binbo.glvideo.sample_app.AppConsts.sampleVideoUri
+import com.binbo.glvideo.sample_app.App.Const.sampleVideoUri
 import com.binbo.glvideo.sample_app.databinding.FragmentAddWatermarkBinding
 import com.binbo.glvideo.sample_app.impl.video.graph.add_watermark.AddWatermarkGraphManager
 import com.binbo.glvideo.sample_app.utils.player.VideoPlayerDelegate

@@ -6,26 +6,24 @@ import com.binbo.glvideo.core.graph.MediaData
 import com.binbo.glvideo.core.graph.MediaGraph
 import com.binbo.glvideo.core.graph.base.BaseGraphEvent
 import com.binbo.glvideo.core.graph.base.BaseMediaGraph
-import com.binbo.glvideo.core.graph.base.DirType
 import com.binbo.glvideo.core.graph.component.FrameRecorder
 import com.binbo.glvideo.core.graph.component.VideoSource
 import com.binbo.glvideo.core.graph.event.RecordingCompleted
 import com.binbo.glvideo.core.graph.manager.BaseGraphManager
 import com.binbo.glvideo.core.media.recorder.GLRecorderConfig
-import com.binbo.glvideo.core.utils.FileToolUtils
-import com.binbo.glvideo.core.utils.FileToolUtils.getFile
-import com.binbo.glvideo.core.utils.FileUseCase
 import com.binbo.glvideo.sample_app.App.Companion.context
-import com.binbo.glvideo.sample_app.AppConsts
-import com.binbo.glvideo.sample_app.AppConsts.recordVideoSize
+import com.binbo.glvideo.sample_app.App.Const.frameRate
+import com.binbo.glvideo.sample_app.App.Const.recordVideoExt
+import com.binbo.glvideo.sample_app.App.Const.recordVideoSize
 import com.binbo.glvideo.sample_app.R
 import com.binbo.glvideo.sample_app.impl.video.graph.gif_to_mp4.GifToMp4RenderingObject
-import com.binbo.glvideo.sample_app.utils.FileUtil
+import com.binbo.glvideo.sample_app.utils.FileToolUtils
+import com.binbo.glvideo.sample_app.utils.FileToolUtils.getFile
+import com.binbo.glvideo.sample_app.utils.FileUseCase
 import com.binbo.glvideo.sample_app.utils.toast
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.withContext
-import java.io.File
 
 class AddWatermarkGraphManager(
     val videoUri: Uri
@@ -37,10 +35,10 @@ class AddWatermarkGraphManager(
         get() = GLRecorderConfig.build {
             width(recordVideoSize.width)
             height(recordVideoSize.height)
-            videoFrameRate(AppConsts.frameRate)
+            videoFrameRate(frameRate)
             targetFileDir(getFile(FileUseCase.ADD_WATERMARK))
             targetFilename("video_with_watermark")
-            targetFileExt(AppConsts.recordVideoExt)
+            targetFileExt(recordVideoExt)
         }
 
     init {
@@ -74,7 +72,7 @@ class AddWatermarkGraphManager(
 
     suspend fun waitUntilDone() {
         recordingCompleted.receive()
-        FileToolUtils.writeVideoToGallery(getFile(FileUseCase.ADD_WATERMARK, recorderConfig.targetFilename + AppConsts.recordVideoExt), "video/mp4")
+        FileToolUtils.writeVideoToGallery(getFile(FileUseCase.ADD_WATERMARK, recorderConfig.targetFilename + recordVideoExt), "video/mp4")
         withContext(Dispatchers.Main) {
             context.toast(context.getString(R.string.video_recording_successful_message), Toast.LENGTH_SHORT)
         }

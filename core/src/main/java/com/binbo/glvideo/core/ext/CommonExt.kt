@@ -8,11 +8,9 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.RoundRectShape
-import android.os.Build
-import android.os.Handler
-import android.os.Looper
-import android.os.SystemClock
+import android.os.*
 import android.text.TextUtils
+import android.util.Log
 import android.view.*
 import android.view.View.LAYER_TYPE_SOFTWARE
 import android.widget.Checkable
@@ -305,4 +303,21 @@ fun tryUntilTimeout(timeout: Long, block: () -> Boolean) {
             break
         }
     } while (!successful)
+}
+
+fun getTempFile(fileName: String): File {
+    return if (Build.VERSION.SDK_INT >= 30) {
+        val filesDir = File(context.filesDir, ".temp")
+        if (!filesDir.exists()) {
+            filesDir.mkdirs()
+        }
+        File(filesDir, fileName)
+    } else {
+        val fileMainPath = Environment.getExternalStorageDirectory().toString() + File.separator + context.packageName
+        val dir = File(fileMainPath, ".temp")
+        if (!dir.exists()) {
+            dir.mkdirs()
+        }
+        File(dir, fileName)
+    }
 }

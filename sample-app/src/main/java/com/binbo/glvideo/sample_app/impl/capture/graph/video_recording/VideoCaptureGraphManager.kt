@@ -14,12 +14,14 @@ import com.binbo.glvideo.core.graph.manager.BaseGraphManager
 import com.binbo.glvideo.core.graph.simple.SimpleSourceObject
 import com.binbo.glvideo.core.media.recorder.GLRecorderConfig
 import com.binbo.glvideo.core.opengl.drawer.SurfaceTextureAvailableListener
-import com.binbo.glvideo.core.utils.FileToolUtils
-import com.binbo.glvideo.core.utils.FileUseCase
 import com.binbo.glvideo.sample_app.App.Companion.context
-import com.binbo.glvideo.sample_app.AppConsts
+import com.binbo.glvideo.sample_app.App.Const.frameRate
+import com.binbo.glvideo.sample_app.App.Const.recordVideoExt
+import com.binbo.glvideo.sample_app.App.Const.recordVideoSize
 import com.binbo.glvideo.sample_app.R
 import com.binbo.glvideo.sample_app.event.RecordVideoEvent
+import com.binbo.glvideo.sample_app.utils.FileToolUtils
+import com.binbo.glvideo.sample_app.utils.FileUseCase
 import com.binbo.glvideo.sample_app.utils.toast
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -44,12 +46,12 @@ class VideoCaptureGraphManager(
 
     val recorderConfig: GLRecorderConfig
         get() = GLRecorderConfig.build {
-            width(AppConsts.recordVideoSize.width)
-            height(AppConsts.recordVideoSize.height)
-            videoFrameRate(AppConsts.frameRate)
+            width(recordVideoSize.width)
+            height(recordVideoSize.height)
+            videoFrameRate(frameRate)
             targetFileDir(FileToolUtils.getFile(FileUseCase.VIDEO_RECORDING))
             targetFilename(capturedFilename)
-            targetFileExt(AppConsts.recordVideoExt)
+            targetFileExt(recordVideoExt)
         }
 
     private var renderingObject: VideoCaptureRenderingObject? = null
@@ -98,7 +100,7 @@ class VideoCaptureGraphManager(
 
     suspend fun waitUntilDone() {
         recordingCompleted.receive()
-        FileToolUtils.writeVideoToGallery(FileToolUtils.getFile(FileUseCase.VIDEO_RECORDING, capturedFilename + AppConsts.recordVideoExt), "video/mp4")
+        FileToolUtils.writeVideoToGallery(FileToolUtils.getFile(FileUseCase.VIDEO_RECORDING, capturedFilename + recordVideoExt), "video/mp4")
         withContext(Dispatchers.Main) {
             context.toast(context.getString(R.string.video_recording_successful_message), Toast.LENGTH_SHORT)
         }

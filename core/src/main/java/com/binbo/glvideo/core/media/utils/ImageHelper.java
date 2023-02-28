@@ -7,9 +7,6 @@ import android.util.Log;
 
 import androidx.camera.core.ImageProxy;
 
-import com.binbo.glvideo.core.utils.FileToolUtils;
-import com.binbo.glvideo.core.utils.FileUseCase;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -19,23 +16,23 @@ public class ImageHelper {
     public static String TAG = "ImageHelper";
 
     // 获取到YuvImage对象 然后存文件
-    public static void useYuvImgSaveFile(ImageProxy imageProxy, boolean outputYOnly) {
-        final int width = imageProxy.getWidth();
-        final int height = imageProxy.getHeight();
-        Log.d(TAG, "宽高: " + width + ", " + height);
-
-        YuvImage yuvImage = ImageHelper.toYuvImage(imageProxy);
-        File file = FileToolUtils.getFile(FileUseCase.TEST_ONLY, "z_" + System.currentTimeMillis() + ".png");
-        saveYuvToFile(file, width, height, yuvImage);
-        Log.d(TAG, "rustfisher.com 存储了" + file);
-
-        if (outputYOnly) { // 仅仅作为功能演示
-            YuvImage yImage = ImageHelper.toYOnlyYuvImage(imageProxy);
-            File yFile = FileToolUtils.getFile(FileUseCase.TEST_ONLY, "y_" + System.currentTimeMillis() + ".png");
-            saveYuvToFile(yFile, width, height, yImage);
-            Log.d(TAG, "rustfisher.com 存储了" + yFile);
-        }
-    }
+//    public static void useYuvImgSaveFile(ImageProxy imageProxy, boolean outputYOnly) {
+//        final int width = imageProxy.getWidth();
+//        final int height = imageProxy.getHeight();
+//        Log.d(TAG, "宽高: " + width + ", " + height);
+//
+//        YuvImage yuvImage = ImageHelper.toYuvImage(imageProxy);
+//        File file = FileToolUtils.getFile(FileUseCase.TEST_ONLY, "z_" + System.currentTimeMillis() + ".png");
+//        saveYuvToFile(file, width, height, yuvImage);
+//        Log.d(TAG, "rustfisher.com 存储了" + file);
+//
+//        if (outputYOnly) { // 仅仅作为功能演示
+//            YuvImage yImage = ImageHelper.toYOnlyYuvImage(imageProxy);
+//            File yFile = FileToolUtils.getFile(FileUseCase.TEST_ONLY, "y_" + System.currentTimeMillis() + ".png");
+//            saveYuvToFile(yFile, width, height, yImage);
+//            Log.d(TAG, "rustfisher.com 存储了" + yFile);
+//        }
+//    }
 
     // 仅作为示例使用
     public static YuvImage toYOnlyYuvImage(ImageProxy imageProxy) {

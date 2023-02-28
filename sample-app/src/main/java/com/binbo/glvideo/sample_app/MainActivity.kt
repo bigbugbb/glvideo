@@ -9,6 +9,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.binbo.glvideo.sample_app.databinding.ActivityMainBinding
+import com.binbo.glvideo.sample_app.utils.HeartBeatManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.tbruyelle.rxpermissions3.RxPermissions
 
@@ -32,6 +33,8 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        HeartBeatManager.bootstrap()
 
         RxPermissions(this)
             .request(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)

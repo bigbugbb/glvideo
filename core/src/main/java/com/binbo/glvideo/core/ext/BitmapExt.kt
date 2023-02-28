@@ -8,7 +8,6 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import com.binbo.glvideo.core.GLVideo
-import com.binbo.glvideo.core.utils.FileToolUtils
 import java.io.File
 
 
@@ -26,7 +25,7 @@ fun Bitmap.flip(source: Bitmap, xFlip: Boolean, yFlip: Boolean): Bitmap {
 fun Bitmap.writeToGallery(
     compressFormat: Bitmap.CompressFormat,
     mimeType: String,
-    fileExtension: String = FileToolUtils.DEFAULT_PHOTO_EXTENSION,
+    fileExtension: String = ".jpg",
     onSuccess: (String) -> Unit
 ) {
     val currentTime = now
@@ -51,7 +50,7 @@ fun Bitmap.writeToGallery(
                 // First, write the actual data for our screenshot
                 resolver.openOutputStream(it).use { out ->
                     if (!compress(compressFormat, 80, out)) {
-                        Log.i(FileToolUtils.TAG, "writeToGallery()---  failure")
+                        Log.i("writeToGallery", "compress failed")
                     }
                 }
                 // Everything went well above, publish it!
@@ -62,7 +61,7 @@ fun Bitmap.writeToGallery(
                 resolver.update(it, values, null, null)
                 onSuccess(imageFileName)
             }.getOrElse {
-                Log.i(FileToolUtils.TAG, "writeToGallery()---  exception = ${it.message}")
+                Log.i("writeToGallery", "exception = ${it.message}")
             }
         }
     }

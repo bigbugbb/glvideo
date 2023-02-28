@@ -13,7 +13,7 @@ class SimpleImageAnalyzer : ImageAnalysis.Analyzer {
         // 下面处理数据
         if (takeOneYuv) {
             takeOneYuv = false
-            ImageHelper.useYuvImgSaveFile(image, true) // 存储这一帧为文件
+//            ImageHelper.useYuvImgSaveFile(image, true) // 存储这一帧为文件
         }
         image.close()
     }

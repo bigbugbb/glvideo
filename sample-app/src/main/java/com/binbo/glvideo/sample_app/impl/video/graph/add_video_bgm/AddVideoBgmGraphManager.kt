@@ -17,13 +17,15 @@ import com.binbo.glvideo.core.graph.interfaces.IMediaPostProcessor
 import com.binbo.glvideo.core.graph.interfaces.MResults
 import com.binbo.glvideo.core.graph.manager.BaseGraphManager
 import com.binbo.glvideo.core.media.recorder.GLRecorderConfig
-import com.binbo.glvideo.core.utils.FileToolUtils
-import com.binbo.glvideo.core.utils.FileToolUtils.getFile
-import com.binbo.glvideo.core.utils.FileUseCase
 import com.binbo.glvideo.sample_app.App.Companion.context
-import com.binbo.glvideo.sample_app.AppConsts
+import com.binbo.glvideo.sample_app.App.Const.frameRate
+import com.binbo.glvideo.sample_app.App.Const.recordVideoExt
+import com.binbo.glvideo.sample_app.App.Const.recordVideoSize
 import com.binbo.glvideo.sample_app.R
 import com.binbo.glvideo.sample_app.impl.video.graph.gif_to_mp4.GifToMp4RenderingObject
+import com.binbo.glvideo.sample_app.utils.FileToolUtils
+import com.binbo.glvideo.sample_app.utils.FileToolUtils.getFile
+import com.binbo.glvideo.sample_app.utils.FileUseCase
 import com.binbo.glvideo.sample_app.utils.FileUtil
 import com.binbo.glvideo.sample_app.utils.toast
 import kotlinx.coroutines.Dispatchers
@@ -42,12 +44,12 @@ class AddVideoBgmGraphManager(
 
     val recorderConfig: GLRecorderConfig
         get() = GLRecorderConfig.build {
-            width(AppConsts.recordVideoSize.width)
-            height(AppConsts.recordVideoSize.height)
-            videoFrameRate(AppConsts.frameRate)
+            width(recordVideoSize.width)
+            height(recordVideoSize.height)
+            videoFrameRate(frameRate)
             targetFileDir(getFile(FileUseCase.VIDEO_WITHOUT_BGM))
             targetFilename(videoFilename)
-            targetFileExt(AppConsts.recordVideoExt)
+            targetFileExt(recordVideoExt)
         }
 
     val videoBgmFile: File
@@ -100,7 +102,7 @@ class AddVideoBgmGraphManager(
 
     suspend fun waitUntilDone() {
         recordingCompleted.receive()
-        FileToolUtils.writeVideoToGallery(getFile(FileUseCase.VIDEO_WITH_BGM, videoFilename + AppConsts.recordVideoExt), "video/mp4")
+        FileToolUtils.writeVideoToGallery(getFile(FileUseCase.VIDEO_WITH_BGM, videoFilename + recordVideoExt), "video/mp4")
         withContext(Dispatchers.Main) {
             context.toast(context.getString(R.string.video_recording_successful_message), Toast.LENGTH_SHORT)
         }

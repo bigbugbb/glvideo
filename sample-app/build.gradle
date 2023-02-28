@@ -56,7 +56,6 @@ dependencies {
 
     // Player Base
     implementation 'com.kk.taurus.playerbase:playerbase:3.4.2'
-    implementation 'cn.jiajunhui:exoplayer:342_2132_019'
 
     // RxJava3 Dependencies
     implementation 'io.reactivex.rxjava3:rxjava:3.0.0'
