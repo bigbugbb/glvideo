@@ -22,7 +22,7 @@ import com.binbo.glvideo.sample_app.event.CreateVideoCutFileSuccess
 import com.binbo.glvideo.sample_app.impl.advanced.graph.video_cut.VideoCutConfig
 import com.binbo.glvideo.sample_app.utils.FileToolUtils
 import com.binbo.glvideo.sample_app.utils.FileUseCase
-import com.binbo.glvideo.sample_app.utils.RxBus
+import com.binbo.glvideo.sample_app.utils.rxbus.RxBus
 import kotlinx.coroutines.channels.Channel
 import java.io.File
 

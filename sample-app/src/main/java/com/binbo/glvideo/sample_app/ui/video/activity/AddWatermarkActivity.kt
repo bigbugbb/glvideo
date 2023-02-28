@@ -4,7 +4,6 @@ import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.binbo.glvideo.sample_app.R
-import com.binbo.glvideo.sample_app.ui.video.fragment.AddVideoBgmFragment
 import com.binbo.glvideo.sample_app.ui.video.fragment.AddWatermarkFragment
 import com.binbo.glvideo.sample_app.utils.replaceViewWithFragment
 

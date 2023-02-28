@@ -1,4 +1,4 @@
-package com.binbo.glvideo.sample_app.utils
+package com.binbo.glvideo.sample_app.utils.player
 
 import android.os.Bundle
 import com.kk.taurus.playerbase.event.OnPlayerEventListener

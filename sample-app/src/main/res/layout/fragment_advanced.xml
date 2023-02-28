@@ -24,9 +24,9 @@
         style="@style/ButtonStyle"
         android:text="@string/button_text_video_cut_widget" />
 
-<!--    <Button-->
-<!--        android:id="@+id/btnScreenSharing"-->
-<!--        style="@style/ButtonStyle"-->
-<!--        android:text="@string/button_text_screen_sharing" />-->
+    <!--    <Button-->
+    <!--        android:id="@+id/btnScreenSharing"-->
+    <!--        style="@style/ButtonStyle"-->
+    <!--        android:text="@string/button_text_screen_sharing" />-->
 
 </LinearLayout>

@@ -4,8 +4,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.widget.FrameLayout
-import com.binbo.glvideo.sample_app.utils.CompositeOnPlayerEventListener
-import com.binbo.glvideo.sample_app.utils.RxBus
+import com.binbo.glvideo.sample_app.utils.rxbus.RxBus
 import com.kk.taurus.playerbase.assist.RelationAssist
 import com.kk.taurus.playerbase.entity.DataSource
 import com.kk.taurus.playerbase.event.OnErrorEventListener

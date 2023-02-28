@@ -1,4 +1,4 @@
-package com.binbo.glvideo.sample_app.utils;
+package com.binbo.glvideo.sample_app.utils.rxbus;
 
 import android.util.Log;
 

@@ -29,7 +29,6 @@ import com.binbo.glvideo.core.opengl.renderer.RenderImpl
 import com.binbo.glvideo.core.opengl.utils.OpenGLUtils
 import com.binbo.glvideo.sample_app.App.Companion.context
 import kotlinx.coroutines.runBlocking
-import java.io.File
 import java.util.concurrent.TimeUnit
 import kotlin.math.min
 

@@ -24,9 +24,9 @@ import com.binbo.glvideo.sample_app.App.Const.recordVideoSize
 import com.binbo.glvideo.sample_app.R
 import com.binbo.glvideo.sample_app.impl.video.graph.gif_to_mp4.GifToMp4RenderingObject
 import com.binbo.glvideo.sample_app.utils.FileToolUtils
+import com.binbo.glvideo.sample_app.utils.FileToolUtils.copyAssets
 import com.binbo.glvideo.sample_app.utils.FileToolUtils.getFile
 import com.binbo.glvideo.sample_app.utils.FileUseCase
-import com.binbo.glvideo.sample_app.utils.FileUtil
 import com.binbo.glvideo.sample_app.utils.toast
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -91,7 +91,7 @@ class AddVideoBgmGraphManager(
     override suspend fun prepare(@DirType dirType: Int) {
         super.prepare(dirType)
         val bgmFolder = getFile(FileUseCase.VIDEO_BGM).apply { deleteRecursively() }
-        FileUtil.copyAssets(context, "bgm.aac", "bgm", bgmFolder.absolutePath, null)
+        copyAssets(context, "bgm.aac", "bgm", bgmFolder.absolutePath)
     }
 
     override suspend fun onReceiveEvent(event: BaseGraphEvent<MediaData>) {

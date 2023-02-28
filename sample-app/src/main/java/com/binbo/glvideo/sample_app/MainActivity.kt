@@ -9,21 +9,22 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.binbo.glvideo.sample_app.databinding.ActivityMainBinding
-import com.binbo.glvideo.sample_app.utils.HeartBeatManager
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.binbo.glvideo.sample_app.utils.rxbus.HeartBeatManager
 import com.tbruyelle.rxpermissions3.RxPermissions
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
+    init {
+        HeartBeatManager.bootstrap()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        val navView: BottomNavigationView = binding.navView
 
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
         // Passing each menu ID as a set of Ids because each
@@ -32,9 +33,7 @@ class MainActivity : AppCompatActivity() {
             setOf(R.id.navigation_capture, R.id.navigation_video, R.id.navigation_advanced)
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
-        navView.setupWithNavController(navController)
-
-        HeartBeatManager.bootstrap()
+        binding.viewNav.setupWithNavController(navController)
 
         RxPermissions(this)
             .request(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)

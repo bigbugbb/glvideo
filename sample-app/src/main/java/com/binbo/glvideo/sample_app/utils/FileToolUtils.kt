@@ -1,9 +1,11 @@
 package com.binbo.glvideo.sample_app.utils
 
 import android.content.ContentValues
+import android.content.Context
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
+import android.text.TextUtils
 import android.util.Log
 import androidx.annotation.IntDef
 import com.binbo.glvideo.core.ext.now
@@ -19,15 +21,11 @@ import com.binbo.glvideo.sample_app.utils.FileUseCase.Companion.VIDEO_CUT
 import com.binbo.glvideo.sample_app.utils.FileUseCase.Companion.VIDEO_RECORDING
 import com.binbo.glvideo.sample_app.utils.FileUseCase.Companion.VIDEO_WITHOUT_BGM
 import com.binbo.glvideo.sample_app.utils.FileUseCase.Companion.VIDEO_WITH_BGM
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
+import java.io.*
 
 object FileToolUtils {
 
     const val TAG = "FileToolUtils"
-
-    const val DEFAULT_VIDEO_EXTENSION = ".mp4"
 
     @JvmStatic
     fun getFile(useCase: Int, filename: String = ""): File {
@@ -70,7 +68,7 @@ object FileToolUtils {
         videoFile: File,
         mimeType: String,
         onSuccess: (String) -> Unit = {},
-        fileExtension: String = DEFAULT_VIDEO_EXTENSION
+        fileExtension: String = ".mp4"
     ) {
         val videoTime = now
         val videoFileName = videoTime.toString() + fileExtension
@@ -111,6 +109,58 @@ object FileToolUtils {
                     onSuccess(videoFileName)
                 }.getOrElse {
                     Log.i(TAG, "writeVideoToGallery()---  exception = ${it.message}")
+                }
+            }
+        }
+    }
+
+    fun copyAssets(
+        context: Context,
+        filename: String,
+        assetDir: String,
+        destPath: String?,
+        onSuccess: (File) -> Unit = {},
+        onFailed: (Throwable) -> Unit = {}
+    ) {
+        val workingPath = File(destPath)
+        // if this directory does not exists, make one.
+        workingPath.mkdirs()
+        var input: InputStream? = null
+        var output: OutputStream? = null
+        try {
+            val outFile = File(workingPath, filename)
+            if (outFile.exists()) outFile.delete()
+            input = if (TextUtils.isEmpty(assetDir)) context.assets.open(filename) else context.assets.open(assetDir + File.separator + filename)
+            output = FileOutputStream(outFile)
+
+            // Transfer bytes from in to out
+            val buf = ByteArray(8192)
+            var len: Int
+            while (input.read(buf).also { len = it } > 0) {
+                output.write(buf, 0, len)
+            }
+            onSuccess(outFile)
+        } catch (e: FileNotFoundException) {
+            Log.i(TAG, "copyAssets() FileNotFoundException")
+            onFailed(e)
+        } catch (e: IOException) {
+            Log.i(TAG, "copyAssets() IOException")
+            onFailed(e)
+        } catch (e: Exception) {
+            onFailed(e)
+        } finally {
+            if (input != null) {
+                try {
+                    input.close()
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+            }
+            if (output != null) {
+                try {
+                    output.close()
+                } catch (e: IOException) {
+                    e.printStackTrace()
                 }
             }
         }

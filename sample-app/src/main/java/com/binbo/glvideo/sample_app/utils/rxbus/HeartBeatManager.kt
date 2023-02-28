@@ -1,4 +1,4 @@
-package com.binbo.glvideo.sample_app.utils
+package com.binbo.glvideo.sample_app.utils.rxbus
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable

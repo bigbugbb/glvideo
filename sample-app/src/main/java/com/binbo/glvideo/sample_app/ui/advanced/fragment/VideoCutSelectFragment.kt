@@ -20,10 +20,9 @@ import com.binbo.glvideo.sample_app.ui.advanced.activity.VideoCutActivity
 import com.binbo.glvideo.sample_app.ui.advanced.activity.VideoCutActivity.Companion.ARG_SELECT_VIDEO_KEY
 import com.binbo.glvideo.sample_app.ui.advanced.fragment.VideoCutFragment.Companion.ARG_VIDEO_PATH_KEY
 import com.binbo.glvideo.sample_app.utils.GlideApp
-import com.binbo.glvideo.sample_app.utils.RxBus
 import com.binbo.glvideo.sample_app.utils.bindToLifecycleOwner
+import com.binbo.glvideo.sample_app.utils.rxbus.RxBus
 import com.binbo.glvideo.sample_app.utils.toast
-import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.signature.ObjectKey
 import com.luck.picture.lib.basic.PictureSelector
