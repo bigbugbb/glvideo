@@ -56,7 +56,7 @@ class PictureTakingFragment : Fragment() {
         cameraController.onFrameAvailableListener = graphManager
         lifecycle.addObserver(cameraController)
 
-        binding.btnTakePicture.singleClick {
+        binding.cardTakePicture.singleClick {
             lifecycleScope.launch {
                 graphManager.takePicture()
             }

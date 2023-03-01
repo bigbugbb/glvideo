@@ -15,9 +15,11 @@ import com.binbo.glvideo.sample_app.App.Const.frameRate
 import com.binbo.glvideo.sample_app.App.Const.recordVideoExt
 import com.binbo.glvideo.sample_app.App.Const.recordVideoSize
 import com.binbo.glvideo.sample_app.R
+import com.binbo.glvideo.sample_app.event.VideoFileCreated
 import com.binbo.glvideo.sample_app.utils.FileToolUtils
 import com.binbo.glvideo.sample_app.utils.FileToolUtils.getFile
 import com.binbo.glvideo.sample_app.utils.FileUseCase.Companion.ADD_ENDING
+import com.binbo.glvideo.sample_app.utils.rxbus.RxBus
 import com.binbo.glvideo.sample_app.utils.toast
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -69,7 +71,9 @@ class AddVideoEndingGraphManager(val videoUri: Uri, val videoRawId: Int) : BaseG
 
     suspend fun waitUntilDone() {
         recordingCompleted.receive()
-        FileToolUtils.writeVideoToGallery(getFile(ADD_ENDING, recorderConfig.targetFilename + recordVideoExt), "video/mp4")
+        val videoFile = getFile(ADD_ENDING, recorderConfig.targetFilename + recordVideoExt)
+        FileToolUtils.writeVideoToGallery(videoFile, "video/mp4")
+        RxBus.getDefault().send(VideoFileCreated(videoFile))
         withContext(Dispatchers.Main) {
             context.toast(context.getString(R.string.video_recording_successful_message), Toast.LENGTH_SHORT)
         }

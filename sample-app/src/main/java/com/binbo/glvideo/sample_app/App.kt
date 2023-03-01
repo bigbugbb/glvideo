@@ -15,12 +15,12 @@ class App : Application() {
     override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base)
         context = this
-        PlayerLibrary.init(this)
     }
 
     override fun onCreate() {
         super.onCreate()
         GLVideo.init(this)
+        PlayerLibrary.init(this)
     }
 
     object Const {
@@ -34,6 +34,11 @@ class App : Application() {
         val sampleVideoPath = ContentResolver.SCHEME_ANDROID_RESOURCE + File.pathSeparator + File.separator + File.separator +
                 context.packageName + File.separator + R.raw.sample_video
         val sampleVideoUri = Uri.parse(sampleVideoPath)
+    }
+
+    object ArgKey {
+        const val ARG_SELECTED_VIDEO_KEY = "arg_selected_video"
+        const val ARG_VIDEO_PATH_KEY = "arg_video_path"
     }
 
     companion object {

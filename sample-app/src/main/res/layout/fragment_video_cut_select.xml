@@ -28,15 +28,31 @@
 
     </com.binbo.glvideo.sample_app.ui.widget.CoverView>
 
-    <Button
-        android:id="@+id/btnSelectVideo"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardSelectVideo"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="36dp"
         android:layout_marginTop="20dp"
-        android:text="@string/button_text_select_video"
-        android:textSize="15sp"
+        android:foreground="?attr/selectableItemBackground"
+        app:cardBackgroundColor="#3894FF"
+        app:cardCornerRadius="18dp"
+        app:cardElevation="1dp"
+        app:cardUseCompatPadding="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/viewCover" />
+        app:layout_constraintTop_toBottomOf="@+id/viewCover">
+
+        <TextView
+            style="@style/font_sf_compact_rounded_bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:includeFontPadding="false"
+            android:paddingHorizontal="18dp"
+            android:text="@string/button_text_select_video"
+            android:textColor="@android:color/white"
+            android:textSize="15sp" />
+
+    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

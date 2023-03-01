@@ -13,6 +13,7 @@ import com.binbo.glvideo.core.ext.singleClick
 import com.binbo.glvideo.core.graph.event.StartFrameBuffering
 import com.binbo.glvideo.core.graph.event.StopFrameBuffering
 import com.binbo.glvideo.core.graph.executor.GraphExecutor
+import com.binbo.glvideo.sample_app.App.ArgKey.ARG_VIDEO_PATH_KEY
 import com.binbo.glvideo.sample_app.databinding.FragmentVideoCutBinding
 import com.binbo.glvideo.sample_app.event.CreateVideoCutFileFailed
 import com.binbo.glvideo.sample_app.event.CreateVideoCutFileSuccess
@@ -58,7 +59,6 @@ class VideoCutFragment : Fragment() {
         _binding = FragmentVideoCutBinding.inflate(inflater, container, false)
         return binding.root
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -184,9 +184,5 @@ class VideoCutFragment : Fragment() {
     private fun onCreateVideoCutFileFailed(event: CreateVideoCutFileFailed) {
         binding.viewLoading.setVisible(false)
         webpPath = ""
-    }
-
-    companion object {
-        const val ARG_VIDEO_PATH_KEY = "arg_video_path"
     }
 }

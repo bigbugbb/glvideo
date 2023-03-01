@@ -13,12 +13,12 @@ import androidx.lifecycle.lifecycleScope
 import com.binbo.glvideo.core.ext.nowString
 import com.binbo.glvideo.core.ext.singleClick
 import com.binbo.glvideo.sample_app.App
+import com.binbo.glvideo.sample_app.App.ArgKey.ARG_SELECTED_VIDEO_KEY
+import com.binbo.glvideo.sample_app.App.ArgKey.ARG_VIDEO_PATH_KEY
 import com.binbo.glvideo.sample_app.R
 import com.binbo.glvideo.sample_app.databinding.FragmentVideoCutSelectBinding
 import com.binbo.glvideo.sample_app.event.CreateVideoCutFileSuccess
 import com.binbo.glvideo.sample_app.ui.advanced.activity.VideoCutActivity
-import com.binbo.glvideo.sample_app.ui.advanced.activity.VideoCutActivity.Companion.ARG_SELECT_VIDEO_KEY
-import com.binbo.glvideo.sample_app.ui.advanced.fragment.VideoCutFragment.Companion.ARG_VIDEO_PATH_KEY
 import com.binbo.glvideo.sample_app.utils.bindToLifecycleOwner
 import com.binbo.glvideo.sample_app.utils.rxbus.RxBus
 import com.binbo.glvideo.sample_app.utils.thirdparty.GlideApp
@@ -53,7 +53,7 @@ class VideoCutSelectFragment : Fragment() {
                 }
             } else {
                 startActivity(Intent(requireContext(), VideoCutActivity::class.java).apply {
-                    putExtra(ARG_SELECT_VIDEO_KEY, bundleOf(ARG_VIDEO_PATH_KEY to videoPath))
+                    putExtra(ARG_SELECTED_VIDEO_KEY, bundleOf(ARG_VIDEO_PATH_KEY to videoPath))
                 })
             }
         }
@@ -71,7 +71,7 @@ class VideoCutSelectFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.btnSelectVideo.singleClick {
+        binding.cardSelectVideo.singleClick {
             PictureSelector.create(this)
                 .openSystemGallery(SelectMimeType.ofVideo())
                 .setSelectFilterListener { it.mimeType != PictureMimeType.ofMP4() }

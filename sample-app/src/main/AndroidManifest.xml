@@ -55,6 +55,10 @@
 
         <!-- video section -->
         <activity
+            android:name=".ui.video.activity.VideoPreviewActivity"
+            android:exported="false"
+            android:launchMode="singleTop" />
+        <activity
             android:name=".ui.video.activity.VideoDecodeActivity"
             android:exported="false"
             android:launchMode="singleTop" />
@@ -74,7 +78,6 @@
             android:name=".ui.video.activity.AddWatermarkActivity"
             android:exported="false"
             android:launchMode="singleTop" />
-
 
         <!-- advanced section -->
         <activity

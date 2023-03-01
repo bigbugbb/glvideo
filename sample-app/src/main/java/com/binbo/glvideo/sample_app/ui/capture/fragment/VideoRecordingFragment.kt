@@ -63,8 +63,8 @@ class VideoRecordingFragment : Fragment() {
         cameraController.onFrameAvailableListener = graphManager
         lifecycle.addObserver(cameraController)
 
-        binding.btnStartRecording.singleClick { startRecording() }
-        binding.btnStopRecording.singleClick { stopRecording() }
+        binding.cardStartRecording.singleClick { startRecording() }
+        binding.cardStopRecording.singleClick { stopRecording() }
 
         // 不阻塞调用导致surfaceHolder回调失效
         runBlocking {
@@ -117,8 +117,8 @@ class VideoRecordingFragment : Fragment() {
             graphManager.recordVideo(true)
         }
 
-        binding.btnStartRecording.setVisible(false)
-        binding.btnStopRecording.setVisible(true)
+        binding.cardStartRecording.setVisible(false)
+        binding.cardStopRecording.setVisible(true)
     }
 
     private fun stopRecording() {

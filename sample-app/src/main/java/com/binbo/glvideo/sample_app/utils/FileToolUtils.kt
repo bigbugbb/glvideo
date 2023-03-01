@@ -69,8 +69,8 @@ object FileToolUtils {
     fun writeVideoToGallery(
         videoFile: File,
         mimeType: String,
-        onSuccess: (String) -> Unit = {},
-        fileExtension: String = ".mp4"
+        fileExtension: String = ".mp4",
+        onSuccess: (String) -> Unit = {}
     ) {
         val videoTime = now
         val videoFileName = videoTime.toString() + fileExtension

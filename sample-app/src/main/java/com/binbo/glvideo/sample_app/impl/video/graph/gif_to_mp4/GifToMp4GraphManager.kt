@@ -16,8 +16,11 @@ import com.binbo.glvideo.sample_app.App.Const.frameRate
 import com.binbo.glvideo.sample_app.App.Const.recordVideoExt
 import com.binbo.glvideo.sample_app.App.Const.recordVideoSize
 import com.binbo.glvideo.sample_app.R
+import com.binbo.glvideo.sample_app.event.VideoFileCreated
 import com.binbo.glvideo.sample_app.utils.FileToolUtils
+import com.binbo.glvideo.sample_app.utils.FileToolUtils.getFile
 import com.binbo.glvideo.sample_app.utils.FileUseCase
+import com.binbo.glvideo.sample_app.utils.rxbus.RxBus
 import com.binbo.glvideo.sample_app.utils.toast
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -37,13 +40,13 @@ class GifToMp4GraphManager(
             width(recordVideoSize.width)
             height(recordVideoSize.height)
             videoFrameRate(frameRate)
-            targetFileDir(FileToolUtils.getFile(FileUseCase.GIF_TO_MP4))
+            targetFileDir(getFile(FileUseCase.GIF_TO_MP4))
             targetFilename(videoFilename)
             targetFileExt(recordVideoExt)
         }
 
     init {
-        FileToolUtils.getFile(FileUseCase.GIF_TO_MP4).deleteRecursively()
+        getFile(FileUseCase.GIF_TO_MP4).deleteRecursively()
     }
 
     override fun createMediaGraph(): BaseMediaGraph<MediaData> {
@@ -73,7 +76,9 @@ class GifToMp4GraphManager(
 
     suspend fun waitUntilDone() {
         recordingCompleted.receive()
-        FileToolUtils.writeVideoToGallery(FileToolUtils.getFile(FileUseCase.GIF_TO_MP4, videoFilename + recordVideoExt), "video/mp4")
+        val videoFile = getFile(FileUseCase.GIF_TO_MP4, videoFilename + recordVideoExt)
+        FileToolUtils.writeVideoToGallery(videoFile, "video/mp4")
+        RxBus.getDefault().send(VideoFileCreated(videoFile))
         withContext(Dispatchers.Main) {
             context.toast(context.getString(R.string.video_recording_successful_message), Toast.LENGTH_SHORT)
         }

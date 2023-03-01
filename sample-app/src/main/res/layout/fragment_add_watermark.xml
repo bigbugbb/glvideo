@@ -16,15 +16,31 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/btnConvert"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardConvert"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="64dp"
-        android:text="@string/button_text_convert"
-        android:textSize="15sp"
+        android:layout_height="36dp"
+        android:layout_marginBottom="112dp"
+        android:foreground="?attr/selectableItemBackground"
+        app:cardBackgroundColor="#3894FF"
+        app:cardCornerRadius="18dp"
+        app:cardElevation="1dp"
+        app:cardUseCompatPadding="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            style="@style/font_sf_compact_rounded_bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:includeFontPadding="false"
+            android:paddingHorizontal="18dp"
+            android:text="@string/button_text_convert"
+            android:textColor="@android:color/white"
+            android:textSize="15sp" />
+
+    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

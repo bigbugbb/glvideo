@@ -23,7 +23,7 @@ abstract class VideoBgmPostProcessor(override val arguments: Bundle = bundleOf()
     suspend fun addBgmToVideo(srcFile: File, audioFile: File, dstFile: File) =
         suspendCancellableCoroutine<String> { continuation ->
             kotlin.runCatching {
-                val ffmpegCmd = "-i ${srcFile.absolutePath} -i ${audioFile.absolutePath} -map 0:v -map 1:a -c copy -shortest"
+                val ffmpegCmd = "-i ${srcFile.absolutePath} -i ${audioFile.absolutePath} -map 0:v -map 1:a -c copy -shortest ${dstFile.absolutePath}"
                 Log.d(TAG, "ffmpeg cmd: $ffmpegCmd")
 
                 val session = FFmpegKit.execute(ffmpegCmd)
