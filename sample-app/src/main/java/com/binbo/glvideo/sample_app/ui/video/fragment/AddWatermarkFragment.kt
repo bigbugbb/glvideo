@@ -20,9 +20,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
-/**
- * 基于gif to mp4，给生成的视频加上音轨
- */
 class AddWatermarkFragment : Fragment() {
 
     private var _binding: FragmentAddWatermarkBinding? = null

@@ -39,8 +39,14 @@
     <string name="common_confirm">Confirm</string>
     <string name="settings_title">Settings</string>
 
-    <string name="add_watermark_title">Here is the watermark</string>
-    <string name="add_watermark_subtitle">Added by bigbug</string>
+    <string name="add_watermark_title">the watermark</string>
+    <string name="add_watermark_subtitle">build by binbo</string>
+
+    <string name="add_video_ending_title">the video ending</string>
+    <string name="add_video_ending_subtitle">build by binbo</string>
+
+    <string name="text_my_name">BinBo</string>
+    <string name="text_my_nickname">(bigbugbb)</string>
 
     <string name="picture_taking_successful_message">new picture saved to gallery</string>
     <string name="video_recording_successful_message">new video saved to gallery</string>

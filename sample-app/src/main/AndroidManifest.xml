@@ -7,7 +7,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <meta-data
-        android:name="com.binbo.glvideo.sample_app.utils.AppGlideModule"
+        android:name="com.binbo.glvideo.sample_app.utils.thirdparty.AppGlideModule"
         android:value="GlideModule" />
 
     <application
@@ -66,9 +66,14 @@
             android:exported="false"
             android:launchMode="singleTop" />
         <activity
+            android:name=".ui.video.activity.AddVideoEndingActivity"
+            android:exported="false"
+            android:launchMode="singleTop" />
+        <activity
             android:name=".ui.video.activity.AddWatermarkActivity"
             android:exported="false"
             android:launchMode="singleTop" />
+
 
         <!-- advanced section -->
         <activity

@@ -13,7 +13,7 @@ import com.binbo.glvideo.core.graph.executor.GraphExecutor
 import com.binbo.glvideo.sample_app.R
 import com.binbo.glvideo.sample_app.databinding.FragmentGifToMp4Binding
 import com.binbo.glvideo.sample_app.impl.video.graph.gif_to_mp4.GifToMp4GraphManager
-import com.binbo.glvideo.sample_app.utils.GlideApp
+import com.binbo.glvideo.sample_app.utils.thirdparty.GlideApp
 import com.bumptech.glide.gifdecoder.StandardGifDecoder
 import com.bumptech.glide.load.resource.gif.GifDrawable
 import com.bumptech.glide.request.target.CustomTarget

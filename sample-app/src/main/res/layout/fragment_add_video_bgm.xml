@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/black"
-    tools:context=".ui.video.fragment.GifToMp4Fragment">
+    tools:context=".ui.video.fragment.AddVideoBgmFragment">
 
     <ImageView
         android:id="@+id/imageGif"

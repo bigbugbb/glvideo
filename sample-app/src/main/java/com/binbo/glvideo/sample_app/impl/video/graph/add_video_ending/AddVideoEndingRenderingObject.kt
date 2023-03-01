@@ -1,4 +1,4 @@
-package com.binbo.glvideo.sample_app.impl.video.graph.gif_to_mp4
+package com.binbo.glvideo.sample_app.impl.video.graph.add_video_ending
 
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
@@ -11,29 +11,36 @@ import com.binbo.glvideo.core.graph.base.BaseGraphEvent
 import com.binbo.glvideo.core.graph.base.BaseMediaQueue
 import com.binbo.glvideo.core.graph.base.GraphState
 import com.binbo.glvideo.core.graph.component.FrameRecorder
-import com.binbo.glvideo.core.graph.event.DecodedGifFrame
+import com.binbo.glvideo.core.graph.event.DecodedVideoFrame
 import com.binbo.glvideo.core.graph.event.RenderingCompleted
+import com.binbo.glvideo.core.graph.event.VideoMetaDataRetrieved
 import com.binbo.glvideo.core.graph.simple.SimpleMediaObject
 import com.binbo.glvideo.core.media.encoder.MediaVideoEncoder
 import com.binbo.glvideo.core.media.ext.setupEncoderSurfaceRender
 import com.binbo.glvideo.core.media.recorder.TextureToRecord
+import com.binbo.glvideo.core.media.utils.VideoMetaData
 import com.binbo.glvideo.core.opengl.drawer.FrameDrawer
 import com.binbo.glvideo.core.opengl.renderer.DefaultGLRenderer
 import com.binbo.glvideo.core.opengl.renderer.RenderImpl
 import com.binbo.glvideo.core.opengl.utils.OpenGLUtils
+import com.binbo.glvideo.sample_app.impl.video.drawer.VideoEndingDrawer
 import kotlinx.coroutines.runBlocking
 import java.util.concurrent.TimeUnit
 
-class GifToMp4RenderingObject(val viewportSize: Size) : SimpleMediaObject() {
+class AddVideoEndingRenderingObject(val viewportSize: Size) : SimpleMediaObject() {
 
-    private var renderer: GifToMp4Renderer? = null
+    private var renderer: AddVideoEndingRenderer? = null
+
+    private var videoMetaData: VideoMetaData? = null
+
+    internal val frameRate: Int
+        get() = videoMetaData?.frameRate ?: 20
 
     override suspend fun onPrepare() {
         super.onPrepare()
-        renderer = GifToMp4Renderer(this).apply {
-            addDrawer(FrameDrawer().apply {
-                rotateByX(180f) // 通过FBO绘制到纹理会上下颠倒，需要修正一下
-            })
+        renderer = AddVideoEndingRenderer(this).apply {
+            addDrawer(FrameDrawer())
+            addDrawer(VideoEndingDrawer())
         }
     }
 
@@ -55,10 +62,13 @@ class GifToMp4RenderingObject(val viewportSize: Size) : SimpleMediaObject() {
 
     override suspend fun onReceiveEvent(event: BaseGraphEvent<MediaData>) {
         super.onReceiveEvent(event)
+        when (event) {
+            is VideoMetaDataRetrieved -> videoMetaData = event.meta
+        }
     }
 }
 
-private class GifToMp4Renderer(val renderingObject: GifToMp4RenderingObject) : DefaultGLRenderer() {
+private class AddVideoEndingRenderer(val renderingObject: AddVideoEndingRenderingObject) : DefaultGLRenderer() {
 
     override var impl: RenderImpl = CustomRenderImpl()
 
@@ -68,6 +78,9 @@ private class GifToMp4Renderer(val renderingObject: GifToMp4RenderingObject) : D
     private val frameDrawer: FrameDrawer?
         get() = drawers[FrameDrawer::class.java] as? FrameDrawer?
 
+    private val videoEndingDrawer: VideoEndingDrawer?
+        get() = drawers[VideoEndingDrawer::class.java] as? VideoEndingDrawer
+
     private val encoder: MediaVideoEncoder?
         get() = (renderingObject.outputQueues.elementAtOrNull(0)?.to as? FrameRecorder?)?.recorder?.getVideoEncoder()
 
@@ -75,21 +88,27 @@ private class GifToMp4Renderer(val renderingObject: GifToMp4RenderingObject) : D
         private val frameBuffers = IntArray(64)
         private val frameBufferTextures = IntArray(64)
 
+        private val endingFrameBuffers = IntArray(1)
+        private val endingFrameBufferTextures = IntArray(1)
+
         private var frames = 0
+        private var lastTimestampUs = 0L
+        private val ptsDelta = 100000000L / frameRate
+
+        private val frameRate: Int
+            get() = renderingObject.frameRate
 
         override fun onSurfaceCreate() {}
 
         override fun onSurfaceChange(width: Int, height: Int) {
-            /**
-             * video decoder默认分配的texture高度始终跟surface的高度一致，所以这里的fbo尺寸直接取surface的尺寸即可
-             */
             OpenGLUtils.createFBO(frameBuffers, frameBufferTextures, width, height)
-
+            OpenGLUtils.createFBO(endingFrameBuffers, endingFrameBufferTextures, width, height)
             setupEncoderSurfaceRender(encoder)
         }
 
         override fun onSurfaceDestroy() {
             OpenGLUtils.deleteFBO(frameBuffers, frameBufferTextures)
+            OpenGLUtils.deleteFBO(endingFrameBuffers, endingFrameBufferTextures)
         }
 
         override fun onDrawFrame() {
@@ -97,7 +116,7 @@ private class GifToMp4Renderer(val renderingObject: GifToMp4RenderingObject) : D
                 while (renderingObject.state == GraphState.STARTED) {
                     textureQueue.poll(100, TimeUnit.MILLISECONDS)?.let { mediaData ->
                         when (mediaData) {
-                            is DecodedGifFrame -> {
+                            is DecodedVideoFrame -> {
 //                                val bitmap = OpenGLUtils.captureRenderBitmap(mediaData.textureId, mediaData.mediaWidth, mediaData.mediaHeight)
                                 val i = frames++ % frameBuffers.size
 
@@ -106,16 +125,33 @@ private class GifToMp4Renderer(val renderingObject: GifToMp4RenderingObject) : D
                                 frameDrawer?.setTextureID(mediaData.textureId)
                                 frameDrawer?.draw()
                                 GLES20.glFinish()
-//                                val bitmap2 = OpenGLUtils.savePixels(0, 0, width, height)s
+//                                val bitmap2 = OpenGLUtils.savePixels(0, 0, width, height)
                                 configDefViewport()
                                 OpenGLUtils.unbindFBO()
 
                                 mediaData.sharedTexture.close()  // free the used shared textures so they can be re-used by the video decoder
 
                                 encoder?.let { drawFrameUntilSucceed(it, TextureToRecord(frameBufferTextures[i], mediaData.timestampUs * 1000L)) }
+
+                                lastTimestampUs = mediaData.timestampUs
                             }
-                            is EndOfStream -> runBlocking {
-                                renderingObject.broadcast(RenderingCompleted()) // 触发recorder的stopRecording
+                            is EndOfStream -> {
+                                OpenGLUtils.bindFBO(endingFrameBuffers[0], endingFrameBufferTextures[0])
+                                configFboViewport(width, height)
+                                videoEndingDrawer?.draw()
+                                GLES20.glFinish()
+//                                val bitmap = OpenGLUtils.savePixels(0, 0, width, height)
+                                configDefViewport()
+                                OpenGLUtils.unbindFBO()
+
+                                // encode the frames of the 2 seconds video ending
+                                (1..frameRate * 2).forEach { i ->
+                                    encoder?.let { drawFrameUntilSucceed(it, TextureToRecord(endingFrameBufferTextures[0], lastTimestampUs * 1000L + ptsDelta * i)) }
+                                }
+
+                                runBlocking {
+                                    renderingObject.broadcast(RenderingCompleted()) // 触发recorder的stopRecording
+                                }
                             }
                             else -> Log.d(TAG, "Unknown media data type")
                         }
@@ -154,6 +190,6 @@ private class GifToMp4Renderer(val renderingObject: GifToMp4RenderingObject) : D
     }
 
     companion object {
-        const val TAG = "GifToMp4Renderer"
+        const val TAG = "AddVideoEndingRenderer"
     }
 }

@@ -11,6 +11,7 @@ import androidx.annotation.IntDef
 import com.binbo.glvideo.core.ext.now
 import com.binbo.glvideo.sample_app.App.Companion.context
 import com.binbo.glvideo.sample_app.App.Const.fileMainPath
+import com.binbo.glvideo.sample_app.utils.FileUseCase.Companion.ADD_ENDING
 import com.binbo.glvideo.sample_app.utils.FileUseCase.Companion.ADD_WATERMARK
 import com.binbo.glvideo.sample_app.utils.FileUseCase.Companion.GIF_TO_MP4
 import com.binbo.glvideo.sample_app.utils.FileUseCase.Companion.MISSION_CARD_VIDEO
@@ -57,6 +58,7 @@ object FileToolUtils {
             VIDEO_WITHOUT_BGM -> "video_without_bgm"
             VIDEO_WITH_BGM -> "video_with_bgm"
             ADD_WATERMARK -> "add_watermark"
+            ADD_ENDING -> "add_ending"
             VIDEO_CUT -> "video_cut"
             else -> "test"
         }
@@ -177,6 +179,7 @@ object FileToolUtils {
     VIDEO_WITHOUT_BGM,
     VIDEO_WITH_BGM,
     ADD_WATERMARK,
+    ADD_ENDING,
     VIDEO_CUT
 )
 @Retention(AnnotationRetention.SOURCE)
@@ -192,6 +195,7 @@ annotation class FileUseCase {
         const val VIDEO_WITHOUT_BGM = 71
         const val VIDEO_WITH_BGM = 72
         const val ADD_WATERMARK = 80
+        const val ADD_ENDING = 90
         const val VIDEO_CUT = 100
     }
 }

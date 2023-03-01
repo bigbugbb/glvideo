@@ -125,7 +125,7 @@ private class AddWatermarkRenderer(val renderingObject: AddWatermarkRenderingObj
 
                                 mediaData.sharedTexture.close()  // free the used shared textures so they can be re-used by the video decoder
 
-                                encoder?.let { drawFrameUntilSucceed(it, TextureToRecord(frameBufferTextures[i], mediaData.timestampUs)) }
+                                encoder?.let { drawFrameUntilSucceed(it, TextureToRecord(frameBufferTextures[i], mediaData.timestampUs * 1000L)) }
                             }
                             is EndOfStream -> runBlocking {
                                 renderingObject.broadcast(RenderingCompleted()) // 触发recorder的stopRecording
@@ -167,6 +167,6 @@ private class AddWatermarkRenderer(val renderingObject: AddWatermarkRenderingObj
     }
 
     companion object {
-        const val TAG = "GifToMp4Renderer"
+        const val TAG = "AddWatermarkRenderer"
     }
 }

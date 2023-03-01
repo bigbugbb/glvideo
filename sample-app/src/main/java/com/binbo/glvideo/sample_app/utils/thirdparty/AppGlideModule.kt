@@ -1,4 +1,4 @@
-package com.binbo.glvideo.sample_app.utils
+package com.binbo.glvideo.sample_app.utils.thirdparty
 
 import android.content.Context
 import com.bumptech.glide.GlideBuilder

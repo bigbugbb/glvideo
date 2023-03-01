@@ -10,10 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.binbo.glvideo.core.ext.singleClick
 import com.binbo.glvideo.sample_app.databinding.FragmentVideoBinding
 import com.binbo.glvideo.sample_app.ui.capture.viewmodel.CaptureViewModel
-import com.binbo.glvideo.sample_app.ui.video.activity.AddVideoBgmActivity
-import com.binbo.glvideo.sample_app.ui.video.activity.AddWatermarkActivity
-import com.binbo.glvideo.sample_app.ui.video.activity.GifToMp4Activity
-import com.binbo.glvideo.sample_app.ui.video.activity.VideoDecodeActivity
+import com.binbo.glvideo.sample_app.ui.video.activity.*
 
 class VideoFragment : Fragment() {
 
@@ -47,6 +44,7 @@ class VideoFragment : Fragment() {
         }
 
         binding.btnAddVideoEnding.singleClick {
+            startActivity(Intent(requireContext(), AddVideoEndingActivity::class.java))
         }
 
         binding.btnAddWatermark.singleClick {

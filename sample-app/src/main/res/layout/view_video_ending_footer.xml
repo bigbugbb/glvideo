@@ -1,0 +1,40 @@
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:layout_height="wrap_content"
+    tools:layout_width="match_parent"
+    tools:orientation="horizontal"
+    tools:parentTag="LinearLayout">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/imageAvatar"
+        android:layout_width="40px"
+        android:layout_height="40px"
+        android:layout_marginLeft="28px"
+        app:civ_border_width="2px"
+        app:civ_border_color="@color/colorBlack_50"
+        android:src="@drawable/my_avatar" />
+
+    <TextView
+        style="@style/font_sf_compact_rounded_medium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="10px"
+        android:includeFontPadding="false"
+        android:text="@string/text_my_name"
+        android:textColor="@color/colorBlack_70"
+        android:textSize="20px" />
+
+    <TextView
+        style="@style/font_sf_compact_rounded_regular"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="4px"
+        android:includeFontPadding="false"
+        android:text="@string/text_my_nickname"
+        android:textColor="@color/colorBlack_70"
+        android:textSize="17px" />
+
+</merge>

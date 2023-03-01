@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@null"
-    tools:context=".ui.video.fragment.AddWatermarkFragment">
+    tools:context=".ui.video.fragment.AddVideoEndingFragment">
 
     <FrameLayout
         android:id="@+id/viewVideoContainer"

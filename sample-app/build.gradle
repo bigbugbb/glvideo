@@ -64,5 +64,7 @@ dependencies {
     // RxPermission
     implementation 'com.github.tbruyelle:rxpermissions:0.12'
 
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+
     implementation project(path: ':core')
 }
