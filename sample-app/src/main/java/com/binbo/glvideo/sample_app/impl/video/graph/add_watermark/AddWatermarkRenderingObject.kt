@@ -35,7 +35,7 @@ class AddWatermarkRenderingObject(val viewportSize: Size) : SimpleMediaObject() 
         super.onPrepare()
         renderer = AddWatermarkRenderer(this).apply {
             addDrawer(FrameDrawer())
-            addDrawer(LayoutDrawer(context, R.layout.layout_add_watermark))
+            addDrawer(LayoutDrawer(context, R.layout.layout_watermark))
         }
     }
 
