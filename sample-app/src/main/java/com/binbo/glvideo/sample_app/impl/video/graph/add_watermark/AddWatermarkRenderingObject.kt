@@ -11,7 +11,6 @@ import com.binbo.glvideo.core.graph.base.BaseGraphEvent
 import com.binbo.glvideo.core.graph.base.BaseMediaQueue
 import com.binbo.glvideo.core.graph.base.GraphState
 import com.binbo.glvideo.core.graph.component.FrameRecorder
-import com.binbo.glvideo.core.graph.event.DecodedGifFrame
 import com.binbo.glvideo.core.graph.event.DecodedVideoFrame
 import com.binbo.glvideo.core.graph.event.RenderingCompleted
 import com.binbo.glvideo.core.graph.simple.SimpleMediaObject

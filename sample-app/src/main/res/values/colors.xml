@@ -2,27 +2,21 @@
 <resources>
     <color name="colorPrimary">#3894FF</color>
 
-    <color name="dialog_color_white">@color/colorWhite</color>
+    <color name="colorWhite_5">#05FFFFFF</color>
+    <color name="colorWhite_8">#14FFFFFF</color>
+    <color name="colorWhite_10">#1AFFFFFF</color>
+    <color name="colorWhite_15">#26FFFFFF</color>
+    <color name="colorWhite_20">#33FFFFFF</color>
+    <color name="colorWhite_25">#40FFFFFF</color>
+    <color name="colorWhite_30">#4dFFFFFF</color>
+    <color name="colorWhite_40">#66FFFFFF</color>
+    <color name="colorWhite_50">#80FFFFFF</color>
+    <color name="colorWhite_60">#99FFFFFF</color>
+    <color name="colorWhite_70">#B3FFFFFF</color>
+    <color name="colorWhite_80">#CCFFFFFF</color>
+    <color name="colorWhite_90">#E6FFFFFF</color>
+    <color name="colorWhite_95">#F2FFFFFF</color>
 
-    <!--          白色透明度       -->
-    <color name="colorWhite">#FFFFFF</color>
-    <color name="colorWhite5">#05FFFFFF</color>
-    <color name="colorWhite8">#14FFFFFF</color>
-    <color name="colorWhite10">#1AFFFFFF</color>
-    <color name="colorWhite15">#26FFFFFF</color>
-    <color name="colorWhite20">#33FFFFFF</color>
-    <color name="colorWhite25">#40FFFFFF</color>
-    <color name="colorWhite30">#4dFFFFFF</color>
-    <color name="colorWhite40">#66FFFFFF</color>
-    <color name="colorWhite50">#80FFFFFF</color>
-    <color name="colorWhite60">#99FFFFFF</color>
-    <color name="colorWhite70">#B3FFFFFF</color>
-    <color name="colorWhite80">#CCFFFFFF</color>
-    <color name="colorWhite90">#E6FFFFFF</color>
-    <color name="colorWhite95">#F2FFFFFF</color>
-
-    <!--          黑色透明度    -->
-    <color name="colorBlack">#000000</color>
     <color name="colorBlack_2">#05000000</color>
     <color name="colorBlack_4">#0A000000</color>
     <color name="colorBlack_5">#0c000000</color>

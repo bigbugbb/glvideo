@@ -5,13 +5,13 @@
     android:id="@+id/constraint"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBlack">
+    android:background="@android:color/black">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/previewConstraint"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@color/colorBlack"
+        android:background="@android:color/black"
         app:layout_constraintBottom_toTopOf="@+id/viewController"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

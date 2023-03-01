@@ -11,7 +11,7 @@ class VideoEndingFooterView @JvmOverloads constructor(
     context: Context,
     attributes: AttributeSet? = null,
     defStyleAttr: Int = 0
-): LinearLayout(context, attributes, defStyleAttr) {
+) : LinearLayout(context, attributes, defStyleAttr) {
 
     init {
         LayoutInflater.from(context).inflate(R.layout.view_video_ending_footer, this, true)

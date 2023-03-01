@@ -15,7 +15,6 @@ import com.binbo.glvideo.sample_app.databinding.FragmentAddWatermarkBinding
 import com.binbo.glvideo.sample_app.impl.video.graph.add_watermark.AddWatermarkGraphManager
 import com.binbo.glvideo.sample_app.utils.player.VideoPlayerDelegate
 import com.kk.taurus.playerbase.assist.RelationAssist
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext

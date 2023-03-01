@@ -20,11 +20,11 @@
             android:includeFontPadding="false"
             android:shadowColor="@color/colorBlack_50"
             android:shadowDx="0"
-            android:shadowDy="2"
-            android:shadowRadius="4"
+            android:shadowDy="1"
+            android:shadowRadius="2"
             android:text="@string/add_watermark_title"
             android:textAllCaps="true"
-            android:textColor="@color/colorWhite"
+            android:textColor="@android:color/white"
             android:textSize="22px" />
 
         <TextView
@@ -36,8 +36,8 @@
             android:paddingTop="4px"
             android:shadowColor="@color/colorBlack_50"
             android:shadowDx="0"
-            android:shadowDy="2"
-            android:shadowRadius="4"
+            android:shadowDy="1"
+            android:shadowRadius="2"
             android:text="@string/add_watermark_subtitle"
             android:textAllCaps="true"
             android:textColor="#3FACFF"

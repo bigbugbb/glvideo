@@ -7,7 +7,6 @@ import com.binbo.glvideo.core.graph.MediaGraph
 import com.binbo.glvideo.core.graph.base.BaseGraphEvent
 import com.binbo.glvideo.core.graph.base.BaseMediaGraph
 import com.binbo.glvideo.core.graph.component.FrameRecorder
-import com.binbo.glvideo.core.graph.component.VideoSource
 import com.binbo.glvideo.core.graph.event.RecordingCompleted
 import com.binbo.glvideo.core.graph.manager.BaseGraphManager
 import com.binbo.glvideo.core.media.recorder.GLRecorderConfig
@@ -16,8 +15,6 @@ import com.binbo.glvideo.sample_app.App.Const.frameRate
 import com.binbo.glvideo.sample_app.App.Const.recordVideoExt
 import com.binbo.glvideo.sample_app.App.Const.recordVideoSize
 import com.binbo.glvideo.sample_app.R
-import com.binbo.glvideo.sample_app.impl.video.graph.gif_to_mp4.GifToMp4RenderingObject
-import com.binbo.glvideo.sample_app.utils.FileToolUtils
 import com.binbo.glvideo.sample_app.utils.FileToolUtils.getFile
 import com.binbo.glvideo.sample_app.utils.FileToolUtils.writeVideoToGallery
 import com.binbo.glvideo.sample_app.utils.FileUseCase.Companion.ADD_WATERMARK

@@ -146,7 +146,12 @@ private class AddVideoEndingRenderer(val renderingObject: AddVideoEndingRenderin
 
                                 // encode the frames of the 2 seconds video ending
                                 (1..frameRate * 2).forEach { i ->
-                                    encoder?.let { drawFrameUntilSucceed(it, TextureToRecord(endingFrameBufferTextures[0], lastTimestampUs * 1000L + ptsDelta * i)) }
+                                    encoder?.let {
+                                        drawFrameUntilSucceed(
+                                            it,
+                                            TextureToRecord(endingFrameBufferTextures[0], lastTimestampUs * 1000L + ptsDelta * i)
+                                        )
+                                    }
                                 }
 
                                 runBlocking {

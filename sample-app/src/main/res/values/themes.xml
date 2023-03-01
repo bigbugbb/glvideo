@@ -10,6 +10,7 @@
         <item name="android:statusBarColor">@color/colorPrimary</item>
         <!-- Customize your theme here. -->
     </style>
+
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -22,7 +23,7 @@
         <item name="android:windowAllowReturnTransitionOverlap">true</item>
         <item name="android:windowAllowEnterTransitionOverlap">true</item>
         <item name="android:windowContentTransitions">true</item>
-        <item name="android:colorControlHighlight">@color/colorWhite30</item>
+        <item name="android:colorControlHighlight">@color/colorWhite_30</item>
         <item name="android:windowAnimationStyle">@null</item>
         <item name="android:navigationBarColor">@color/colorPrimary</item>
     </style>

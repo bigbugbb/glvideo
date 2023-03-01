@@ -111,7 +111,7 @@ class PictureTakingFragment : Fragment() {
                 titleStr = App.context.getString(R.string.no_permission_toast),
                 noStr = App.context.getString(R.string.common_cancel),
                 yesStr = App.context.getString(R.string.settings_title),
-                noColor = App.context.getColorCompat(R.color.dialog_color_white),
+                noColor = App.context.getColorCompat(android.R.color.white),
                 yesColor = App.context.getColorCompat(R.color.colorPrimary)
             ).apply {
                 onPositiveClick = {
