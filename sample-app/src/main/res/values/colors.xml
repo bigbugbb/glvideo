@@ -3,7 +3,6 @@
     <color name="colorPrimary">#3894FF</color>
 
     <color name="dialog_color_white">@color/colorWhite</color>
-    <color name="dialog_color_62FD75">#62FD75</color>
 
     <!--          白色透明度       -->
     <color name="colorWhite">#FFFFFF</color>

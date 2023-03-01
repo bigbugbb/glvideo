@@ -112,7 +112,7 @@ class PictureTakingFragment : Fragment() {
                 noStr = App.context.getString(R.string.common_cancel),
                 yesStr = App.context.getString(R.string.settings_title),
                 noColor = App.context.getColorCompat(R.color.dialog_color_white),
-                yesColor = App.context.getColorCompat(R.color.dialog_color_62FD75)
+                yesColor = App.context.getColorCompat(R.color.colorPrimary)
             ).apply {
                 onPositiveClick = {
                     kotlin.runCatching { PermissionUtils.toPermissionSetting(context) }
