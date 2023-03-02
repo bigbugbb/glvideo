@@ -11,8 +11,10 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import com.binbo.glvideo.core.GLVideo.Core.tagOfGraph
 import com.binbo.glvideo.core.ext.singleClick
+import com.binbo.glvideo.core.graph.GraphJob
 import com.binbo.glvideo.core.graph.component.GifSource
 import com.binbo.glvideo.core.graph.executor.GraphExecutor
+import com.binbo.glvideo.core.graph.manager.BaseGraphManager
 import com.binbo.glvideo.sample_app.App
 import com.binbo.glvideo.sample_app.App.ArgKey.ARG_SELECTED_VIDEO_KEY
 import com.binbo.glvideo.sample_app.R
@@ -46,9 +48,20 @@ class GifToMp4Fragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
-    private var graphManager: GifToMp4GraphManager? = null
+    private val graphJobObserver = object : GraphJob.EventObserver {
+        override suspend fun onStarted(graphManager: BaseGraphManager) {
+            super.onStarted(graphManager)
+            (graphManager as GifToMp4GraphManager).let { it.waitUntilDone() }
+        }
+    }
 
-    private var job: Job? = null
+    private var graphJob: GraphJob = GraphJob(object : GraphJob.GraphManagerProvider {
+        override fun onGraphManagerRequested(): BaseGraphManager {
+            return GifToMp4GraphManager("converted", 285, 500, createGifFrameProvider(this@GifToMp4Fragment))
+        }
+    }).apply {
+        registerObserver(graphJobObserver)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentGifToMp4Binding.inflate(inflater, container, false)
@@ -64,31 +77,7 @@ class GifToMp4Fragment : Fragment() {
             .into(binding.imageGif)
 
         binding.cardConvert.singleClick {
-            if (job == null) {
-                job = GraphExecutor.coroutineScope.launch {
-                    graphManager = GifToMp4GraphManager("converted", 285, 500, createGifFrameProvider(this@GifToMp4Fragment))
-                    graphManager?.run {
-                        createMediaGraph()
-                        prepare()
-                        start()
-                        waitUntilDone()
-                    }
-                }
-
-                job?.invokeOnCompletion { throwable ->
-                    runBlocking {
-                        graphManager?.stop()
-                        graphManager?.release()
-                        graphManager?.destroyMediaGraph()
-                        graphManager = null
-                    }
-                    job = null
-
-                    if (throwable != null) {
-                        Log.e(tagOfGraph, throwable.message ?: "")
-                    }
-                }
-            }
+            graphJob.execute()
         }
 
         RxBus.getDefault().onEvent(VideoFileCreated::class.java)
@@ -103,9 +92,8 @@ class GifToMp4Fragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        graphJob.cancel()
         _binding = null
-        job?.cancel()
-        job = null
     }
 
     companion object {
