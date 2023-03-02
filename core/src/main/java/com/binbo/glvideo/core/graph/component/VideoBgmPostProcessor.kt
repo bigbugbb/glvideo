@@ -20,10 +20,11 @@ abstract class VideoBgmPostProcessor(override val arguments: Bundle = bundleOf()
 
     private val TAG = "VideoBgmPostProcessor"
 
-    suspend fun addBgmToVideo(srcFile: File, audioFile: File, dstFile: File) =
+    suspend fun addBgmToVideo(srcFile: File, audioFile: File, dstFile: File, applyShortest: Boolean = true) =
         suspendCancellableCoroutine<String> { continuation ->
             kotlin.runCatching {
-                val ffmpegCmd = "-i ${srcFile.absolutePath} -i ${audioFile.absolutePath} -map 0:v -map 1:a -c copy -shortest ${dstFile.absolutePath}"
+                val shortest = if (applyShortest) "-shortest" else ""
+                val ffmpegCmd = "-i ${srcFile.absolutePath} -i ${audioFile.absolutePath} -map 0:v -map 1:a -c copy $shortest ${dstFile.absolutePath}"
                 Log.d(TAG, "ffmpeg cmd: $ffmpegCmd")
 
                 val session = FFmpegKit.execute(ffmpegCmd)

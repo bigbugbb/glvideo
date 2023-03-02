@@ -9,11 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import com.binbo.glvideo.core.GLVideo.Core.tagOfGraph
 import com.binbo.glvideo.core.ext.singleClick
 import com.binbo.glvideo.core.graph.GraphJob
 import com.binbo.glvideo.core.graph.component.GifSource
-import com.binbo.glvideo.core.graph.executor.GraphExecutor
 import com.binbo.glvideo.core.graph.manager.BaseGraphManager
 import com.binbo.glvideo.sample_app.App
 import com.binbo.glvideo.sample_app.App.ArgKey.ARG_SELECTED_VIDEO_KEY
@@ -30,12 +28,14 @@ import com.bumptech.glide.load.resource.gif.GifDrawable
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.channels.onFailure
+import kotlinx.coroutines.channels.onSuccess
+import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 /**
  * 解析出gif的每一帧，再逐帧编码成mp4
@@ -95,6 +95,7 @@ class GifToMp4Fragment : Fragment() {
 
 fun createGifFrameProvider(fragment: Fragment, gifRawId: Int = R.raw.sample_gif) = object : GifSource.GifFrameProvider {
     override fun getFrames(): Flow<GifSource.GifFrame> = callbackFlow {
+        val tag = "GifSource"
         val target = GlideApp.with(fragment)
             .asGif()
             .load(gifRawId)
@@ -102,17 +103,19 @@ fun createGifFrameProvider(fragment: Fragment, gifRawId: Int = R.raw.sample_gif)
                 override fun onResourceReady(resource: GifDrawable, transition: Transition<in GifDrawable>?) {
                     kotlin.runCatching {
                         val gifState = resource.constantState!!
-                        val frameLoader = gifState.javaClass.getDeclaredField("frameLoader");
+                        val frameLoader = gifState.javaClass.getDeclaredField("frameLoader")
                         frameLoader.isAccessible = true
                         val gifFrameLoader = frameLoader.get(gifState)
 
                         val gifDecoder = gifFrameLoader.javaClass.getDeclaredField("gifDecoder");
                         gifDecoder.isAccessible = true
                         val standardGifDecoder = gifDecoder.get(gifFrameLoader) as StandardGifDecoder
-                        (0 until standardGifDecoder.frameCount).forEach { _ ->
+                        (0 until standardGifDecoder.frameCount).forEach { i ->
                             standardGifDecoder.advance()
                             standardGifDecoder.nextFrame?.let { bitmap ->
                                 trySend(GifSource.GifFrame(bitmap, standardGifDecoder.nextDelay))
+                                    .onSuccess { Log.i(tag, "$i onSuccess") }
+                                    .onFailure { t: Throwable? -> Log.i(tag, "$i onFailure $t") }
                             }
                         }
                     }.getOrElse {
@@ -123,7 +126,7 @@ fun createGifFrameProvider(fragment: Fragment, gifRawId: Int = R.raw.sample_gif)
                 }
 
                 override fun onLoadFailed(errorDrawable: Drawable?) {
-                    close()
+                    cancel(CancellationException("load gif failed"))
                 }
 
                 override fun onLoadCleared(placeholder: Drawable?) {
@@ -131,5 +134,6 @@ fun createGifFrameProvider(fragment: Fragment, gifRawId: Int = R.raw.sample_gif)
             })
 
         awaitClose { GlideApp.with(fragment).clear(target) }
+        Log.i(tag, "awaitClose return")
     }
 }

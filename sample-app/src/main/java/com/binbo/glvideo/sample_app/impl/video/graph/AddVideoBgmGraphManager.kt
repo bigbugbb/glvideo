@@ -123,7 +123,7 @@ class AddVideoBgmGraphManager(
 
             return if (srcFile.exists()) {
                 kotlin.runCatching {
-                    val result = addBgmToVideo(srcFile, bgmFile, dstFile)
+                    val result = addBgmToVideo(srcFile, bgmFile, dstFile, false)
                     MResults.success(result)
                 }.getOrElse {
                     MResults.failure(it)

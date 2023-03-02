@@ -29,7 +29,7 @@ class GifSource(
 
     private val maxTextureCount = 60
 
-    private var gifFrameProviderRef: WeakReference<GifFrameProvider> = WeakReference(gifFrameProvider)
+    private var frameProviderRef: WeakReference<GifFrameProvider> = WeakReference(gifFrameProvider)
 
     private val frameBuffer = IntArray(1)
     private val frameDrawer = FrameDrawer()
@@ -40,7 +40,7 @@ class GifSource(
     private lateinit var handlerThread: HandlerThread
     private lateinit var handlerDispatcher: CoroutineDispatcher
 
-    private val defaultScope = CoroutineScope(Dispatchers.Default)
+    private val defaultScope = CoroutineScope(Dispatchers.IO)
 
     private val outputQueue: BaseMediaQueue<MediaData>
         get() = outputQueues[0]
@@ -81,8 +81,9 @@ class GifSource(
             frames = 0
             lastFramePresentationTimeUs = 0L
 
-            gifFrameProviderRef.get()?.let { gifFrameProvider ->
-                gifFrameProvider.getFrames()
+            frameProviderRef.get()?.let { frameProvider ->
+                frameProvider.getFrames()
+                    .flowOn(Dispatchers.IO) // the callback should run on a separate thread
                     .map { frame ->
                         val textureId = OpenGLUtils.loadTexture(GLVideo.context, frame.bitmap)
                         val sharedTexture = eglResource!!.getMediaTextures(vpw, vph, 1, maxTextureCount).first()
@@ -145,7 +146,7 @@ class GifSource(
     }
 
     companion object {
-        const val TAG = "BitmapSource"
+        const val TAG = "GifSource"
     }
 }
 
