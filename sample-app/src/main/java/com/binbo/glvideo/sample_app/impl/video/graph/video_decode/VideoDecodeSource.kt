@@ -7,7 +7,4 @@ class VideoDecodeSource(videoUri: Uri, videoRawId: Int) : VideoSource(videoUri, 
 
     override val withSync: Boolean
         get() = true
-
-    override val stopAfterWindowFilled: Boolean
-        get() = false
 }

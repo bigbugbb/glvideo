@@ -36,6 +36,9 @@ open class VideoExtractionSource(videoUri: Uri) : VideoSource(videoUri) {
     override val textureCount: Int
         get() = maxCachedFrames + frameWindowSize
 
+    override val stopAfterWindowFilled: Boolean
+        get() = true
+
     override val frameWindowSize: Int
         get() = maxCachedFrames / 5
 

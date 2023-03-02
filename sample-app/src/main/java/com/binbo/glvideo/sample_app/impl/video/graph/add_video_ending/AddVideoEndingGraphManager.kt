@@ -7,6 +7,7 @@ import com.binbo.glvideo.core.graph.MediaGraph
 import com.binbo.glvideo.core.graph.base.BaseGraphEvent
 import com.binbo.glvideo.core.graph.base.BaseMediaGraph
 import com.binbo.glvideo.core.graph.component.FrameRecorder
+import com.binbo.glvideo.core.graph.component.VideoSource
 import com.binbo.glvideo.core.graph.event.RecordingCompleted
 import com.binbo.glvideo.core.graph.manager.BaseGraphManager
 import com.binbo.glvideo.core.media.recorder.GLRecorderConfig
@@ -49,7 +50,7 @@ class AddVideoEndingGraphManager(val videoUri: Uri, val videoRawId: Int) : BaseG
             override fun onCreate() {
                 super.onCreate()
 
-                val mediaSource = AddVideoEndingVideoSource(videoUri, videoRawId).apply { mediaGraph.addObject(this) }
+                val mediaSource = VideoSource(videoUri, videoRawId).apply { mediaGraph.addObject(this) }
                 val mediaObject = AddVideoEndingRenderingObject(recordVideoSize).apply { mediaGraph.addObject(this) }
                 val mediaSink = FrameRecorder(context, recorderConfig).apply { mediaGraph.addObject(this) }
 

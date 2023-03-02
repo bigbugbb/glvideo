@@ -75,7 +75,7 @@ open class VideoSource(
         get() = false
 
     protected open val stopAfterWindowFilled: Boolean
-        get() = true
+        get() = false
 
     protected open val videoDrawerMode: Int
         get() = 0

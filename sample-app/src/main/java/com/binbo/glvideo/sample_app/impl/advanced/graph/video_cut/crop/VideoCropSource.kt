@@ -36,6 +36,9 @@ class VideoCropSource(videoUri: Uri, timeline: Range<Long>) :
     override val timeIntervalUsPerFrame: Long
         get() = 1000L / maxFrameRate * 1000L
 
+    override val stopAfterWindowFilled: Boolean
+        get() = true
+
     override val frameWindowSize: Int
         get() {
             /**

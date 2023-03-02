@@ -7,6 +7,7 @@ import com.binbo.glvideo.core.graph.MediaGraph
 import com.binbo.glvideo.core.graph.base.BaseGraphEvent
 import com.binbo.glvideo.core.graph.base.BaseMediaGraph
 import com.binbo.glvideo.core.graph.component.FrameRecorder
+import com.binbo.glvideo.core.graph.component.VideoSource
 import com.binbo.glvideo.core.graph.event.RecordingCompleted
 import com.binbo.glvideo.core.graph.manager.BaseGraphManager
 import com.binbo.glvideo.core.media.recorder.GLRecorderConfig
@@ -48,7 +49,7 @@ class AddWatermarkGraphManager(val videoUri: Uri, val videoRawId: Int) : BaseGra
             override fun onCreate() {
                 super.onCreate()
 
-                val mediaSource = AddWatermarkVideoSource(videoUri, videoRawId).apply { mediaGraph.addObject(this) }
+                val mediaSource = VideoSource(videoUri, videoRawId).apply { mediaGraph.addObject(this) }
                 val mediaObject = AddWatermarkRenderingObject(recordVideoSize).apply { mediaGraph.addObject(this) }
                 val mediaSink = FrameRecorder(context, recorderConfig).apply { mediaGraph.addObject(this) }
 
