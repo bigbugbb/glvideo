@@ -10,13 +10,16 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import com.binbo.glvideo.core.GLVideo.Core.tagOfGraph
 import com.binbo.glvideo.core.ext.singleClick
+import com.binbo.glvideo.core.graph.GraphJob
 import com.binbo.glvideo.core.graph.executor.GraphExecutor
+import com.binbo.glvideo.core.graph.manager.BaseGraphManager
 import com.binbo.glvideo.sample_app.App
 import com.binbo.glvideo.sample_app.App.ArgKey.ARG_SELECTED_VIDEO_KEY
 import com.binbo.glvideo.sample_app.R
 import com.binbo.glvideo.sample_app.databinding.FragmentAddVideoBgmBinding
 import com.binbo.glvideo.sample_app.event.VideoFileCreated
 import com.binbo.glvideo.sample_app.impl.video.graph.AddVideoBgmGraphManager
+import com.binbo.glvideo.sample_app.impl.video.graph.GifToMp4GraphManager
 import com.binbo.glvideo.sample_app.ui.video.activity.VideoPreviewActivity
 import com.binbo.glvideo.sample_app.utils.bindToLifecycleOwner
 import com.binbo.glvideo.sample_app.utils.rxbus.RxBus
@@ -37,9 +40,11 @@ class AddVideoBgmFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
-    private var graphManager: AddVideoBgmGraphManager? = null
-
-    private var job: Job? = null
+    private var graphJob: GraphJob = GraphJob(object : GraphJob.GraphManagerProvider {
+        override fun onGraphManagerRequested(): BaseGraphManager {
+            return AddVideoBgmGraphManager("video_with_bgm", 285, 500, createGifFrameProvider(this@AddVideoBgmFragment))
+        }
+    })
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentAddVideoBgmBinding.inflate(inflater, container, false)
@@ -55,31 +60,7 @@ class AddVideoBgmFragment : Fragment() {
             .into(binding.imageGif)
 
         binding.cardConvert.singleClick {
-            if (job == null) {
-                job = GraphExecutor.coroutineScope.launch {
-                    graphManager = AddVideoBgmGraphManager("video_with_bgm", 285, 500, createGifFrameProvider(this@AddVideoBgmFragment))
-                    graphManager?.run {
-                        createMediaGraph()
-                        prepare()
-                        start()
-                        waitUntilDone()
-                    }
-                }
-
-                job?.invokeOnCompletion { throwable ->
-                    runBlocking {
-                        graphManager?.stop()
-                        graphManager?.release()
-                        graphManager?.destroyMediaGraph()
-                        graphManager = null
-                    }
-                    job = null
-
-                    if (throwable != null) {
-                        Log.e(tagOfGraph, throwable.message ?: "")
-                    }
-                }
-            }
+            graphJob.execute()
         }
 
         RxBus.getDefault().onEvent(VideoFileCreated::class.java)
@@ -95,8 +76,7 @@ class AddVideoBgmFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        job?.cancel()
-        job = null
+        graphJob.cancel()
     }
 
     companion object {

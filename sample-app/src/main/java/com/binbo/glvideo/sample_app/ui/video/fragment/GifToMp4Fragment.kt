@@ -48,20 +48,11 @@ class GifToMp4Fragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
-    private val graphJobObserver = object : GraphJob.EventObserver {
-        override suspend fun onStarted(graphManager: BaseGraphManager) {
-            super.onStarted(graphManager)
-            (graphManager as GifToMp4GraphManager).let { it.waitUntilDone() }
-        }
-    }
-
     private var graphJob: GraphJob = GraphJob(object : GraphJob.GraphManagerProvider {
         override fun onGraphManagerRequested(): BaseGraphManager {
             return GifToMp4GraphManager("converted", 285, 500, createGifFrameProvider(this@GifToMp4Fragment))
         }
-    }).apply {
-        registerObserver(graphJobObserver)
-    }
+    })
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentGifToMp4Binding.inflate(inflater, container, false)
@@ -102,11 +93,11 @@ class GifToMp4Fragment : Fragment() {
     }
 }
 
-fun createGifFrameProvider(fragment: Fragment) = object : GifSource.GifFrameProvider {
+fun createGifFrameProvider(fragment: Fragment, gifRawId: Int = R.raw.sample_gif) = object : GifSource.GifFrameProvider {
     override fun getFrames(): Flow<GifSource.GifFrame> = callbackFlow {
         val target = GlideApp.with(fragment)
             .asGif()
-            .load(R.raw.sample_gif)
+            .load(gifRawId)
             .into(object : CustomTarget<GifDrawable>() {
                 override fun onResourceReady(resource: GifDrawable, transition: Transition<in GifDrawable>?) {
                     kotlin.runCatching {

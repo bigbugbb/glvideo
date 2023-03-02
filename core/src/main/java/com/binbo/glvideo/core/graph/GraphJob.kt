@@ -28,6 +28,7 @@ class GraphJob(val provider: GraphManagerProvider) : ObserverHolder<GraphJob.Eve
                     observers.forEach { it.onPrepared(this) }
                     start()
                     observers.forEach { it.onStarted(this) }
+                    waitUntilDone()
                 }
             }.also { job ->
                 job.invokeOnCompletion { throwable ->

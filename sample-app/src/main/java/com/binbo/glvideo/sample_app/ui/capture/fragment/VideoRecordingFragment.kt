@@ -34,8 +34,6 @@ class VideoRecordingFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
-    private val viewModel by viewModels<VideoRecordingViewModel>()
-
     private lateinit var cameraController: CameraController
 
     private lateinit var graphManager: VideoCaptureGraphManager

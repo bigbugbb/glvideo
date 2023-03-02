@@ -5,14 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.binbo.glvideo.core.graph.executor.GraphExecutor
+import com.binbo.glvideo.core.graph.GraphJob
+import com.binbo.glvideo.core.graph.manager.BaseGraphManager
 import com.binbo.glvideo.sample_app.App.Const.sampleVideoUri
 import com.binbo.glvideo.sample_app.R
 import com.binbo.glvideo.sample_app.databinding.FragmentVideoDecodeBinding
 import com.binbo.glvideo.sample_app.impl.video.graph.VideoDecodeGraphManager
 import com.binbo.glvideo.sample_app.ui.capture.fragment.CameraPreviewCustomFragment
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 
 class VideoDecodeFragment : Fragment() {
 
@@ -22,7 +21,11 @@ class VideoDecodeFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
-    private lateinit var graphManager: VideoDecodeGraphManager
+    private var graphJob: GraphJob = GraphJob(object : GraphJob.GraphManagerProvider {
+        override fun onGraphManagerRequested(): BaseGraphManager {
+            return VideoDecodeGraphManager(sampleVideoUri, R.raw.sample_video, binding.viewSurface)
+        }
+    })
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentVideoDecodeBinding.inflate(inflater, container, false)
@@ -31,30 +34,12 @@ class VideoDecodeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        graphManager = VideoDecodeGraphManager(sampleVideoUri, R.raw.sample_video, binding.viewSurface).apply {
-            createMediaGraph()
-        }
-
-        runBlocking {
-            withContext(GraphExecutor.dispatchers) {
-                graphManager.prepare()
-                graphManager.start()
-            }
-        }
+        graphJob.execute()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-
-        runBlocking {
-            withContext(GraphExecutor.dispatchers) {
-                graphManager.stop()
-                graphManager.release()
-                graphManager.destroyMediaGraph()
-            }
-        }
-
+        graphJob.cancel()
         _binding = null
     }
 

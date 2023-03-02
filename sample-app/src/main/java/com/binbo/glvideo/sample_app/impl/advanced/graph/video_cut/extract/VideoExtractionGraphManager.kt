@@ -193,3 +193,12 @@ class VideoExtractionGraphManager(
         player.destroy()
     }
 }
+
+object VideoExtractionConfig {
+    val extractWidth: Int = 72
+    val extractHeight: Int = 128
+    val maxCachedFrames: Int = 300
+
+    val minExtractDuration = 2000000L // us
+    val maxExtractDuration = 6000000L
+}

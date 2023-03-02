@@ -11,13 +11,16 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.binbo.glvideo.core.GLVideo.Core.tagOfGraph
 import com.binbo.glvideo.core.ext.singleClick
+import com.binbo.glvideo.core.graph.GraphJob
 import com.binbo.glvideo.core.graph.executor.GraphExecutor
+import com.binbo.glvideo.core.graph.manager.BaseGraphManager
 import com.binbo.glvideo.sample_app.App
 import com.binbo.glvideo.sample_app.App.ArgKey.ARG_SELECTED_VIDEO_KEY
 import com.binbo.glvideo.sample_app.App.Const.sampleVideoUri
 import com.binbo.glvideo.sample_app.R
 import com.binbo.glvideo.sample_app.databinding.FragmentAddVideoEndingBinding
 import com.binbo.glvideo.sample_app.event.VideoFileCreated
+import com.binbo.glvideo.sample_app.impl.video.graph.AddVideoBgmGraphManager
 import com.binbo.glvideo.sample_app.impl.video.graph.AddVideoEndingGraphManager
 import com.binbo.glvideo.sample_app.ui.video.activity.VideoPreviewActivity
 import com.binbo.glvideo.sample_app.utils.bindToLifecycleOwner
@@ -38,9 +41,11 @@ class AddVideoEndingFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
-    private var graphManager: AddVideoEndingGraphManager? = null
-
-    private var job: Job? = null
+    private var graphJob: GraphJob = GraphJob(object : GraphJob.GraphManagerProvider {
+        override fun onGraphManagerRequested(): BaseGraphManager {
+            return AddVideoEndingGraphManager(sampleVideoUri, R.raw.sample_video)
+        }
+    })
 
     private val player = object : VideoPlayerDelegate(RelationAssist(App.context)) {
         override fun onPlayComplete() {
@@ -70,31 +75,7 @@ class AddVideoEndingFragment : Fragment() {
         }
 
         binding.cardConvert.singleClick {
-            if (job == null) {
-                job = GraphExecutor.coroutineScope.launch {
-                    graphManager = AddVideoEndingGraphManager(sampleVideoUri, R.raw.sample_video)
-                    graphManager?.run {
-                        createMediaGraph()
-                        prepare()
-                        start()
-                        waitUntilDone()
-                    }
-                }
-
-                job?.invokeOnCompletion { throwable ->
-                    runBlocking {
-                        graphManager?.stop()
-                        graphManager?.release()
-                        graphManager?.destroyMediaGraph()
-                        graphManager = null
-                    }
-                    job = null
-
-                    if (throwable != null) {
-                        Log.e(tagOfGraph, throwable.message ?: "")
-                    }
-                }
-            }
+            graphJob.execute()
         }
 
         RxBus.getDefault().onEvent(VideoFileCreated::class.java)
@@ -123,8 +104,7 @@ class AddVideoEndingFragment : Fragment() {
         player.reset()
         player.destroy()
 
-        job?.cancel()
-        job = null
+        graphJob.cancel()
 
         _binding = null
     }

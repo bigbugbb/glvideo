@@ -90,7 +90,7 @@ class AddWatermarkGraphManager(val videoUri: Uri, val videoRawId: Int) : BaseGra
         }
     }
 
-    suspend fun waitUntilDone() {
+    override suspend fun waitUntilDone() {
         recordingCompleted.receive()
         val videoFile = getFile(ADD_WATERMARK, recorderConfig.targetFilename + recordVideoExt)
         writeVideoToGallery(videoFile, "video/mp4")

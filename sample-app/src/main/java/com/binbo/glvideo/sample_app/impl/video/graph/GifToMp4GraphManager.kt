@@ -93,7 +93,7 @@ class GifToMp4GraphManager(
         }
     }
 
-    suspend fun waitUntilDone() {
+    override suspend fun waitUntilDone() {
         recordingCompleted.receive()
         val videoFile = getFile(FileUseCase.GIF_TO_MP4, videoFilename + recordVideoExt)
         FileToolUtils.writeVideoToGallery(videoFile, "video/mp4")

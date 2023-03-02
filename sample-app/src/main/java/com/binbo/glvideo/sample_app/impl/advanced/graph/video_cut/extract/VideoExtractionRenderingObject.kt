@@ -48,11 +48,7 @@ class VideoExtractionRenderingObject(private val surfaceViewRef: WeakReference<V
     internal var meta: VideoMetaData? = null
 
     val visibleTimeRange: Range<Long>
-        get() = if (renderer == null) {
-            Range(0L, 10000000L)
-        } else {
-            Range(renderer!!.timeRangeLower, renderer!!.timeRangeUpper)
-        }
+        get() = Range(renderer?.timeRangeLower ?: 0L, renderer?.timeRangeUpper ?: 10000000L)
 
     override suspend fun onPrepare() {
         super.onPrepare()

@@ -93,7 +93,7 @@ class AddVideoEndingGraphManager(val videoUri: Uri, val videoRawId: Int) : BaseG
         }
     }
 
-    suspend fun waitUntilDone() {
+    override suspend fun waitUntilDone() {
         recordingCompleted.receive()
         val videoFile = getFile(ADD_ENDING, recorderConfig.targetFilename + recordVideoExt)
         FileToolUtils.writeVideoToGallery(videoFile, "video/mp4")

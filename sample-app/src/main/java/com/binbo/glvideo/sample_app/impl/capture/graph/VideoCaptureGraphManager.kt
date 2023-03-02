@@ -117,7 +117,7 @@ class VideoCaptureGraphManager(
         renderingObject?.renderer?.notifySwap(SystemClock.uptimeMillis() * 1000)
     }
 
-    suspend fun waitUntilDone() {
+    override suspend fun waitUntilDone() {
         recordingCompleted.receive()
         FileToolUtils.writeVideoToGallery(FileToolUtils.getFile(FileUseCase.VIDEO_RECORDING, capturedFilename + recordVideoExt), "video/mp4")
         withContext(Dispatchers.Main) {

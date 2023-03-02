@@ -47,4 +47,6 @@ abstract class BaseGraphManager : IGraphManager<MediaData> {
     override suspend fun release(@DirType dirType: Int) {
         mediaGraph.release(dirType)
     }
+
+    override suspend fun waitUntilDone() {}
 }
