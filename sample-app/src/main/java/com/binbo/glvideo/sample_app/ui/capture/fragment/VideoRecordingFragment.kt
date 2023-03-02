@@ -17,7 +17,7 @@ import com.binbo.glvideo.core.ext.singleClick
 import com.binbo.glvideo.sample_app.App
 import com.binbo.glvideo.sample_app.R
 import com.binbo.glvideo.sample_app.databinding.FragmentVideoRecordingBinding
-import com.binbo.glvideo.sample_app.impl.capture.graph.video_recording.VideoCaptureGraphManager
+import com.binbo.glvideo.sample_app.impl.capture.graph.VideoCaptureGraphManager
 import com.binbo.glvideo.sample_app.ui.capture.viewmodel.VideoRecordingViewModel
 import com.binbo.glvideo.sample_app.ui.widget.CommonHintDialog
 import com.binbo.glvideo.sample_app.utils.PermissionUtils

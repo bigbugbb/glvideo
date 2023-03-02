@@ -16,7 +16,7 @@ import com.binbo.glvideo.sample_app.App.ArgKey.ARG_SELECTED_VIDEO_KEY
 import com.binbo.glvideo.sample_app.R
 import com.binbo.glvideo.sample_app.databinding.FragmentAddVideoBgmBinding
 import com.binbo.glvideo.sample_app.event.VideoFileCreated
-import com.binbo.glvideo.sample_app.impl.video.graph.add_video_bgm.AddVideoBgmGraphManager
+import com.binbo.glvideo.sample_app.impl.video.graph.AddVideoBgmGraphManager
 import com.binbo.glvideo.sample_app.ui.video.activity.VideoPreviewActivity
 import com.binbo.glvideo.sample_app.utils.bindToLifecycleOwner
 import com.binbo.glvideo.sample_app.utils.rxbus.RxBus

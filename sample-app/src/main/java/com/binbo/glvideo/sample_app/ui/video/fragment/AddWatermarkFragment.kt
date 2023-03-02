@@ -18,7 +18,7 @@ import com.binbo.glvideo.sample_app.App.Const.sampleVideoUri
 import com.binbo.glvideo.sample_app.R
 import com.binbo.glvideo.sample_app.databinding.FragmentAddWatermarkBinding
 import com.binbo.glvideo.sample_app.event.VideoFileCreated
-import com.binbo.glvideo.sample_app.impl.video.graph.add_watermark.AddWatermarkGraphManager
+import com.binbo.glvideo.sample_app.impl.video.graph.AddWatermarkGraphManager
 import com.binbo.glvideo.sample_app.ui.video.activity.VideoPreviewActivity
 import com.binbo.glvideo.sample_app.utils.bindToLifecycleOwner
 import com.binbo.glvideo.sample_app.utils.player.VideoPlayerDelegate

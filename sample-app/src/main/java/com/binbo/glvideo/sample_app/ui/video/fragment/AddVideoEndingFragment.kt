@@ -18,7 +18,7 @@ import com.binbo.glvideo.sample_app.App.Const.sampleVideoUri
 import com.binbo.glvideo.sample_app.R
 import com.binbo.glvideo.sample_app.databinding.FragmentAddVideoEndingBinding
 import com.binbo.glvideo.sample_app.event.VideoFileCreated
-import com.binbo.glvideo.sample_app.impl.video.graph.add_video_ending.AddVideoEndingGraphManager
+import com.binbo.glvideo.sample_app.impl.video.graph.AddVideoEndingGraphManager
 import com.binbo.glvideo.sample_app.ui.video.activity.VideoPreviewActivity
 import com.binbo.glvideo.sample_app.utils.bindToLifecycleOwner
 import com.binbo.glvideo.sample_app.utils.player.VideoPlayerDelegate

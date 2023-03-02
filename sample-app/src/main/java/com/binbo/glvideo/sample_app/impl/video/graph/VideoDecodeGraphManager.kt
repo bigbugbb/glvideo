@@ -1,21 +1,70 @@
-package com.binbo.glvideo.sample_app.impl.video.graph.video_decode
+package com.binbo.glvideo.sample_app.impl.video.graph
 
+import android.net.Uri
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import android.util.Log
 import android.view.SurfaceView
 import com.binbo.glvideo.core.graph.EndOfStream
 import com.binbo.glvideo.core.graph.MediaData
+import com.binbo.glvideo.core.graph.MediaGraph
 import com.binbo.glvideo.core.graph.base.BaseGraphEvent
+import com.binbo.glvideo.core.graph.base.BaseMediaGraph
 import com.binbo.glvideo.core.graph.base.BaseMediaQueue
 import com.binbo.glvideo.core.graph.base.GraphState
+import com.binbo.glvideo.core.graph.component.VideoSource
 import com.binbo.glvideo.core.graph.event.DecodedVideoFrame
+import com.binbo.glvideo.core.graph.manager.BaseGraphManager
 import com.binbo.glvideo.core.graph.simple.SimpleMediaObject
+import com.binbo.glvideo.core.graph.simple.SimpleSinkObject
 import com.binbo.glvideo.core.opengl.drawer.FrameDrawer
 import com.binbo.glvideo.core.opengl.renderer.DefaultGLRenderer
 import com.binbo.glvideo.core.opengl.renderer.RenderImpl
 import java.lang.ref.WeakReference
 import java.util.concurrent.TimeUnit
+
+
+class VideoDecodeGraphManager(
+    val videoUri: Uri,
+    val videoRawId: Int,
+    surfaceView: SurfaceView
+) : BaseGraphManager() {
+
+    private val surfaceViewRef: WeakReference<SurfaceView>
+
+    private var renderingObject: VideoDecodeRenderingObject? = null
+
+    init {
+        surfaceViewRef = WeakReference(surfaceView)
+    }
+
+    override fun createMediaGraph(): BaseMediaGraph<MediaData> {
+        mediaGraph = object : MediaGraph(this) {
+            override fun onCreate() {
+                super.onCreate()
+
+                val mediaSource = VideoDecodeSource(videoUri, videoRawId).apply { mediaGraph.addObject(this) }
+                val mediaObject = VideoDecodeRenderingObject(surfaceViewRef).apply { mediaGraph.addObject(this) }
+                val mediaSink = SimpleSinkObject().apply { mediaGraph.addObject(this) }
+
+                mediaSource to mediaObject to mediaSink
+
+                renderingObject = mediaObject
+            }
+        }
+        return mediaGraph.apply { create() }
+    }
+
+    override fun destroyMediaGraph() {
+        mediaGraph?.destroy()
+    }
+}
+
+class VideoDecodeSource(videoUri: Uri, videoRawId: Int) : VideoSource(videoUri, videoRawId) {
+
+    override val withSync: Boolean
+        get() = true
+}
 
 class VideoDecodeRenderingObject(
     private val surfaceViewRef: WeakReference<SurfaceView>

@@ -14,7 +14,7 @@ import com.binbo.glvideo.core.ext.singleClick
 import com.binbo.glvideo.sample_app.App
 import com.binbo.glvideo.sample_app.R
 import com.binbo.glvideo.sample_app.databinding.FragmentPictureTakingBinding
-import com.binbo.glvideo.sample_app.impl.capture.graph.picture_taking.PictureCaptureGraphManager
+import com.binbo.glvideo.sample_app.impl.capture.graph.PictureCaptureGraphManager
 import com.binbo.glvideo.sample_app.ui.widget.CommonHintDialog
 import com.binbo.glvideo.sample_app.utils.PermissionUtils
 import com.binbo.glvideo.sample_app.utils.getColorCompat

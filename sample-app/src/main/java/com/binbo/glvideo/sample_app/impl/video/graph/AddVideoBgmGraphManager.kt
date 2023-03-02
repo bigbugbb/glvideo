@@ -1,4 +1,4 @@
-package com.binbo.glvideo.sample_app.impl.video.graph.add_video_bgm
+package com.binbo.glvideo.sample_app.impl.video.graph
 
 import android.os.Bundle
 import android.util.Size
@@ -23,7 +23,6 @@ import com.binbo.glvideo.sample_app.App.Const.recordVideoExt
 import com.binbo.glvideo.sample_app.App.Const.recordVideoSize
 import com.binbo.glvideo.sample_app.R
 import com.binbo.glvideo.sample_app.event.VideoFileCreated
-import com.binbo.glvideo.sample_app.impl.video.graph.gif_to_mp4.GifToMp4RenderingObject
 import com.binbo.glvideo.sample_app.utils.FileToolUtils
 import com.binbo.glvideo.sample_app.utils.FileToolUtils.copyAssets
 import com.binbo.glvideo.sample_app.utils.FileToolUtils.getFile

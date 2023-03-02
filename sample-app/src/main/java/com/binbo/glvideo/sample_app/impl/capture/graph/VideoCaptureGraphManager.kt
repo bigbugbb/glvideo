@@ -1,20 +1,28 @@
-package com.binbo.glvideo.sample_app.impl.capture.graph.video_recording
+package com.binbo.glvideo.sample_app.impl.capture.graph
 
+import android.graphics.SurfaceTexture
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import android.os.SystemClock
 import android.util.Log
 import android.view.SurfaceView
+import android.widget.Toast
 import com.binbo.glvideo.core.ext.tryUntilTimeout
 import com.binbo.glvideo.core.graph.MediaData
+import com.binbo.glvideo.core.graph.MediaGraph
 import com.binbo.glvideo.core.graph.base.BaseGraphEvent
+import com.binbo.glvideo.core.graph.base.BaseMediaGraph
 import com.binbo.glvideo.core.graph.base.BaseMediaQueue
 import com.binbo.glvideo.core.graph.component.FrameRecorder
+import com.binbo.glvideo.core.graph.event.RecordingCompleted
 import com.binbo.glvideo.core.graph.event.RenderingCompleted
+import com.binbo.glvideo.core.graph.manager.BaseGraphManager
 import com.binbo.glvideo.core.graph.simple.SimpleMediaObject
 import com.binbo.glvideo.core.graph.simple.SimpleMediaQueue
+import com.binbo.glvideo.core.graph.simple.SimpleSourceObject
 import com.binbo.glvideo.core.media.encoder.MediaVideoEncoder
 import com.binbo.glvideo.core.media.ext.setupEncoderSurfaceRender
+import com.binbo.glvideo.core.media.recorder.GLRecorderConfig
 import com.binbo.glvideo.core.media.recorder.TextureToRecord
 import com.binbo.glvideo.core.opengl.drawer.CameraDrawer
 import com.binbo.glvideo.core.opengl.drawer.FrameDrawer
@@ -22,19 +30,108 @@ import com.binbo.glvideo.core.opengl.drawer.SurfaceTextureAvailableListener
 import com.binbo.glvideo.core.opengl.renderer.DefaultCameraRenderer
 import com.binbo.glvideo.core.opengl.renderer.RenderImpl
 import com.binbo.glvideo.core.opengl.utils.OpenGLUtils
-import com.binbo.glvideo.core.utils.Constants.RECORDER_INPUT_QUEUE_SIZE
+import com.binbo.glvideo.core.utils.Constants
+import com.binbo.glvideo.sample_app.App.Companion.context
 import com.binbo.glvideo.sample_app.App.Const.frameRate
+import com.binbo.glvideo.sample_app.App.Const.recordVideoExt
+import com.binbo.glvideo.sample_app.App.Const.recordVideoSize
+import com.binbo.glvideo.sample_app.R
 import com.binbo.glvideo.sample_app.event.RecordVideoEvent
+import com.binbo.glvideo.sample_app.utils.FileToolUtils
+import com.binbo.glvideo.sample_app.utils.FileUseCase
+import com.binbo.glvideo.sample_app.utils.toast
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import java.lang.ref.WeakReference
+import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.math.abs
+
+class VideoCaptureGraphManager(
+    private val capturedFilename: String,
+    surfaceView: SurfaceView,
+    textureAvailableListener: SurfaceTextureAvailableListener
+) : BaseGraphManager(), SurfaceTexture.OnFrameAvailableListener {
+
+    private val surfaceViewRef: WeakReference<SurfaceView>
+    private val textureAvailableListenerRef: WeakReference<SurfaceTextureAvailableListener>
+
+    private var recordingCompleted = Channel<Boolean>()
+    private var recording = AtomicBoolean(false)
+
+    val isRecording: Boolean
+        get() = recording.get()
+
+    val recorderConfig: GLRecorderConfig
+        get() = GLRecorderConfig.build {
+            width(recordVideoSize.width)
+            height(recordVideoSize.height)
+            videoFrameRate(frameRate)
+            targetFileDir(FileToolUtils.getFile(FileUseCase.VIDEO_RECORDING))
+            targetFilename(capturedFilename)
+            targetFileExt(recordVideoExt)
+        }
+
+    private var renderingObject: VideoCaptureRenderingObject? = null
+
+    init {
+        surfaceViewRef = WeakReference(surfaceView)
+        textureAvailableListenerRef = WeakReference(textureAvailableListener)
+        FileToolUtils.getFile(FileUseCase.VIDEO_RECORDING).deleteRecursively()
+    }
+
+    suspend fun recordVideo(recording: Boolean) {
+        mediaGraph.broadcast(RecordVideoEvent(recording))
+    }
+
+    override fun createMediaGraph(): BaseMediaGraph<MediaData> {
+        mediaGraph = object : MediaGraph(this) {
+            override fun onCreate() {
+                super.onCreate()
+
+                val mediaSource = SimpleSourceObject().apply { mediaGraph.addObject(this) }
+                val mediaObject = VideoCaptureRenderingObject(surfaceViewRef, textureAvailableListenerRef).apply { mediaGraph.addObject(this) }
+                val mediaSink = FrameRecorder(context, recorderConfig).apply { mediaGraph.addObject(this) }
+
+                mediaSource to mediaObject to mediaSink
+
+                renderingObject = mediaObject
+            }
+        }
+        return mediaGraph.apply { create() }
+    }
+
+    override fun destroyMediaGraph() {
+        mediaGraph?.destroy()
+    }
+
+    override suspend fun onReceiveEvent(event: BaseGraphEvent<MediaData>) {
+        when (event) {
+            is RecordVideoEvent -> recording.set(event.recording)
+            is RecordingCompleted -> recordingCompleted.send(true)
+        }
+    }
+
+    override fun onFrameAvailable(surfaceTexture: SurfaceTexture?) {
+        renderingObject?.renderer?.notifySwap(SystemClock.uptimeMillis() * 1000)
+    }
+
+    suspend fun waitUntilDone() {
+        recordingCompleted.receive()
+        FileToolUtils.writeVideoToGallery(FileToolUtils.getFile(FileUseCase.VIDEO_RECORDING, capturedFilename + recordVideoExt), "video/mp4")
+        withContext(Dispatchers.Main) {
+            context.toast(context.getString(R.string.video_recording_successful_message), Toast.LENGTH_SHORT)
+        }
+    }
+}
 
 class VideoCaptureRenderingObject(
     private val surfaceViewRef: WeakReference<SurfaceView>,
     private val textureAvailableListener: WeakReference<SurfaceTextureAvailableListener>
 ) : SimpleMediaObject() {
 
-    var renderer: CaptureCameraRenderer? = null
+    var renderer: VideoCaptureRenderer? = null
         private set
 
     var recording: Boolean = false
@@ -42,7 +139,7 @@ class VideoCaptureRenderingObject(
 
     override suspend fun onPrepare() {
         super.onPrepare()
-        renderer = CaptureCameraRenderer(this).apply {
+        renderer = VideoCaptureRenderer(this).apply {
             addDrawer(CameraDrawer().apply { setSurfaceTextureAvailableListener(textureAvailableListener.get()) })
             addDrawer(FrameDrawer())
         }
@@ -76,7 +173,7 @@ class VideoCaptureRenderingObject(
     }
 }
 
-class CaptureCameraRenderer(private val renderingObject: VideoCaptureRenderingObject) : DefaultCameraRenderer() {
+class VideoCaptureRenderer(private val renderingObject: VideoCaptureRenderingObject) : DefaultCameraRenderer() {
 
     private val encoder: MediaVideoEncoder?
         get() = (renderingObject.outputQueues.elementAtOrNull(0)?.to as? FrameRecorder?)?.recorder?.getVideoEncoder()
@@ -85,8 +182,8 @@ class CaptureCameraRenderer(private val renderingObject: VideoCaptureRenderingOb
 
         private var lastCaptureTime = 0L
 
-        private val recordingFrameBuffers = IntArray(RECORDER_INPUT_QUEUE_SIZE * 2)
-        private val recordingFrameBufferTextures = IntArray(RECORDER_INPUT_QUEUE_SIZE * 2)
+        private val recordingFrameBuffers = IntArray(Constants.RECORDER_INPUT_QUEUE_SIZE * 2)
+        private val recordingFrameBufferTextures = IntArray(Constants.RECORDER_INPUT_QUEUE_SIZE * 2)
 
         private var frames = 0
         private val ptsDelta = 1000000000L / frameRate

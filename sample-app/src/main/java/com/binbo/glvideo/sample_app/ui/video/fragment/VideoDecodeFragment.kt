@@ -9,7 +9,7 @@ import com.binbo.glvideo.core.graph.executor.GraphExecutor
 import com.binbo.glvideo.sample_app.App.Const.sampleVideoUri
 import com.binbo.glvideo.sample_app.R
 import com.binbo.glvideo.sample_app.databinding.FragmentVideoDecodeBinding
-import com.binbo.glvideo.sample_app.impl.video.graph.video_decode.VideoDecodeGraphManager
+import com.binbo.glvideo.sample_app.impl.video.graph.VideoDecodeGraphManager
 import com.binbo.glvideo.sample_app.ui.capture.fragment.CameraPreviewCustomFragment
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext

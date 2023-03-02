@@ -18,7 +18,7 @@ import com.binbo.glvideo.sample_app.App.ArgKey.ARG_SELECTED_VIDEO_KEY
 import com.binbo.glvideo.sample_app.R
 import com.binbo.glvideo.sample_app.databinding.FragmentGifToMp4Binding
 import com.binbo.glvideo.sample_app.event.VideoFileCreated
-import com.binbo.glvideo.sample_app.impl.video.graph.gif_to_mp4.GifToMp4GraphManager
+import com.binbo.glvideo.sample_app.impl.video.graph.GifToMp4GraphManager
 import com.binbo.glvideo.sample_app.ui.video.activity.VideoPreviewActivity
 import com.binbo.glvideo.sample_app.utils.bindToLifecycleOwner
 import com.binbo.glvideo.sample_app.utils.rxbus.RxBus
