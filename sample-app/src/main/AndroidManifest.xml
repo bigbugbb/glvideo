@@ -81,6 +81,10 @@
 
         <!-- advanced section -->
         <activity
+            android:name=".ui.advanced.activity.NameCardActivity"
+            android:exported="false"
+            android:launchMode="singleTop" />
+        <activity
             android:name=".ui.advanced.activity.NameCardWithVideoActivity"
             android:exported="false"
             android:launchMode="singleTop" />

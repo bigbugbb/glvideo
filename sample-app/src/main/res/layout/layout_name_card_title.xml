@@ -6,6 +6,6 @@
     android:ellipsize="end"
     android:textStyle="bold"
     android:maxLines="2"
-    android:text="@string/text_namecard_title"
+    android:text="namecard title"
     android:textColor="@android:color/white"
     android:textSize="20sp" />

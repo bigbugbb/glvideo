@@ -3,8 +3,8 @@ package com.binbo.glvideo.sample_app.impl.advanced.namecard_with_video.objects;
 import static android.opengl.GLES20.GL_TRIANGLE_FAN;
 import static android.opengl.GLES20.glDrawArrays;
 import static com.binbo.glvideo.core.utils.Constants.BYTES_PER_FLOAT;
-import static com.binbo.glvideo.sample_app.impl.advanced.namecard_with_video.NameCardConfig.nameCardLeft;
-import static com.binbo.glvideo.sample_app.impl.advanced.namecard_with_video.NameCardConfig.nameCardRight;
+import static com.binbo.glvideo.sample_app.impl.advanced.namecard_with_video.NameCardWithVideoConfig.nameCardLeft;
+import static com.binbo.glvideo.sample_app.impl.advanced.namecard_with_video.NameCardWithVideoConfig.nameCardRight;
 
 import android.os.SystemClock;
 

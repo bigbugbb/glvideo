@@ -12,7 +12,7 @@
         app:sl_cornerRadius="80dp"
         app:sl_dx="0dp"
         app:sl_dy="2dp"
-        app:sl_shadowColor="@color/colorBlack_20"
+        app:sl_shadowColor="@color/colorDarkGray"
         app:sl_shadowRadius="5dp">
 
         <de.hdodenhof.circleimageview.CircleImageView

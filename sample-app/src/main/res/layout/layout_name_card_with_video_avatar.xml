@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="180dp"
+    android:layout_height="180dp">
+
+    <com.binbo.glvideo.sample_app.ui.widget.ShadowFrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        app:sl_cornerRadius="80dp"
+        app:sl_dx="0dp"
+        app:sl_dy="2dp"
+        app:sl_shadowColor="@color/colorBlack_20"
+        app:sl_shadowRadius="5dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/imageAvatar"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:layout_gravity="center"
+            android:scaleType="centerCrop"
+            tools:src="@drawable/base_avatar_placeholder_white" />
+
+    </com.binbo.glvideo.sample_app.ui.widget.ShadowFrameLayout>
+
+</FrameLayout>

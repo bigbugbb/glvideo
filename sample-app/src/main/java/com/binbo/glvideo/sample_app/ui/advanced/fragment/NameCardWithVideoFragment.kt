@@ -20,7 +20,7 @@ import com.binbo.glvideo.sample_app.databinding.FragmentNameCardWithVideoBinding
 import com.binbo.glvideo.sample_app.impl.advanced.namecard_with_video.renderer.NameCardRenderer
 import com.binbo.glvideo.sample_app.utils.FileToolUtils
 import com.binbo.glvideo.sample_app.utils.FileToolUtils.getFile
-import com.binbo.glvideo.sample_app.utils.FileUseCase
+import com.binbo.glvideo.sample_app.utils.FileUseCase.Companion.NAME_CARD_WITH_VIDEO
 import com.binbo.glvideo.sample_app.utils.toast
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -42,8 +42,8 @@ class NameCardWithVideoFragment : Fragment() {
         get() = GLRecorderConfig.build {
             width(recordVideoSize.width)
             height(recordVideoSize.height)
-            targetFileDir(getFile(FileUseCase.NAME_CARD_VIDEO))
-            targetFilename("name_card_video")
+            targetFileDir(getFile(NAME_CARD_WITH_VIDEO))
+            targetFilename("name_card_with_video")
         }
 
     private val encoderListener = object : BaseMediaEncoder.MediaEncoderListener { // the inner class holders the weak ref

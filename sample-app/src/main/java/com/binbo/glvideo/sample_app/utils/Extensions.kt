@@ -9,6 +9,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.annotation.AnyThread
 import androidx.annotation.ColorRes
+import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -27,6 +28,14 @@ fun Context.toast(message: String, duration: Int = Toast.LENGTH_LONG) {
 
 fun Context.getColorCompat(@ColorRes resId: Int): Int {
     return ContextCompat.getColor(this, resId)
+}
+
+fun Context.getStringSafe(@StringRes resId: Int, vararg formatArgs: Any?, returnStringWhenError: String = ""): String {
+    return kotlin.runCatching {
+        getString(resId, *formatArgs)
+    }.getOrElse {
+        returnStringWhenError
+    }
 }
 
 fun <T> FragmentActivity.replaceViewWithFragment(viewId: Int, clazz: Class<T>, args: Bundle = bundleOf(), tag: String = clazz.name) where T : Fragment {

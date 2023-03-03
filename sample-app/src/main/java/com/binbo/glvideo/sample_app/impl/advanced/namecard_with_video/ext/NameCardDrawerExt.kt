@@ -13,7 +13,7 @@ import com.binbo.glvideo.sample_app.utils.thirdparty.GlideApp
 
 
 fun createAvatarBitmap(): Bitmap? {
-    val rootView = LayoutInflater.from(context).inflate(R.layout.layout_name_card_avatar, null)
+    val rootView = LayoutInflater.from(context).inflate(R.layout.layout_name_card_with_video_avatar, null)
     val widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(dip(180f).toInt(), View.MeasureSpec.EXACTLY)
     val heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(dip(180f).toInt(), View.MeasureSpec.EXACTLY)
     rootView.measure(widthMeasureSpec, heightMeasureSpec)
@@ -38,7 +38,7 @@ fun createAvatarBitmap(): Bitmap? {
 }
 
 fun createTitleBitmap(typeface: Typeface): Bitmap? {
-    val rootView = LayoutInflater.from(context).inflate(R.layout.layout_name_card_title, null)
+    val rootView = LayoutInflater.from(context).inflate(R.layout.layout_name_card_with_video_title, null)
     val textView = rootView.findViewById<TextView>(R.id.textNameCardTitle)
     textView.typeface = typeface
     val widthMeasureSpec = View.MeasureSpec.makeMeasureSpec((1 shl 30) - 1, View.MeasureSpec.UNSPECIFIED)
@@ -51,7 +51,7 @@ fun createTitleBitmap(typeface: Typeface): Bitmap? {
 }
 
 fun createFooterBitmap(): Bitmap? {
-    val rootView = LayoutInflater.from(context).inflate(R.layout.layout_name_card_footer, null)
+    val rootView = LayoutInflater.from(context).inflate(R.layout.layout_name_card_with_video_footer, null)
     val widthMeasureSpec = View.MeasureSpec.makeMeasureSpec((1 shl 30) - 1, View.MeasureSpec.UNSPECIFIED)
     val heightMeasureSpec = View.MeasureSpec.makeMeasureSpec((1 shl 30) - 1, View.MeasureSpec.UNSPECIFIED)
     rootView.measure(widthMeasureSpec, heightMeasureSpec)

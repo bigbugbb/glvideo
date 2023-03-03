@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.camera.core.CameraSelector
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.binbo.glvideo.core.camera.CameraController
 import com.binbo.glvideo.core.ext.nowString
@@ -18,7 +17,6 @@ import com.binbo.glvideo.sample_app.App
 import com.binbo.glvideo.sample_app.R
 import com.binbo.glvideo.sample_app.databinding.FragmentVideoRecordingBinding
 import com.binbo.glvideo.sample_app.impl.capture.graph.VideoCaptureGraphManager
-import com.binbo.glvideo.sample_app.ui.capture.viewmodel.VideoRecordingViewModel
 import com.binbo.glvideo.sample_app.ui.widget.CommonHintDialog
 import com.binbo.glvideo.sample_app.utils.PermissionUtils
 import com.binbo.glvideo.sample_app.utils.getColorCompat

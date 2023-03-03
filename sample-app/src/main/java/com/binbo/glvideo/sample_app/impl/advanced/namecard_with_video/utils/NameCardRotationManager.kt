@@ -17,8 +17,10 @@ class NameCardRotationManager {
 
     @Volatile
     private var rotateXAnimator: ValueAnimator? = null
+
     @Volatile
     private var rotateYAnimator: ValueAnimator? = null
+
     @Volatile
     private var rotateZAnimator: ValueAnimator? = null
 

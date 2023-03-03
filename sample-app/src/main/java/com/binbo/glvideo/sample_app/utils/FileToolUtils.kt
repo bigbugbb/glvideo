@@ -14,8 +14,8 @@ import com.binbo.glvideo.sample_app.App.Const.fileMainPath
 import com.binbo.glvideo.sample_app.utils.FileUseCase.Companion.ADD_ENDING
 import com.binbo.glvideo.sample_app.utils.FileUseCase.Companion.ADD_WATERMARK
 import com.binbo.glvideo.sample_app.utils.FileUseCase.Companion.GIF_TO_MP4
-import com.binbo.glvideo.sample_app.utils.FileUseCase.Companion.MISSION_CARD_VIDEO
-import com.binbo.glvideo.sample_app.utils.FileUseCase.Companion.NAME_CARD_VIDEO
+import com.binbo.glvideo.sample_app.utils.FileUseCase.Companion.NAME_CARD
+import com.binbo.glvideo.sample_app.utils.FileUseCase.Companion.NAME_CARD_WITH_VIDEO
 import com.binbo.glvideo.sample_app.utils.FileUseCase.Companion.PICTURE_TAKING
 import com.binbo.glvideo.sample_app.utils.FileUseCase.Companion.VIDEO_BGM
 import com.binbo.glvideo.sample_app.utils.FileUseCase.Companion.VIDEO_CUT
@@ -49,8 +49,8 @@ object FileToolUtils {
     private fun useCaseToFilePath(useCase: Int): String {
         val useNewSdk = Build.VERSION.SDK_INT >= 30
         val path = when (useCase) {
-            NAME_CARD_VIDEO -> "name_card/video"
-            MISSION_CARD_VIDEO -> "mission_card/video"
+            NAME_CARD -> "name_card"
+            NAME_CARD_WITH_VIDEO -> "name_card_with_video"
             PICTURE_TAKING -> "picture_taking"
             VIDEO_RECORDING -> "video_recording"
             GIF_TO_MP4 -> "gif_to_mp4"
@@ -170,8 +170,8 @@ object FileToolUtils {
 }
 
 @IntDef(
-    NAME_CARD_VIDEO,
-    MISSION_CARD_VIDEO,
+    NAME_CARD,
+    NAME_CARD_WITH_VIDEO,
     PICTURE_TAKING,
     VIDEO_RECORDING,
     GIF_TO_MP4,
@@ -186,8 +186,8 @@ object FileToolUtils {
 annotation class FileUseCase {
 
     companion object {
-        const val NAME_CARD_VIDEO = 10
-        const val MISSION_CARD_VIDEO = 20
+        const val NAME_CARD = 10
+        const val NAME_CARD_WITH_VIDEO = 20
         const val PICTURE_TAKING = 30
         const val VIDEO_RECORDING = 40
         const val GIF_TO_MP4 = 60

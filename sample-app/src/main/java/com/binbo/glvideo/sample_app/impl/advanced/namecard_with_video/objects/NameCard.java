@@ -4,10 +4,10 @@ import static android.opengl.GLES20.GL_TRIANGLE_STRIP;
 import static android.opengl.GLES20.glDrawArrays;
 import static com.binbo.glvideo.core.ext.CommonExtKt.dip;
 import static com.binbo.glvideo.core.utils.Constants.BYTES_PER_FLOAT;
-import static com.binbo.glvideo.sample_app.impl.advanced.namecard_with_video.NameCardConfig.nameCardBottom;
-import static com.binbo.glvideo.sample_app.impl.advanced.namecard_with_video.NameCardConfig.nameCardLeft;
-import static com.binbo.glvideo.sample_app.impl.advanced.namecard_with_video.NameCardConfig.nameCardRight;
-import static com.binbo.glvideo.sample_app.impl.advanced.namecard_with_video.NameCardConfig.nameCardTop;
+import static com.binbo.glvideo.sample_app.impl.advanced.namecard_with_video.NameCardWithVideoConfig.nameCardBottom;
+import static com.binbo.glvideo.sample_app.impl.advanced.namecard_with_video.NameCardWithVideoConfig.nameCardLeft;
+import static com.binbo.glvideo.sample_app.impl.advanced.namecard_with_video.NameCardWithVideoConfig.nameCardRight;
+import static com.binbo.glvideo.sample_app.impl.advanced.namecard_with_video.NameCardWithVideoConfig.nameCardTop;
 
 import com.binbo.glvideo.core.opengl.data.VertexArray;
 import com.binbo.glvideo.sample_app.impl.advanced.namecard_with_video.program.NameCardShaderProgram;

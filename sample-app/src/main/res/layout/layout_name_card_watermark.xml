@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="540px"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingVertical="4px">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/imageAvatar"
+        android:layout_width="64px"
+        android:layout_height="64px"
+        android:layout_marginLeft="16px"
+        android:src="@drawable/my_avatar"
+        app:civ_border_color="@color/colorBlack_50"
+        app:civ_border_width="2px" />
+
+    <TextView
+        style="@style/font_sf_compact_rounded_medium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="10px"
+        android:includeFontPadding="false"
+        android:text="@string/text_my_name"
+        android:textColor="@color/colorBlack_70"
+        android:textSize="15sp" />
+
+    <TextView
+        style="@style/font_sf_compact_rounded_regular"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="4px"
+        android:includeFontPadding="false"
+        android:text="@string/text_my_nickname"
+        android:textColor="@color/colorBlack_70"
+        android:textSize="13sp" />
+
+</LinearLayout>

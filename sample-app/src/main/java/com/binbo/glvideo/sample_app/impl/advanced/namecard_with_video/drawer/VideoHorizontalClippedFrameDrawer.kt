@@ -5,8 +5,8 @@ import android.os.SystemClock
 import com.binbo.glvideo.core.opengl.drawer.Drawer
 import com.binbo.glvideo.core.opengl.program.TextureShaderProgram
 import com.binbo.glvideo.sample_app.App.Companion.context
-import com.binbo.glvideo.sample_app.impl.advanced.namecard_with_video.NameCardConfig.cardVideoSize
-import com.binbo.glvideo.sample_app.impl.advanced.namecard_with_video.NameCardConfig.nameCardAspectRatio
+import com.binbo.glvideo.sample_app.impl.advanced.namecard_with_video.NameCardWithVideoConfig.cardVideoSize
+import com.binbo.glvideo.sample_app.impl.advanced.namecard_with_video.NameCardWithVideoConfig.nameCardAspectRatio
 import com.binbo.glvideo.sample_app.impl.advanced.namecard_with_video.objects.ClippedVideoFrame
 
 

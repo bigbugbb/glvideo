@@ -8,7 +8,7 @@ import com.binbo.glvideo.sample_app.R
 import java.io.File
 import kotlin.math.abs
 
-object NameCardConfig {
+object NameCardWithVideoConfig {
     val cardVideoPath =
         ContentResolver.SCHEME_ANDROID_RESOURCE + File.pathSeparator + File.separator + File.separator + context.packageName + File.separator + R.raw.name_card_background
     val cardVideoUri = Uri.parse(cardVideoPath)

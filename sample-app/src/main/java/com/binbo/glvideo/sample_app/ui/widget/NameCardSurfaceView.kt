@@ -12,7 +12,7 @@ import com.binbo.glvideo.core.media.utils.VideoDecoderHolder
 import com.binbo.glvideo.core.opengl.drawer.FrameDrawer
 import com.binbo.glvideo.core.opengl.drawer.SurfaceTextureAvailableListener
 import com.binbo.glvideo.core.opengl.renderer.DefaultGLSurfaceView
-import com.binbo.glvideo.sample_app.impl.advanced.namecard_with_video.NameCardConfig.cardVideoUri
+import com.binbo.glvideo.sample_app.impl.advanced.namecard_with_video.NameCardWithVideoConfig.cardVideoUri
 import com.binbo.glvideo.sample_app.impl.advanced.namecard_with_video.drawer.*
 import com.binbo.glvideo.sample_app.impl.advanced.namecard_with_video.renderer.NameCardRenderer
 

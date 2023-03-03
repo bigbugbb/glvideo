@@ -30,41 +30,41 @@ void main()
     // namecard内纹理上下颠倒了一下
 
     if (xy.x <= u_CornerRadius && xy.y <= u_CornerRadius) { // bottom-left
-        vec2 center = vec2(u_CornerRadius, u_CornerRadius);
-        float distanceToCenter = dot(xy - center);
-        if (distanceToCenter > radiusSquare) {
-            discard;
-        } else if (distanceToCenter >= radiusSquareInner) {
-            gl_FragColor = borderColor;
-            return;
-        }
+                                                            vec2 center = vec2(u_CornerRadius, u_CornerRadius);
+                                                            float distanceToCenter = dot(xy - center);
+                                                            if (distanceToCenter > radiusSquare) {
+                                                                discard;
+                                                            } else if (distanceToCenter >= radiusSquareInner) {
+                                                                gl_FragColor = borderColor;
+                                                                return;
+                                                            }
     } else if (xy.x >= u_Resolution.x - u_CornerRadius && xy.y <= u_CornerRadius) { // bottom-right
-        vec2 center = vec2(u_Resolution.x - u_CornerRadius, u_CornerRadius);
-        float distanceToCenter = dot(xy - center);
-        if (distanceToCenter > radiusSquare) {
-            discard;
-        } else if (distanceToCenter >= radiusSquareInner) {
-            gl_FragColor = borderColor;
-            return;
-        }
+                                                                                    vec2 center = vec2(u_Resolution.x - u_CornerRadius, u_CornerRadius);
+                                                                                    float distanceToCenter = dot(xy - center);
+                                                                                    if (distanceToCenter > radiusSquare) {
+                                                                                        discard;
+                                                                                    } else if (distanceToCenter >= radiusSquareInner) {
+                                                                                        gl_FragColor = borderColor;
+                                                                                        return;
+                                                                                    }
     } else if (xy.x <= u_CornerRadius && xy.y >= u_Resolution.y - u_CornerRadius) { // top-left
-        vec2 center = vec2(u_CornerRadius, u_Resolution.y - u_CornerRadius);
-        float distanceToCenter = dot(xy - center);
-        if (distanceToCenter > radiusSquare) {
-            discard;
-        } else if (distanceToCenter > radiusSquareInner) {
-            gl_FragColor = borderColor;
-            return;
-        }
+                                                                                    vec2 center = vec2(u_CornerRadius, u_Resolution.y - u_CornerRadius);
+                                                                                    float distanceToCenter = dot(xy - center);
+                                                                                    if (distanceToCenter > radiusSquare) {
+                                                                                        discard;
+                                                                                    } else if (distanceToCenter > radiusSquareInner) {
+                                                                                        gl_FragColor = borderColor;
+                                                                                        return;
+                                                                                    }
     } else if (xy.x >= u_Resolution.x - u_CornerRadius && xy.y >= u_Resolution.y - u_CornerRadius) { // top-right
-        vec2 center = vec2(u_Resolution.x - u_CornerRadius, u_Resolution.y - u_CornerRadius);
-        float distanceToCenter = dot(xy - center);
-        if (dot(xy - center) >= radiusSquare) {
-            discard;
-        } else if (distanceToCenter > radiusSquareInner) {
-            gl_FragColor = borderColor;
-            return;
-        }
+                                                                                                     vec2 center = vec2(u_Resolution.x - u_CornerRadius, u_Resolution.y - u_CornerRadius);
+                                                                                                     float distanceToCenter = dot(xy - center);
+                                                                                                     if (dot(xy - center) >= radiusSquare) {
+                                                                                                         discard;
+                                                                                                     } else if (distanceToCenter > radiusSquareInner) {
+                                                                                                         gl_FragColor = borderColor;
+                                                                                                         return;
+                                                                                                     }
     }
 
     if (v_TextureCoords.y < 0.1) {
