@@ -199,7 +199,7 @@ public final class RecorderGLRender implements Runnable {
                         if (textureToRecord.getPts() != -1) {
                             pts = textureToRecord.getPts();
                         }
-//                    LogUtil.d(TAG, String.format("setPresentationTime i=%d pts=%ld", i, pts));
+//                    Log.d(TAG, String.format("setPresentationTime i=%d pts=%ld", i, pts));
                         mRecorderEglManager.setPresentationTime(pts);
                         mRecorderEglManager.swapMyEGLBuffers();
                     } catch (Exception e) {

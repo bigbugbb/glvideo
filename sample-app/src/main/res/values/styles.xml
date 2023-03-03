@@ -28,6 +28,14 @@
         <attr name="cover_rightBottomRadius" format="dimension" />
     </declare-styleable>
 
+    <declare-styleable name="ShadowFrameLayout">
+        <attr name="sl_cornerRadius" format="dimension" />
+        <attr name="sl_shadowRadius" format="dimension" />
+        <attr name="sl_shadowColor" format="color" />
+        <attr name="sl_dx" format="dimension" />
+        <attr name="sl_dy" format="dimension" />
+    </declare-styleable>
+
     <style name="font_sf_compact_rounded_black">
         <item name="android:fontFamily">@font/sf_compact_rounded_black</item>
     </style>

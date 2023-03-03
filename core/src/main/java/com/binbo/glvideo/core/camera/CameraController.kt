@@ -392,45 +392,45 @@ class CameraController(
 
         override fun onCaptureStarted(session: CameraCaptureSession, request: CaptureRequest, timestamp: Long, frameNumber: Long) {
             super.onCaptureStarted(session, request, timestamp, frameNumber)
-//            LogUtil.d(tagOfCapture, "onCaptureStarted timestamp: $timestamp frameNumber: $frameNumber")
+//            Log.d(tagOfCapture, "onCaptureStarted timestamp: $timestamp frameNumber: $frameNumber")
             cameraCaptureCallback?.onCaptureStarted(session, request, timestamp, frameNumber)
         }
 
         override fun onCaptureProgressed(session: CameraCaptureSession, request: CaptureRequest, partialResult: CaptureResult) {
             super.onCaptureProgressed(session, request, partialResult)
-//            LogUtil.d(tagOfCapture, "onCaptureProgressed")
+//            Log.d(tagOfCapture, "onCaptureProgressed")
             partialCaptureResult = partialResult
             cameraCaptureCallback?.onCaptureProgressed(session, request, partialResult)
         }
 
         override fun onCaptureCompleted(session: CameraCaptureSession, request: CaptureRequest, result: TotalCaptureResult) {
             super.onCaptureCompleted(session, request, result)
-//            LogUtil.d(tagOfCapture, "onCaptureCompleted")
+//            Log.d(tagOfCapture, "onCaptureCompleted")
             totalCaptureResult = result
             cameraCaptureCallback?.onCaptureCompleted(session, request, result)
         }
 
         override fun onCaptureFailed(session: CameraCaptureSession, request: CaptureRequest, failure: CaptureFailure) {
             super.onCaptureFailed(session, request, failure)
-//            LogUtil.d(tagOfCapture, "onCaptureFailed failure: $failure")
+//            Log.d(tagOfCapture, "onCaptureFailed failure: $failure")
             cameraCaptureCallback?.onCaptureFailed(session, request, failure)
         }
 
         override fun onCaptureSequenceCompleted(session: CameraCaptureSession, sequenceId: Int, frameNumber: Long) {
             super.onCaptureSequenceCompleted(session, sequenceId, frameNumber)
-//            LogUtil.d(tagOfCapture, "onCaptureSequenceCompleted sequenceId: $sequenceId frameNumber: $frameNumber")
+//            Log.d(tagOfCapture, "onCaptureSequenceCompleted sequenceId: $sequenceId frameNumber: $frameNumber")
             cameraCaptureCallback?.onCaptureSequenceCompleted(session, sequenceId, frameNumber)
         }
 
         override fun onCaptureSequenceAborted(session: CameraCaptureSession, sequenceId: Int) {
             super.onCaptureSequenceAborted(session, sequenceId)
-//            LogUtil.d(tagOfCapture, "onCaptureSequenceAborted sequenceId: $sequenceId")
+//            Log.d(tagOfCapture, "onCaptureSequenceAborted sequenceId: $sequenceId")
             cameraCaptureCallback?.onCaptureSequenceAborted(session, sequenceId)
         }
 
         override fun onCaptureBufferLost(session: CameraCaptureSession, request: CaptureRequest, target: Surface, frameNumber: Long) {
             super.onCaptureBufferLost(session, request, target, frameNumber)
-//            LogUtil.d(tagOfCapture, "onCaptureBufferLost target: $target frameNumber: $frameNumber")
+//            Log.d(tagOfCapture, "onCaptureBufferLost target: $target frameNumber: $frameNumber")
             cameraCaptureCallback?.onCaptureBufferLost(session, request, target, frameNumber)
         }
     }

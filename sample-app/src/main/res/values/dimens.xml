@@ -11,4 +11,8 @@
     <dimen name="dialog_common_bts_h">48dp</dimen>
     <dimen name="dialog_common_title_margin_bottom">2dp</dimen>
     <dimen name="dialog_common_subtitle_margin_bottom">14dp</dimen>
+
+    <dimen name="default_corner_radius">0dp</dimen>
+    <dimen name="default_shadow_radius">4dp</dimen>
+    <dimen name="default_shadow_dy">2dp</dimen>
 </resources>

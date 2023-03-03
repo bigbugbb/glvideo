@@ -16,10 +16,12 @@ import android.view.View.LAYER_TYPE_SOFTWARE
 import android.widget.Checkable
 import android.widget.Toast
 import androidx.annotation.*
+import androidx.annotation.IntRange
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
 import com.binbo.glvideo.core.BuildConfig
 import com.binbo.glvideo.core.GLVideo.Core.context
+import com.binbo.glvideo.core.utils.WeightTypefaceOreo
 import java.io.*
 import java.util.*
 import kotlin.math.abs
@@ -276,6 +278,17 @@ fun String.getTextBounds(paint: Paint): Rect {
     return bounds
 }
 
+fun createTypeface(base: Typeface = Typeface.DEFAULT, @IntRange(from = 1, to = 1000) weight: Int = 500, italic: Boolean = false): Typeface {
+    return runCatching {
+        when (Build.VERSION.SDK_INT) {
+            Build.VERSION_CODES.N_MR1 -> base
+            Build.VERSION_CODES.O,
+            Build.VERSION_CODES.O_MR1 -> WeightTypefaceOreo.create(base, weight, italic)
+            else -> Typeface.create(base, weight, italic)
+        }
+    }.getOrDefault(base)
+}
+
 /**
  * 根布局 拓展方法，在根布局中检查有没目标子控件，如果没有，就从隐藏控件的 viewStub inflate 里面取到
  * @param rootView 可以是根布局
@@ -321,3 +334,5 @@ fun getTempFile(fileName: String): File {
         File(dir, fileName)
     }
 }
+
+

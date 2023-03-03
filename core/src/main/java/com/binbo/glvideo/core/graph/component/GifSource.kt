@@ -92,8 +92,8 @@ class GifSource(
                             GLES20.glViewport(0, 0, bmpWidth, bmpHeight)
                             GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f)
                             GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT)
-                            frameDrawer?.setTextureID(textureId)
-                            frameDrawer?.draw()
+                            frameDrawer.setTextureID(textureId)
+                            frameDrawer.draw()
                             GLES20.glFinish()
                         }
 

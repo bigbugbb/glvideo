@@ -18,10 +18,10 @@ import com.binbo.glvideo.sample_app.databinding.FragmentVideoCutBinding
 import com.binbo.glvideo.sample_app.event.CreateVideoCutFileFailed
 import com.binbo.glvideo.sample_app.event.CreateVideoCutFileSuccess
 import com.binbo.glvideo.sample_app.event.TimelineUpdatedEvent
-import com.binbo.glvideo.sample_app.impl.advanced.graph.video_cut.crop.VideoCropGraphManager
-import com.binbo.glvideo.sample_app.impl.advanced.graph.video_cut.extract.VideoExtractionConfig
-import com.binbo.glvideo.sample_app.impl.advanced.graph.video_cut.extract.VideoExtractionGraphManager
-import com.binbo.glvideo.sample_app.impl.advanced.graph.video_cut.extract.tagOfExtract
+import com.binbo.glvideo.sample_app.impl.advanced.video_cut.crop.VideoCropGraphManager
+import com.binbo.glvideo.sample_app.impl.advanced.video_cut.extract.VideoExtractionConfig
+import com.binbo.glvideo.sample_app.impl.advanced.video_cut.extract.VideoExtractionGraphManager
+import com.binbo.glvideo.sample_app.impl.advanced.video_cut.extract.tagOfExtract
 import com.binbo.glvideo.sample_app.utils.bindToLifecycleOwner
 import com.binbo.glvideo.sample_app.utils.doClickVibrator
 import com.binbo.glvideo.sample_app.utils.rxbus.HeartBeatEvent

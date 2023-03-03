@@ -121,7 +121,7 @@ class VideoExtractionSurfaceView @JvmOverloads constructor(
         override fun onFling(e1: MotionEvent, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
             val totalDistance = abs(velocityX.toInt()).coerceAtMost(maxVelocity)
             if (e1.x - e2.x > horizontalMinDistance && abs(velocityX) > minVelocity) {
-//                LogUtil.d(TAG, "fling left")
+//                Log.d(TAG, "fling left")
                 flingXAnimator = ValueAnimator.ofInt(0, totalDistance).apply {
                     lastFlingX = 0
                     duration = 2500
@@ -138,7 +138,7 @@ class VideoExtractionSurfaceView @JvmOverloads constructor(
                     start()
                 }
             } else if (e2.x - e1.x > horizontalMinDistance && abs(velocityX) > minVelocity) {
-//                LogUtil.d(TAG, "fling right")
+//                Log.d(TAG, "fling right")
                 flingXAnimator = ValueAnimator.ofInt(0, totalDistance).apply {
                     lastFlingX = 0
                     duration = 2500

@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.binbo.glvideo.core.ext.singleClick
 import com.binbo.glvideo.sample_app.databinding.FragmentAdvancedBinding
+import com.binbo.glvideo.sample_app.ui.advanced.activity.NameCardWithVideoActivity
 import com.binbo.glvideo.sample_app.ui.advanced.activity.VideoCutSelectActivity
 import com.binbo.glvideo.sample_app.ui.advanced.viewmodel.AdvancedViewModel
 
@@ -29,6 +30,10 @@ class AdvancedFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.btnNamecardWithVideoBkg.singleClick {
+            startActivity(Intent(requireContext(), NameCardWithVideoActivity::class.java))
+        }
 
         binding.btnVideoCutWidget.singleClick {
             startActivity(Intent(requireContext(), VideoCutSelectActivity::class.java))
