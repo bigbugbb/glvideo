@@ -14,7 +14,10 @@ import com.binbo.glvideo.core.opengl.program.TextureShaderProgram
 import com.binbo.glvideo.core.opengl.utils.MatrixHelper
 import com.binbo.glvideo.core.opengl.utils.OpenGLUtils
 import com.binbo.glvideo.sample_app.App.Companion.context
+import com.binbo.glvideo.sample_app.App.Const.frameRate
 import com.binbo.glvideo.sample_app.impl.advanced.namecard.NameCardConfig
+import com.binbo.glvideo.sample_app.impl.advanced.namecard.NameCardConfig.missionCardBottom
+import com.binbo.glvideo.sample_app.impl.advanced.namecard.NameCardConfig.missionCardLeft
 import com.binbo.glvideo.sample_app.impl.advanced.namecard.NameCardConfig.watermarkHeight
 import com.binbo.glvideo.sample_app.impl.advanced.namecard.ext.createWatermarkBitmap
 import com.binbo.glvideo.sample_app.impl.advanced.namecard.objects.Watermark
@@ -40,8 +43,8 @@ class WatermarkDrawer : Drawer() {
 
     private val textureAlpha: Float
         get() = when {
-            frames < NameCardConfig.frameRate -> 0f
-            frames < NameCardConfig.frameRate * 1.75 -> (frames - NameCardConfig.frameRate) / (NameCardConfig.frameRate * 0.75f) * 1f
+            frames < frameRate -> 0f
+            frames < frameRate * 1.75 -> (frames - frameRate) / (frameRate * 0.75f) * 1f
             else -> 1f
         }
 
@@ -51,7 +54,7 @@ class WatermarkDrawer : Drawer() {
 
     private fun positionWatermarkInScene() {
         Matrix.setIdentityM(modelMatrix, 0)
-        Matrix.translateM(modelMatrix, 0, NameCardConfig.missionCardLeft - 0.1f, NameCardConfig.missionCardBottom - 0.45f, 0f)
+        Matrix.translateM(modelMatrix, 0, missionCardLeft - 0.1f, missionCardBottom - 0.45f, 0f)
         Matrix.multiplyMM(modelViewProjectionMatrix, 0, viewProjectionMatrix, 0, modelMatrix, 0)
     }
 

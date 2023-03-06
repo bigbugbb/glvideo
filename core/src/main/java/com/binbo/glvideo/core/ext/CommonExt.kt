@@ -241,7 +241,7 @@ val isMainProcess: Boolean
 @get:NonNull
 val currentProcessName: String
     get() {
-        val pid: Int = android.os.Process.myPid()
+        val pid: Int = Process.myPid()
         val manager: ActivityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
         if (manager.runningAppProcesses != null) {
             for (process: ActivityManager.RunningAppProcessInfo in Objects.requireNonNull(manager).runningAppProcesses) {

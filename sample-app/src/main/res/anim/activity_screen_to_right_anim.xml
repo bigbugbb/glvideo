@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 从屏幕跑出到屏幕右侧-->
+    <translate
+        android:duration="400"
+        android:fromXDelta="0"
+        android:toXDelta="100%" />
+</set>

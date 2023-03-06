@@ -24,6 +24,7 @@ import com.binbo.glvideo.sample_app.utils.player.VideoPlayerDelegate
 import com.binbo.glvideo.sample_app.utils.rxbus.RxBus
 import com.kk.taurus.playerbase.assist.RelationAssist
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
@@ -44,8 +45,11 @@ class AddVideoEndingFragment : Fragment() {
     private val player = object : VideoPlayerDelegate(RelationAssist(App.context)) {
         override fun onPlayComplete() {
             if (isLoopingEnabled) {
-                seekTo(0)
-                assist.play()
+                lifecycleScope.launch {
+                    delay(100) // the system player needs some time to reset its inner status
+                    assist.seekTo(0)
+                    assist.play()
+                }
             }
         }
     }.apply {

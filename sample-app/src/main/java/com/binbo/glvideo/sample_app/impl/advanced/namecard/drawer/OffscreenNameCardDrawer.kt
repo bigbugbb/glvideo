@@ -4,8 +4,8 @@ import android.opengl.GLES20
 import android.opengl.Matrix
 import com.binbo.glvideo.core.opengl.utils.OpenGLUtils
 import com.binbo.glvideo.sample_app.App.Companion.context
+import com.binbo.glvideo.sample_app.App.Const.frameRate
 import com.binbo.glvideo.sample_app.impl.advanced.namecard.NameCardConfig
-import com.binbo.glvideo.sample_app.impl.advanced.namecard.NameCardConfig.frameRate
 import com.binbo.glvideo.sample_app.impl.advanced.namecard.NameCardConfig.missionCardLeft
 import com.binbo.glvideo.sample_app.impl.advanced.namecard.NameCardConfig.missionCardPaddingLeft
 import com.binbo.glvideo.sample_app.impl.advanced.namecard.NameCardConfig.missionCardPaddingTop

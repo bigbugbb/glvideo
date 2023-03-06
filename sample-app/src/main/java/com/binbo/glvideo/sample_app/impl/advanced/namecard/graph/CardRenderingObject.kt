@@ -18,6 +18,7 @@ import com.binbo.glvideo.core.media.recorder.TextureToRecord
 import com.binbo.glvideo.core.opengl.renderer.DefaultGLRenderer
 import com.binbo.glvideo.core.opengl.renderer.RenderImpl
 import com.binbo.glvideo.core.opengl.utils.OpenGLUtils
+import com.binbo.glvideo.sample_app.App.Const.frameRate
 import com.binbo.glvideo.sample_app.impl.advanced.namecard.NameCardConfig
 import com.binbo.glvideo.sample_app.impl.advanced.namecard.drawer.BackgroundDrawer
 import com.binbo.glvideo.sample_app.impl.advanced.namecard.drawer.OffscreenNameCardDrawer
@@ -80,7 +81,7 @@ private class CardOffscreenRenderer(val renderingObject: CardRenderingObject) : 
         private val frameBufferTextures = IntArray(1)
 
         private var frames = 0
-        private val ptsDelta = 1000000000L / NameCardConfig.frameRate
+        private val ptsDelta = 1000000000L / frameRate
 
         override fun onSurfaceCreate() {}
 
@@ -99,7 +100,7 @@ private class CardOffscreenRenderer(val renderingObject: CardRenderingObject) : 
 
         override fun onDrawFrame() {
             kotlin.runCatching {
-                if (frames < NameCardConfig.frameRate * 8) {
+                if (frames < frameRate * 8) {
                     OpenGLUtils.bindFBO(frameBuffers[0], frameBufferTextures[0])
                     configFboViewport(width, height)
                     drawers[BackgroundDrawer::class.java]?.draw()
@@ -117,7 +118,7 @@ private class CardOffscreenRenderer(val renderingObject: CardRenderingObject) : 
                         drawFrameUntilSucceed(it, TextureToRecord(frameBufferTextures[0], ptsDelta * frames++))
                     }
 
-                    if (frames == NameCardConfig.frameRate * 8) {
+                    if (frames == frameRate * 8) {
                         runBlocking { renderingObject.broadcast(RenderingCompleted()) }
                     }
                 }

@@ -6,13 +6,13 @@
 
     <!-- Section Capture -->
     <string name="button_text_camera_preview">camera preview (GLSurfaceView + cameraX)</string>
-    <string name="button_text_camera_preview_custom">camera preview (CustomSurfaceView + cameraX)</string>
+    <string name="button_text_camera_preview_custom">camera preview (SurfaceView + cameraX)</string>
     <string name="button_text_camera_preview_with_effects">camera preview with effects</string>
     <string name="button_text_picture_taking">picture taking</string>
     <string name="button_text_video_recording">video recording</string>
 
     <!-- Section Video -->
-    <string name="button_text_video_decode">video decode + CustomSurfaceView</string>
+    <string name="button_text_video_decode">video decode + SurfaceView</string>
     <string name="button_text_gif_to_mp4">gif to mp4</string>
     <string name="button_text_add_video_bgm">add video bgm</string>
     <string name="button_text_add_video_ending">add video ending</string>
@@ -46,6 +46,8 @@
     <string name="text_my_name">BinBo</string>
     <string name="text_my_nickname">(bigbugbb)</string>
     <string name="text_namecard_title">My NameCard</string>
+
+    <string name="text_preview">Preview</string>
 
     <string name="picture_taking_successful_message">new picture saved to gallery</string>
     <string name="video_recording_successful_message">new video saved to gallery</string>

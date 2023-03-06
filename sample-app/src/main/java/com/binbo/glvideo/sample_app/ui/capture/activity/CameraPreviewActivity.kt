@@ -4,10 +4,11 @@ import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.binbo.glvideo.sample_app.R
+import com.binbo.glvideo.sample_app.ui.base.BaseActivity
 import com.binbo.glvideo.sample_app.ui.capture.fragment.CameraPreviewFragment
 import com.binbo.glvideo.sample_app.utils.replaceViewWithFragment
 
-class CameraPreviewActivity : AppCompatActivity() {
+class CameraPreviewActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_common_container)

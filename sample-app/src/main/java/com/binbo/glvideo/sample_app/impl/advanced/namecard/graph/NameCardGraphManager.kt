@@ -15,6 +15,9 @@ import com.binbo.glvideo.core.media.recorder.GLRecorderConfig
 import com.binbo.glvideo.core.utils.DeviceUtil
 import com.binbo.glvideo.sample_app.App
 import com.binbo.glvideo.sample_app.App.Companion.context
+import com.binbo.glvideo.sample_app.App.Const.frameRate
+import com.binbo.glvideo.sample_app.App.Const.recordVideoExt
+import com.binbo.glvideo.sample_app.App.Const.recordVideoSize
 import com.binbo.glvideo.sample_app.R
 import com.binbo.glvideo.sample_app.impl.advanced.namecard.NameCardConfig
 import com.binbo.glvideo.sample_app.utils.FileToolUtils
@@ -33,16 +36,13 @@ import kotlinx.coroutines.withContext
  */
 class NameCardGraphManager : BaseGraphManager() {
 
-    val videoFilePath: String =
-        MediaMuxerManager.getCaptureFile(recorderConfig.targetFileDir, recorderConfig.targetFilename, NameCardConfig.recordVideoExt)
-
     private var recordingCompleted = Channel<Boolean>()
 
     private val recorderConfig: GLRecorderConfig
         get() = GLRecorderConfig.build {
-            width(NameCardConfig.recordVideoSize.width)
-            height(NameCardConfig.recordVideoSize.height)
-            videoFrameRate(NameCardConfig.frameRate)
+            width(recordVideoSize.width)
+            height(recordVideoSize.height)
+            videoFrameRate(frameRate)
             targetFileDir(getFile(NAME_CARD))
             targetFilename("name_card")
         }

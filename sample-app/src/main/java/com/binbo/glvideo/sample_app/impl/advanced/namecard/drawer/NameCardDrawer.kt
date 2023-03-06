@@ -314,11 +314,7 @@ open class NameCardDrawer : Drawer() {
         missionCardProgram?.useProgram()
         nameCard?.let {
             missionCardProgram?.setUniforms(
-                modelViewProjectionMatrix,
-                it.cornerRadius,
-                it.borderSize,
-                viewportWidth,
-                (viewportWidth / missionCardAspectRatio).toInt()
+                modelViewProjectionMatrix, it.cornerRadius, it.borderSize, viewportWidth, (viewportWidth / missionCardAspectRatio).toInt()
             )
             it.bindData(missionCardProgram)
             it.draw()
@@ -382,12 +378,10 @@ open class NameCardDrawer : Drawer() {
     companion object {
         const val TAG = "MissionCardDrawer"
 
-        const val titleId = 0
         const val avatarId = 1
         const val nicknameId = 2
         const val movingNicknameId = 3
         const val userHandlerId = 4
         const val footerId = 5
-        const val missionCardId = 6
     }
 }
