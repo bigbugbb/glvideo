@@ -189,9 +189,15 @@ open class VideoSource(
     override suspend fun onPostConsumeDecodedFrame(decodeJob: BaseDecoder?, frame: Frame) {
         val frames = videoDecoder?.frames ?: 0
         when {
-            frames <= 1 -> broadcast(StartFrameBuffering())
-            frames >= frameWindowSize -> broadcast(StopFrameBuffering())
-            endOfStream -> broadcast(StopFrameBuffering())
+            frames <= 1 -> {
+                broadcast(StartFrameBuffering())
+            }
+            frames >= frameWindowSize -> {
+                broadcast(StopFrameBuffering())
+            }
+            endOfStream -> {
+                broadcast(StopFrameBuffering())
+            }
         }
     }
 

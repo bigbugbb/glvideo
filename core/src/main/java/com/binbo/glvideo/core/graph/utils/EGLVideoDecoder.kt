@@ -198,7 +198,7 @@ class EGLVideoDecoder(
                     videoDrawer?.draw()
                     GLES20.glFinish()
 
-                    val bitmap = OpenGLUtils.savePixels(0, 0, vpw, vph)
+//                    val bitmap = OpenGLUtils.savePixels(0, 0, vpw, vph)
                     Log.d(tagOfGraph, "")
                 }
 

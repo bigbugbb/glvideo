@@ -20,6 +20,7 @@ import com.binbo.glvideo.core.graph.simple.SimpleSinkObject
 import com.binbo.glvideo.core.opengl.drawer.FrameDrawer
 import com.binbo.glvideo.core.opengl.renderer.DefaultGLRenderer
 import com.binbo.glvideo.core.opengl.renderer.RenderImpl
+import com.binbo.glvideo.core.opengl.utils.OpenGLUtils
 import java.lang.ref.WeakReference
 import java.util.concurrent.TimeUnit
 
@@ -31,8 +32,6 @@ class VideoDecodeGraphManager(
 ) : BaseGraphManager() {
 
     private val surfaceViewRef: WeakReference<SurfaceView>
-
-    private var renderingObject: VideoDecodeRenderingObject? = null
 
     init {
         surfaceViewRef = WeakReference(surfaceView)
@@ -48,8 +47,6 @@ class VideoDecodeGraphManager(
                 val mediaSink = SimpleSinkObject().apply { mediaGraph.addObject(this) }
 
                 mediaSource to mediaObject to mediaSink
-
-                renderingObject = mediaObject
             }
         }
         return mediaGraph.apply { create() }
@@ -121,7 +118,7 @@ class VideoDecodeRenderer(private val renderingObject: VideoDecodeRenderingObjec
                     textureQueue.poll(100, TimeUnit.MILLISECONDS)?.let { mediaData ->
                         when (mediaData) {
                             is DecodedVideoFrame -> {
-//                                val bitmap = OpenGLUtils.captureRenderBitmap(mediaData.textureId, mediaData.mediaWidth, mediaData.mediaHeight)
+                                val bitmap = OpenGLUtils.captureRenderBitmap(mediaData.textureId, mediaData.mediaWidth, mediaData.mediaHeight)
                                 val viewportWidth = width
                                 val viewportHeight = (viewportWidth.toFloat() * mediaData.mediaHeight / mediaData.mediaWidth).toInt()
 

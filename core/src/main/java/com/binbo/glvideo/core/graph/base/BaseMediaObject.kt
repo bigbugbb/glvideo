@@ -1,11 +1,9 @@
 package com.binbo.glvideo.core.graph.base
 
 import androidx.annotation.IntDef
-import com.binbo.glvideo.core.graph.EndOfStream
 import com.binbo.glvideo.core.graph.base.DirType.Companion.TYPE_INPUT
 import com.binbo.glvideo.core.graph.base.DirType.Companion.TYPE_OUTPUT
 import com.binbo.glvideo.core.graph.interfaces.*
-import kotlinx.coroutines.sync.Semaphore
 import java.util.*
 
 /**
