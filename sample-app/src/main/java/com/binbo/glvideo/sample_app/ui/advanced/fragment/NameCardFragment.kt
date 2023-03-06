@@ -30,7 +30,7 @@ class NameCardFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        graphJob.execute()
+        graphJob.run()
 
         binding.imageBack.singleClick {
             activity?.finish()

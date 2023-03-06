@@ -50,9 +50,6 @@ class VideoFragment : Fragment() {
         binding.btnAddWatermark.singleClick {
             startActivity(Intent(requireContext(), AddWatermarkActivity::class.java))
         }
-
-        binding.btnVideoCrop.singleClick {
-        }
     }
 
     override fun onDestroyView() {

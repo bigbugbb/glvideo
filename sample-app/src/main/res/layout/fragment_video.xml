@@ -34,9 +34,4 @@
         style="@style/ButtonStyle"
         android:text="@string/button_text_add_watermark" />
 
-    <Button
-        android:id="@+id/btnVideoCrop"
-        style="@style/ButtonStyle"
-        android:text="@string/button_text_video_crop" />
-
 </LinearLayout>

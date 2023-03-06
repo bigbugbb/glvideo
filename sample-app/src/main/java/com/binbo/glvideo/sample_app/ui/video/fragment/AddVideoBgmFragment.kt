@@ -53,7 +53,7 @@ class AddVideoBgmFragment : Fragment() {
             .into(binding.imageGif)
 
         binding.cardConvert.singleClick {
-            graphJob.execute()
+            graphJob.run()
         }
 
         RxBus.getDefault().onEvent(VideoFileCreated::class.java)

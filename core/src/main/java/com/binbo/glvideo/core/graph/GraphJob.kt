@@ -18,7 +18,7 @@ class GraphJob(val provider: GraphManagerProvider) : ObserverHolder<GraphJob.Eve
 
     private var graphManager: BaseGraphManager? = null
 
-    fun execute(): Boolean = kotlin.runCatching {
+    fun run(): Boolean = kotlin.runCatching {
         if (jobRef.compareAndSet(null, GraphExecutor.coroutineScope.launch(start = CoroutineStart.LAZY) {
                 graphManager = provider.onGraphManagerRequested()
                 graphManager?.run {

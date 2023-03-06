@@ -34,7 +34,7 @@ class VideoDecodeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        graphJob.execute()
+        graphJob.run()
     }
 
     override fun onDestroyView() {
@@ -42,7 +42,6 @@ class VideoDecodeFragment : Fragment() {
         graphJob.cancel()
         _binding = null
     }
-
 
     companion object {
         @JvmStatic

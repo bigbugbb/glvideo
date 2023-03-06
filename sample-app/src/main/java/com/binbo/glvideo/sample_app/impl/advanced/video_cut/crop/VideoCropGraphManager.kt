@@ -278,7 +278,7 @@ class VideoCropRenderingObject(val viewportSize: Size, val videoRotation: Int = 
                                             draw()
                                         }
 
-                                        val bitmap = OpenGLUtils.savePixels(0, 0, width, height)
+//                                        val bitmap = OpenGLUtils.savePixels(0, 0, width, height)
                                         GLES20.glFinish()
                                     }
 

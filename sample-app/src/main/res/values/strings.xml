@@ -17,8 +17,6 @@
     <string name="button_text_add_video_bgm">add video bgm</string>
     <string name="button_text_add_video_ending">add video ending</string>
     <string name="button_text_add_watermark">add watermark overlay</string>
-    <string name="button_text_merge_video_files">merge video files</string>
-    <string name="button_text_video_crop">video crop</string>
 
     <!-- Section Advanced -->
     <string name="button_text_3d_namecard">3D namecard</string>

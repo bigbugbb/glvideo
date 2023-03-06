@@ -68,7 +68,7 @@ class AddWatermarkFragment : Fragment() {
         }
 
         binding.cardConvert.singleClick {
-            graphJob.execute()
+            graphJob.run()
         }
 
         RxBus.getDefault().onEvent(VideoFileCreated::class.java)

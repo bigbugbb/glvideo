@@ -81,7 +81,7 @@ open class LayoutDrawer(protected val context: Context, protected val layoutResI
             layoutObject?.draw()
         }
 
-        val bitmap = OpenGLUtils.savePixels(0, 0, viewportWidth, viewportHeight)
+//        val bitmap = OpenGLUtils.savePixels(0, 0, viewportWidth, viewportHeight)
 
         GLES20.glDisable(GLES20.GL_BLEND)
     }
