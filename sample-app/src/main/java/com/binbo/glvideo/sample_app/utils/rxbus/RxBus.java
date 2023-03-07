@@ -30,6 +30,7 @@ public class RxBus {
             synchronized (RxBus.class) {
                 if (mDefaultInstance == null) {
                     mDefaultInstance = new RxBus();
+                    HeartBeatManager.bootstrap();
                 }
             }
         }

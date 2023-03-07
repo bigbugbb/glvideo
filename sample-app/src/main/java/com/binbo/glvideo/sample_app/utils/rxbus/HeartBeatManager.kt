@@ -33,5 +33,6 @@ object HeartBeatManager {
             }
     }
 
+    @JvmStatic
     fun bootstrap() {}
 }

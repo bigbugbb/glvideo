@@ -264,7 +264,7 @@ class VideoCropRenderingObject(val viewportSize: Size, val videoRotation: Int = 
                         textureQueue.poll(33, TimeUnit.MILLISECONDS)?.let { mediaData ->
                             when (mediaData) {
                                 is DecodedVideoFrame -> {
-                                    // val bitmap1 = OpenGLUtils.captureRenderBitmap(decodedVideoFrame.textureId, videoWidth, videoHeight)
+//                                    val bitmap1 = OpenGLUtils.captureRenderBitmap(decodedVideoFrame.textureId, videoWidth, videoHeight)
 
                                     OpenGLUtils.drawWithFBO(frameBuffers[0], frameBufferTextures[0]) {
                                         GLES20.glViewport(0, 0, width, height)

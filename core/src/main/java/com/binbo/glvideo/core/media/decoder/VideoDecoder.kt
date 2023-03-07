@@ -76,7 +76,6 @@ open class VideoDecoder(uri: Uri, var surfaceView: SurfaceView?, var surface: Su
             reset()
         }
         val p = mExtractor?.seek(pos, mode)
-        mCodec?.flush()
         mIsEOS = false
         mBufferInfo = MediaCodec.BufferInfo()
         return 0
