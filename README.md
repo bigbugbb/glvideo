@@ -16,7 +16,7 @@
 
 ## About The Project
 
-![Screen Shot](https://github.com/bigbugbb/glvideo/assets/5157712/e1450bc5-817f-431b-94f5-7e25764d1d4e)
+<a href="https://github.com/bigbugbb/glvideo/assets/5157712/e1450bc5-817f-431b-94f5-7e25764d1d4e"></a>
 
 开发公司App过程中，设计提出了渲染3d卡片并分享渲染视频的需求。iOS端用SceneKit可以实现，Android这边没有相应工具链，我只能DIY一套工具自己实现:
 
@@ -45,7 +45,7 @@ App临死前还加入了设置用户webp头像的功能，这里先通过摄像�
 
 ## License
 
-Distributed under the MIT License. See [LICENSE](https://github.com/bigbugbb/glvideo/LICENSE.md) for more information.
+Distributed under the MIT License. See [LICENSE](https://github.com/bigbugbb/glvideo/blob/master/LICENSE.md) for more information.
 
 ## Authors
 
