@@ -462,7 +462,7 @@ object OpenGLUtils {
         /**
          * 获取PBO对应GPU缓冲区的内存地址
          */
-        val buffer = GLES30.glMapBufferRange(GLES30.GL_PIXEL_UNPACK_BUFFER, 0, sizeInByte, GLES30.GL_MAP_WRITE_BIT)
+        val buffer = GLES30.glMapBufferRange(GLES30.GL_PIXEL_UNPACK_BUFFER, 0, sizeInByte, GLES30.GL_MAP_WRITE_BIT or GLES30.GL_MAP_INVALIDATE_BUFFER_BIT)
         if (buffer.hasRemaining()) {
             (buffer as ByteBuffer).put(byteBuffer)
         }
