@@ -1,6 +1,6 @@
 <br/>
 <p align="center">
-  <h3 align="center">GLVideo</h3>
+  <h4 align="center">GLVideo</h3>
 
   <p align="center">
     一个基于图连接和GLES的简单音视频框架
