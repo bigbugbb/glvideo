@@ -17,7 +17,7 @@
 
 <a href="https://github.com/bigbugbb/glvideo/assets/5157712/e1450bc5-817f-431b-94f5-7e25764d1d4e" target="_blank"></a>
 
-<p style="font-size: 20px;">
+<p style="font-size: 16px;">
 开发公司App过程中，设计提出了渲染3d卡片并分享渲染视频的需求。iOS端用SceneKit可以实现，Android这边没有相应工具链，我只能DIY一套工具自己实现:
 
 * 为实现渲染，我加入了OpenGLES渲染操作相关工具，包括纹理操作，基础shader, FBO操作, 基础Renderer类和定制化GLSurfaceView，定制化RenderThread等。同时把每个渲染元素抽象成一个Drawer，分开管理不同元素的顶点坐标、纹理坐标、坐标变换、坐标数据加载、viewport和具体绘制逻辑。
@@ -41,8 +41,10 @@ App临死前还加入了设置用户webp头像的功能，这里先通过摄像�
 
 ## Roadmap
 
+<p style="font-size: 16px;">
 未来短期目标是逐步加入native部分，用native代码取代上层代码，在native部分直接整合ffmpeg的使用，通过ffmpeg进行硬解和硬编，简化上层逻辑。
 更远点的目标是移植到其他开发环境。
+</p>
 
 ## License
 
