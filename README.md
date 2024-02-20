@@ -2,7 +2,7 @@
   <h2 align="center">GLVideo</h3>
 
   <p align="center">
-    一个基于图连接和GLES的简单音视频框架
+    一个基于图连接、Kotlin协程和GLES的简单音视频框架
     <br/>
     <br/>
     <a href="https://github.com/bigbugbb/glvideo/issues">Report Bug</a>
