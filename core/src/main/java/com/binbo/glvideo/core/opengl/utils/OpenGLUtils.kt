@@ -108,26 +108,30 @@ object OpenGLUtils {
         GLES20.glDeleteTextures(texture.size, texture, 0)
     }
 
-    fun createPBO(pixelBuffers: IntArray, sizeInBytes: Int) {
+    fun createPBO(pixelBuffers: IntArray, sizeInBytes: Int, read: Boolean) {
         /**
          * 可以使用双PBO上传纹理，速度更快
          */
         GLES30.glGenBuffers(pixelBuffers.size, pixelBuffers, 0)
 
-        pixelBuffers.indices.forEach { i ->
-            // 绑定pbo
-            GLES30.glBindBuffer(GLES30.GL_PIXEL_UNPACK_BUFFER, pixelBuffers[i])
-            // 设置pbo内存大小
-            // 这一步十分重要，第2个参数指定了这个缓冲区的大小，单位是字节，一定要注意
-            // 然后第3个参数是初始化用的数据，如果你传个内存指针进去，这个函数就会把你的
-            // 数据复制到缓冲区里，我们这里一开始并不需要什么数据，所以传个nullptr就行了
-            GLES30.glBufferData(GLES30.GL_PIXEL_UNPACK_BUFFER, sizeInBytes, null, GLES30.GL_STREAM_DRAW)
-            GLES30.glBindBuffer(GLES30.GL_PIXEL_UNPACK_BUFFER, 0)
+        pixelBuffers.forEach { pboId ->
+            if (read) {
+                GLES30.glBindBuffer(GLES30.GL_PIXEL_PACK_BUFFER, pboId)
+                GLES30.glBufferData(GLES30.GL_PIXEL_PACK_BUFFER, sizeInBytes, null, GLES30.GL_STREAM_READ)
+            } else {
+                GLES30.glBindBuffer(GLES30.GL_PIXEL_UNPACK_BUFFER, pboId)
+                // 设置pbo内存大小
+                // 这一步十分重要，第2个参数指定了这个缓冲区的大小，单位是字节，一定要注意
+                // 然后第3个参数是初始化用的数据，如果你传个内存指针进去，这个函数就会把你的
+                // 数据复制到缓冲区里，我们这里一开始并不需要什么数据，所以传个nullptr就行了
+                GLES30.glBufferData(GLES30.GL_PIXEL_UNPACK_BUFFER, sizeInBytes, null, GLES30.GL_STREAM_DRAW)
+            }
         }
+        GLES30.glBindBuffer(if (read) GLES30.GL_PIXEL_PACK_BUFFER else GLES30.GL_PIXEL_UNPACK_BUFFER, 0)
     }
 
-    fun deletePBO(pixelBuffers: IntArray) {
-        GLES30.glBindBuffer(GLES30.GL_PIXEL_UNPACK_BUFFER, 0)
+    fun deletePBO(pixelBuffers: IntArray, read: Boolean) {
+        GLES30.glBindBuffer(if (read) GLES30.GL_PIXEL_PACK_BUFFER else GLES30.GL_PIXEL_UNPACK_BUFFER, 0)
         GLES30.glDeleteBuffers(pixelBuffers.size, pixelBuffers, 0)
     }
 
@@ -385,64 +389,6 @@ object OpenGLUtils {
         return textureHandle[0]
     }
 
-    private var uploadPboIndex = 0
-
-//    fun copyDataToGPUWith2PBO(bitmap: Bitmap, textureId: Int = -1) {
-//        val bitmapWidth = bitmap.width
-//        val bitmapHeight = bitmap.height
-//        // Pbo初始化
-//        initPBOArray(bitmapWidth, bitmapHeight)
-//        if (imageTextureId[0] == 0 && textureId == -1) {  // 没有生成过纹理的话就生成纹理
-//            GLES30.glGenTextures(1, imageTextureId, 0)
-//        }
-//        val currentTextureId: Int = if (textureId != -1) textureId else imageTextureId[0]
-//        // 激活纹理，注意以下这个两句是搭配的，glActiveTexture激活的是那个纹理，就设置的sampler2D是那个
-//        // 默认是0，如果不是0的话，需要在onDraw的时候重新激活一下？
-//        GLES30.glActiveTexture(GLES30.GL_TEXTURE2)
-//        // 绑定纹理
-//        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, currentTextureId)
-//        // 为当前绑定的纹理对象设置环绕、过滤方式
-//        GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_WRAP_S, GLES30.GL_REPEAT)
-//        GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_WRAP_T, GLES30.GL_REPEAT)
-//        GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_MIN_FILTER, GLES30.GL_LINEAR)
-//        GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_MAG_FILTER, GLES30.GL_LINEAR)
-//        // pixels参数传递空，后面会通过pbo更新纹理数据
-//        GLES30.glTexImage2D(GLES30.GL_TEXTURE_2D, 0, GLES30.GL_RGBA, bitmapWidth, bitmapHeight, 0, GLES30.GL_RGBA, GLES30.GL_UNSIGNED_BYTE, null)
-//
-//        // 生成mip贴图
-//        GLES30.glGenerateMipmap(GLES30.GL_TEXTURE_2D)
-//
-//        // 绑定纹理
-//        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, currentTextureId)
-//        val dataSize: Int = bitmapWidth * bitmapHeight * 4
-//        // 使用Pbo
-//        GLES30.glBindBuffer(
-//            GLES30.GL_PIXEL_UNPACK_BUFFER,
-//            uploadPboIds[uploadPboIndex % NUM_PBO]
-//        )
-//        /**
-//         * 获取PBO对应GPU缓冲区的内存地址
-//         */
-//        val buffer = GLES30.glMapBufferRange(GLES30.GL_PIXEL_UNPACK_BUFFER, 0, dataSize, GLES30.GL_MAP_WRITE_BIT)
-//        if (buffer.hasRemaining()) {
-//            (buffer as ByteBuffer).put(convertBitmapToByteBuffer(bitmap))
-//            GLES30.glUnmapBuffer(GLES30.GL_PIXEL_UNPACK_BUFFER)
-//        }
-//
-//        // 将pbo缓冲区中的数据拷贝到纹理，调用 glTexSubImage2D 后立即返回，不影响 CPU 时钟周期
-//        // 这个函数会判断 GL_PIXEL_UNPACK_BUFFER 这个地方有没有绑定一个缓冲区
-//        //   如果有，就从这个缓冲区读取数据，而不是data参数指定的那个内存
-//        // 这样glTexSubImage2D就会从我们的缓冲区中读取数据了
-//        // 这里为什么要用glTexSubImage2D呢，因为如果用glTexImage2D，glTexImage2D会销毁纹理内存重新申请，glTexSubImage2D就仅仅只是更新纹理中的数据，这就提高了速度，并且优化了显存的利用率
-//        GLES30.glTexSubImage2D(GLES30.GL_TEXTURE_2D, 0, 0, 0, bitmapWidth, bitmapHeight, GLES30.GL_RGBA, GLES30.GL_UNSIGNED_BYTE, null)
-//        // Pbo解除
-//        GLES30.glBindBuffer(GLES30.GL_PIXEL_UNPACK_BUFFER, 0)
-//        // 解绑定
-//        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, 0)
-//        // 索引自加
-//        uploadPboIndex++
-//    }
-
     private fun convertBitmapToByteBuffer(bitmap: Bitmap): ByteBuffer {
         val byteBuffer = ByteBuffer.allocate(bitmap.byteCount)
         bitmap.copyPixelsToBuffer(byteBuffer)
@@ -450,14 +396,14 @@ object OpenGLUtils {
         return byteBuffer
     }
 
-    fun loadTextureByPBO(pixelBufferId: Int, targetTextureId: Int, width: Int, height: Int, byteBuffer: ByteBuffer) {
-        val sizeInByte = width * height * 4
+    fun loadTextureToGpuWithPBO(pboIds: IntArray, targetTextureId: Int, width: Int, height: Int, bytesPerPixel: Int, byteBuffer: ByteBuffer) {
+        val sizeInByte = width * height * bytesPerPixel
 
         // 绑定纹理
         GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, targetTextureId)
 
         // 使用Pbo
-        GLES30.glBindBuffer(GLES30.GL_PIXEL_UNPACK_BUFFER, pixelBufferId)
+        GLES30.glBindBuffer(GLES30.GL_PIXEL_UNPACK_BUFFER, pboIds[0])
 
         /**
          * 获取PBO对应GPU缓冲区的内存地址
@@ -468,16 +414,54 @@ object OpenGLUtils {
         }
         GLES30.glUnmapBuffer(GLES30.GL_PIXEL_UNPACK_BUFFER)
 
+        // 绑定下一个PBO并启动异步上传
+        GLES30.glBindBuffer(GLES30.GL_PIXEL_UNPACK_BUFFER, pboIds[1])
         // 将pbo缓冲区中的数据拷贝到纹理，调用 glTexSubImage2D 后立即返回，不影响 CPU 时钟周期
         // 这个函数会判断 GL_PIXEL_UNPACK_BUFFER 这个地方有没有绑定一个缓冲区
-        // 如果有，就从这个缓冲区读取数据，而不是data参数指定的那个内存
+        // 如果有，就从这个缓冲区读取数据，而不是pixels参数指定的那个内存
         // 这样glTexSubImage2D就会从我们的缓冲区中读取数据了
         // 这里为什么要用glTexSubImage2D呢，因为如果用glTexImage2D，glTexImage2D会销毁纹理内存重新申请，glTexSubImage2D就仅仅只是更新纹理中的数据，这就提高了速度，并且优化了显存的利用率
         GLES30.glTexSubImage2D(GLES30.GL_TEXTURE_2D, 0, 0, 0, width, height, GLES30.GL_RGBA, GLES30.GL_UNSIGNED_BYTE, null)
-        // Pbo解除
+
+        // 交换PBO，为下一次写入做准备
+        pboIds[0] = pboIds[1].also { pboIds[1] = pboIds[0] }
+
+        // 解绑PBO和纹理
         GLES30.glBindBuffer(GLES30.GL_PIXEL_UNPACK_BUFFER, 0)
-        // 解绑定
         GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, 0)
+    }
+
+    fun loadTextureFromGpuWithPBO(pboIds: IntArray, sourceTextureId: Int, width: Int, height: Int, bytesPerPixel: Int, block: (ByteBuffer) -> Unit = {}) {
+        val sizeInByte = width * height * bytesPerPixel
+
+        // 绑定纹理
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, sourceTextureId)
+
+        // 绑定PBO以异步读取
+        GLES30.glBindBuffer(GLES30.GL_PIXEL_PACK_BUFFER, pboIds[0])
+        GLES30.glReadPixels(0, 0, width, height, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, 0)
+
+        // 切换到第二个PBO，准备从中读取或操作数据
+        GLES30.glBindBuffer(GLES30.GL_PIXEL_PACK_BUFFER, pboIds[1])
+
+        // 将PBO数据映射到CPU可访问的内存(在映射PBO以访问其内容时，如果GPU还没有完成数据的读写，尝试映射可能会导致延迟或阻塞，直到GPU完成读写)
+        val buffer = GLES30.glMapBufferRange(GLES30.GL_PIXEL_PACK_BUFFER, 0, sizeInByte, GLES30.GL_MAP_READ_BIT) as ByteBuffer?
+
+        // 确保buffer不为null，然后可以读取或处理数据
+        buffer?.let {
+            // 读取或处理数据
+            block.invoke(it)
+
+            // 完成数据处理后，解除映射
+            GLES30.glUnmapBuffer(GLES30.GL_PIXEL_PACK_BUFFER)
+        }
+
+        // 交换PBO，为下一次读取做准备
+        pboIds[0] = pboIds[1].also { pboIds[1] = pboIds[0] }
+
+        // 解绑PBO和纹理
+        GLES30.glBindBuffer(GLES30.GL_PIXEL_PACK_BUFFER, 0)
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0)
     }
 
     /**

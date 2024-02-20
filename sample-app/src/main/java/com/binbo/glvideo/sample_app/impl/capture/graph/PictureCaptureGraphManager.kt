@@ -2,6 +2,7 @@ package com.binbo.glvideo.sample_app.impl.capture.graph
 
 import android.graphics.Bitmap
 import android.graphics.SurfaceTexture
+import android.opengl.GLES30
 import android.opengl.GLSurfaceView
 import android.os.SystemClock
 import android.view.SurfaceView
@@ -138,6 +139,18 @@ class PictureCaptureRenderer(private val renderingObject: PictureCaptureRenderin
     }
 
     override var impl: RenderImpl = object : DefaultRenderImpl(this) {
+
+        private val pboIds = IntArray(2)
+
+        override fun onSurfaceCreate() {
+            super.onSurfaceCreate()
+            OpenGLUtils.createPBO(pboIds, width * height * 4, true)
+        }
+
+        override fun onSurfaceDestroy() {
+            super.onSurfaceDestroy()
+            OpenGLUtils.deletePBO(pboIds, true)
+        }
 
         override fun renderCameraTexture() {
             OpenGLUtils.bindFBO(frameBuffers[0], frameBufferTextures[0])

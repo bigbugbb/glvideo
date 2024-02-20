@@ -109,7 +109,7 @@ private class CardOffscreenRenderer(val renderingObject: CardRenderingObject) : 
                     OpenGLUtils.unbindFBO()
                     configDefViewport()
 
-                    GLES20.glFinish()
+                    GLES20.glFinish() // consider about using glFenceSync
 
                     Log.d(TAG, "card offscreen frames = $frames")
 

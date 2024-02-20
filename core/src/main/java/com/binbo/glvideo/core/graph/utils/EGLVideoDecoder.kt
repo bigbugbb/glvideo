@@ -196,7 +196,7 @@ class EGLVideoDecoder(
                     GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT)
                     videoDrawer?.setRotation(videoMetaData.rotation)
                     videoDrawer?.draw()
-                    GLES20.glFinish()
+                    GLES20.glFinish() // consider about using glFenceSync
 
 //                    val bitmap = OpenGLUtils.savePixels(0, 0, vpw, vph)
                     Log.d(tagOfGraph, "")
