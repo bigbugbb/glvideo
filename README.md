@@ -14,9 +14,9 @@
 ![Contributors](https://img.shields.io/github/contributors/bigbugbb/glvideo?color=dark-green) ![Issues](https://img.shields.io/github/issues/bigbugbb/glvideo) ![License](https://img.shields.io/github/license/bigbugbb/glvideo)
 
 ## About The Project
-<div>
-  <a href="https://github.com/bigbugbb/glvideo/assets/5157712/e1450bc5-817f-431b-94f5-7e25764d1d4e" align="center" target="_blank"></a>
-</div>
+<p align="center">
+  <a href="https://github.com/bigbugbb/glvideo/assets/5157712/e1450bc5-817f-431b-94f5-7e25764d1d4e" target="_blank"></a>
+</p>
 
 <p style="font-size: 16px;">
 开发公司App过程中，设计提出了渲染3d卡片并分享渲染视频的需求。iOS端用SceneKit可以实现，Android这边没有相应工具链，我只能DIY一套工具自己实现:
