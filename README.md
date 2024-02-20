@@ -17,6 +17,7 @@
 
 <a href="https://github.com/bigbugbb/glvideo/assets/5157712/e1450bc5-817f-431b-94f5-7e25764d1d4e" target="_blank"></a>
 
+<p>
 开发公司App过程中，设计提出了渲染3d卡片并分享渲染视频的需求。iOS端用SceneKit可以实现，Android这边没有相应工具链，我只能DIY一套工具自己实现:
 
 * 为实现渲染，我加入了OpenGLES渲染操作相关工具，包括纹理操作，基础shader, FBO操作, 基础Renderer类和定制化GLSurfaceView，定制化RenderThread等。同时把每个渲染元素抽象成一个Drawer，分开管理不同元素的顶点坐标、纹理坐标、坐标变换、坐标数据加载、viewport和具体绘制逻辑。
@@ -32,6 +33,7 @@
 App临死前还加入了设置用户webp头像的功能，这里先通过摄像头录制视频或加载本地视频，接着实现裁剪工具进行裁剪，获得一个mp4文件，再通过ffmpeg转码，生成webp。
 
 以上开发过程中，基于对现有代码复用、组件交互简化、线程操作简化、降低学习成本等考虑，实现了一套基于图和协程的Kotlin端简易视频处理框架，这里打包成库和SampleApp，方便以后学习交流。
+</p>
 
 ## Prerequisites
 
