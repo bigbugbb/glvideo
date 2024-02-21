@@ -17,10 +17,9 @@
 
 
 
-![3d card](https://github.com/bigbugbb/glvideo/assets/5157712/3345bb93-17d6-44d6-b155-291563665458)
+https://github.com/bigbugbb/glvideo/assets/5157712/b64869ba-9654-44c2-ab3f-0aae49bd19e0
+https://github.com/bigbugbb/glvideo/assets/5157712/49cd6eb1-5e70-449d-8839-d48ff3062553
 
-
-![video cut](https://github.com/bigbugbb/glvideo/assets/5157712/d6e4b56b-24c3-4416-8f4d-7f26de502fab)
 
 
 
