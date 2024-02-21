@@ -1,9 +1,11 @@
 package com.binbo.glvideo.sample_app.impl.advanced.namecard.graph
 
 import android.opengl.GLES20
+import android.opengl.GLES30
 import android.opengl.GLSurfaceView
 import android.util.Log
 import android.util.Size
+import com.binbo.glvideo.core.GLVideo
 import com.binbo.glvideo.core.ext.tryUntilTimeout
 import com.binbo.glvideo.core.graph.MediaData
 import com.binbo.glvideo.core.graph.MediaObject
@@ -82,6 +84,7 @@ private class CardOffscreenRenderer(val renderingObject: CardRenderingObject) : 
 
         private var frames = 0
         private val ptsDelta = 1000000000L / frameRate
+        private var fenceSyncObject = 0L
 
         override fun onSurfaceCreate() {}
 
@@ -109,13 +112,17 @@ private class CardOffscreenRenderer(val renderingObject: CardRenderingObject) : 
                     OpenGLUtils.unbindFBO()
                     configDefViewport()
 
-                    GLES20.glFinish() // consider about using glFenceSync
+                    if (GLVideo.isGlEs3Supported) {
+                        fenceSyncObject = GLES30.glFenceSync(GLES30.GL_SYNC_GPU_COMMANDS_COMPLETE, 0)
+                    } else {
+                        GLES20.glFinish() // consider about using glFenceSync
+                    }
 
                     Log.d(TAG, "card offscreen frames = $frames")
 
                     // notify to capturing thread that the frame is available.
                     encoder?.let {
-                        drawFrameUntilSucceed(it, TextureToRecord(frameBufferTextures[0], ptsDelta * frames++))
+                        drawFrameUntilSucceed(it, TextureToRecord(frameBufferTextures[0], ptsDelta * frames++, fenceSyncObject))
                     }
 
                     if (frames == frameRate * 8) {

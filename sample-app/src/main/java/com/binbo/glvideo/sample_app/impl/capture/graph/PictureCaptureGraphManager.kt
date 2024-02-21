@@ -140,18 +140,6 @@ class PictureCaptureRenderer(private val renderingObject: PictureCaptureRenderin
 
     override var impl: RenderImpl = object : DefaultRenderImpl(this) {
 
-        private val pboIds = IntArray(2)
-
-        override fun onSurfaceCreate() {
-            super.onSurfaceCreate()
-            OpenGLUtils.createPBO(pboIds, width * height * 4, true)
-        }
-
-        override fun onSurfaceDestroy() {
-            super.onSurfaceDestroy()
-            OpenGLUtils.deletePBO(pboIds, true)
-        }
-
         override fun renderCameraTexture() {
             OpenGLUtils.bindFBO(frameBuffers[0], frameBufferTextures[0])
             configFboViewport(renderer.width, renderer.height)

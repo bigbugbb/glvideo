@@ -6,6 +6,7 @@ import android.graphics.SurfaceTexture;
 import android.opengl.EGL14;
 import android.opengl.EGLContext;
 import android.opengl.GLES20;
+import android.opengl.GLES30;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Size;
@@ -186,6 +187,15 @@ public final class RecorderGLRender implements Runnable {
                         // 清屏颜色为黑色
                         GLES20.glClearColor(0f, 0f, 0f, 0f);
                         GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_COLOR_BUFFER_BIT);
+
+                        long fenceSyncObject = textureToRecord.getFenceSyncObject();
+                        if (fenceSyncObject != 0) {
+                            // Waiting for completion of the OpenGL commands before our fence
+                            GLES30.glWaitSync(fenceSyncObject, 0, GLES30.GL_TIMEOUT_IGNORED);
+
+                            // Delete the fence sync object
+                            GLES30.glDeleteSync(fenceSyncObject);
+                        }
 
                         mFrameDrawer.setFrameSize(mTextureSize.getWidth(), mTextureSize.getHeight());
                         mFrameDrawer.setViewportSize(mConfig.getWidth(), mConfig.getHeight());
