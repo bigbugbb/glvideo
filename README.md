@@ -14,7 +14,7 @@
 ![Contributors](https://img.shields.io/github/contributors/bigbugbb/glvideo?color=dark-green) ![Issues](https://img.shields.io/github/issues/bigbugbb/glvideo) ![License](https://img.shields.io/github/license/bigbugbb/glvideo)
 
 ## About The Project
-[![3D Card](https://github.com/bigbugbb/glvideo/assets/5157712/6787d339-f675-45a8-86a5-f908cd6ef3e0)](https://github.com/bigbugbb/glvideo/assets/5157712/e1450bc5-817f-431b-94f5-7e25764d1d4e)
+[![3D Card](https://github.com/bigbugbb/glvideo/assets/5157712/e1450bc5-817f-431b-94f5-7e25764d1d4e)]
 [![Video Cut](https://github.com/bigbugbb/glvideo/assets/5157712/2f03feff-de8a-40e0-a298-b4c5807d3cd9)](https://github.com/bigbugbb/glvideo/assets/5157712/28487f53-6f0a-4bc7-a829-e5ceb50b047a)
 
 
