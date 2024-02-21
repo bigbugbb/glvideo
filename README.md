@@ -15,21 +15,17 @@
 
 ## About The Project
 
-
-
-https://github.com/bigbugbb/glvideo/assets/5157712/b64869ba-9654-44c2-ab3f-0aae49bd19e0
-https://github.com/bigbugbb/glvideo/assets/5157712/49cd6eb1-5e70-449d-8839-d48ff3062553
-
-
-
-
 <p style="font-size: 16px;">
-开发公司App过程中，设计提出了渲染3d卡片并分享渲染视频的需求。iOS端用SceneKit可以实现，Android这边没有相应工具链，我只能DIY一套工具自己实现:
+开发公司App过程中，设计提出了渲染3d卡片并分享渲染视频的需求。iOS端用SceneKit可以实现，Android这边没有相应工具链，我
+
+只能DIY一套工具自己实现:
 
 * 为实现渲染，我加入了OpenGLES渲染操作相关工具，包括纹理操作，基础shader, FBO操作, 基础Renderer类和定制化GLSurfaceView，定制化RenderThread等。同时把每个渲染元素抽象成一个Drawer，分开管理不同元素的顶点坐标、纹理坐标、坐标变换、坐标数据加载、viewport和具体绘制逻辑。
 * 为实现录制，加入了自己的MediaCodec硬编码操作和编码器端的Renderer。该Renderer主要为了解耦encoder和待编码纹理源，因为源纹理尺寸可以和encoder编码尺寸不一致，同时这也赋予了encoder对纹理图像进行后处理的灵活度。
 * 开发过程中为在不同线程共享GL资源，参考了字节流动的技术文章实现了灵活的EGL Context管理（主要涉及EGL资源创建，共享EGL资源到具体线程的绑定和解绑定）。
 * 卡片上还需要显示一个视频，因此又加入了基于MediaCodec的硬解码和帧缓冲区位块传送（Blit）。
+
+[![3d card]](https://github.com/bigbugbb/glvideo/assets/5157712/3345bb93-17d6-44d6-b155-291563665458)
 
 基于这套技术工具，后来又实现了给视频加水印，加开头和结尾内容，基于CameraX的视频帧采集、渲染和简单特效。
 
@@ -37,6 +33,8 @@ https://github.com/bigbugbb/glvideo/assets/5157712/49cd6eb1-5e70-449d-8839-d48ff
 由于源数据帧来自不同线程，为了在采集时实现纹理共享，又实现了简单的纹理池（纹理池自己维护了一个GL线程，通过将纹理池的EGLContext分享给数据采集线程，实现纹理共享）。为了将采集的ByteBuffer数据上传到具体的纹理缓冲，又加入了PBO操作进行性能优化。
 
 App临死前还加入了设置用户webp头像的功能，这里先通过摄像头录制视频或加载本地视频，接着实现裁剪工具进行裁剪，获得一个mp4文件，再通过ffmpeg转码，生成webp。
+
+[![video cut]](https://github.com/bigbugbb/glvideo/assets/5157712/d7561d73-ff60-4486-9253-d7fe85b542f5)
 
 以上开发过程中，基于对现有代码复用、组件交互简化、线程操作简化、降低学习成本等考虑，实现了一套基于图和协程的Kotlin端简易视频处理框架，这里打包成库和SampleApp，方便以后学习交流。
 </p>
