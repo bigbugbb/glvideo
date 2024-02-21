@@ -15,6 +15,8 @@
 
 ## About The Project
 [![Watch the video]](https://github.com/bigbugbb/glvideo/assets/5157712/e1450bc5-817f-431b-94f5-7e25764d1d4e)
+[![Watch the video]]([https://github.com/bigbugbb/glvideo/assets/5157712/e1450bc5-817f-431b-94f5-7e25764d1d4e](https://github.com/bigbugbb/glvideo/assets/5157712/28487f53-6f0a-4bc7-a829-e5ceb50b047a))
+
 
 <p style="font-size: 16px;">
 开发公司App过程中，设计提出了渲染3d卡片并分享渲染视频的需求。iOS端用SceneKit可以实现，Android这边没有相应工具链，我只能DIY一套工具自己实现:
