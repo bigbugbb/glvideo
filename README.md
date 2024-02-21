@@ -34,7 +34,7 @@
 
 App临死前还加入了设置用户webp头像的功能，这里先通过摄像头录制视频或加载本地视频，接着实现裁剪工具进行裁剪，获得一个mp4文件，再通过ffmpeg转码，生成webp。
 
-[![video cut]](https://github.com/bigbugbb/glvideo/assets/5157712/5a27b0d4-1dab-4131-bc4a-6dff2cbf766f)
+[![video cut]](https://github.com/bigbugbb/glvideo/assets/5157712/14f5bc9c-e5e2-4534-abaa-50fdb33230bb)
 
 以上开发过程中，基于对现有代码复用、组件交互简化、线程操作简化、降低学习成本等考虑，实现了一套基于图和协程的Kotlin端简易视频处理框架，这里打包成库和SampleApp，方便以后学习交流。
 </p>
