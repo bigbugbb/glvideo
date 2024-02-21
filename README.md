@@ -15,7 +15,7 @@
 
 ## About The Project
 [![Watch the video]](https://github.com/bigbugbb/glvideo/assets/5157712/e1450bc5-817f-431b-94f5-7e25764d1d4e)
-[![Watch the video]]([https://github.com/bigbugbb/glvideo/assets/5157712/e1450bc5-817f-431b-94f5-7e25764d1d4e](https://github.com/bigbugbb/glvideo/assets/5157712/28487f53-6f0a-4bc7-a829-e5ceb50b047a))
+[![Watch the video]](https://github.com/bigbugbb/glvideo/assets/5157712/28487f53-6f0a-4bc7-a829-e5ceb50b047a)
 
 
 <p style="font-size: 16px;">
