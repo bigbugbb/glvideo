@@ -25,7 +25,7 @@
 * 开发过程中为在不同线程共享GL资源，参考了字节流动的技术文章实现了灵活的EGL Context管理（主要涉及EGL资源创建，共享EGL资源到具体线程的绑定和解绑定）。
 * 卡片上还需要显示一个视频，因此又加入了基于MediaCodec的硬解码和帧缓冲区位块传送（Blit）。
 
-[![3d card]](https://github.com/bigbugbb/glvideo/assets/5157712/3345bb93-17d6-44d6-b155-291563665458)
+[![3d card]](https://github.com/bigbugbb/glvideo/assets/5157712/f2e332e8-b4ce-4806-90b7-63b64bf2d8d3)
 
 基于这套技术工具，后来又实现了给视频加水印，加开头和结尾内容，基于CameraX的视频帧采集、渲染和简单特效。
 
@@ -34,7 +34,7 @@
 
 App临死前还加入了设置用户webp头像的功能，这里先通过摄像头录制视频或加载本地视频，接着实现裁剪工具进行裁剪，获得一个mp4文件，再通过ffmpeg转码，生成webp。
 
-[![video cut]](https://github.com/bigbugbb/glvideo/assets/5157712/d7561d73-ff60-4486-9253-d7fe85b542f5)
+[![video cut]](https://github.com/bigbugbb/glvideo/assets/5157712/5a27b0d4-1dab-4131-bc4a-6dff2cbf766f)
 
 以上开发过程中，基于对现有代码复用、组件交互简化、线程操作简化、降低学习成本等考虑，实现了一套基于图和协程的Kotlin端简易视频处理框架，这里打包成库和SampleApp，方便以后学习交流。
 </p>
