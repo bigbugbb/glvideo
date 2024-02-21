@@ -16,7 +16,7 @@
 ## About The Project
 
 <p style="font-size: 16px;">
-开发公司App过程中，设计提出了渲染3d卡片并分享渲染视频的需求。iOS端用SceneKit可以实现，Android这边没有相应工具链，只能DIY一套工具:
+开发公司App过程中，有个渲染3d卡片并分享渲染视频的需求。iOS端用SceneKit可以实现，Android这边没有相应工具链，只能DIY一套工具:
 
 * 为实现渲染，我加入了OpenGLES渲染操作相关工具，包括纹理操作，基础shader, FBO操作, 基础Renderer类和定制化GLSurfaceView，定制化RenderThread等。同时把每个渲染元素抽象成一个Drawer，分开管理不同元素的顶点坐标、纹理坐标、坐标变换、坐标数据加载、viewport和具体绘制逻辑。
 * 为实现录制，加入了自己的MediaCodec硬编码操作和编码器端的Renderer。该Renderer主要为了解耦encoder和待编码纹理源，因为源纹理尺寸可以和encoder编码尺寸不一致，同时这也赋予了encoder对纹理图像进行后处理的灵活度。
