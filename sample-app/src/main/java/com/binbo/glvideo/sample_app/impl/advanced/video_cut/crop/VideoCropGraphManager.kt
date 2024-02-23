@@ -132,7 +132,7 @@ class VideoCropGraphManager(val videoUri: Uri, val timeline: Range<Long> = Range
         }
     }
 
-    override suspend fun waitUntilDone() {
+    override suspend fun awaitDone() {
         recordingCompleted.receive()
         RxBus.getDefault().send(CreateVideoCutFileSuccess(webpFilePath))
     }

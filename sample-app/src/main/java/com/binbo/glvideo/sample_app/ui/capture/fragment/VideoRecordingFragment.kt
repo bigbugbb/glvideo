@@ -122,7 +122,7 @@ class VideoRecordingFragment : Fragment() {
 
         lifecycleScope.launch {
             graphManager.recordVideo(false)
-            graphManager.waitUntilDone()
+            graphManager.awaitDone()
             activity?.finish()
         }
     }

@@ -80,7 +80,7 @@ class NameCardGraphManager : BaseGraphManager() {
         }
     }
 
-    override suspend fun waitUntilDone() {
+    override suspend fun awaitDone() {
         recordingCompleted.receive()
         val videoFile = getFile(NAME_CARD, recorderConfig.targetFilename + App.Const.recordVideoExt)
         FileToolUtils.writeVideoToGallery(videoFile, "video/mp4")

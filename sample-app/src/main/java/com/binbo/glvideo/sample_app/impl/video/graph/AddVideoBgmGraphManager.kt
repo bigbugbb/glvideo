@@ -101,7 +101,7 @@ class AddVideoBgmGraphManager(
         }
     }
 
-    override suspend fun waitUntilDone() {
+    override suspend fun awaitDone() {
         recordingCompleted.receive()
         val videoFile = getFile(FileUseCase.VIDEO_WITH_BGM, videoFilename + recordVideoExt)
         FileToolUtils.writeVideoToGallery(videoFile, "video/mp4")

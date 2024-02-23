@@ -19,7 +19,7 @@ interface IGraphManager<D> where D : IMediaData {
     fun createMediaGraph(): BaseMediaGraph<D>
     fun destroyMediaGraph()
 
-    suspend fun waitUntilDone() {}
+    suspend fun awaitDone() {}
 
     suspend fun prepare(@DirType dirType: Int = TYPE_OUTPUT)
     suspend fun start(@DirType dirType: Int = TYPE_OUTPUT)

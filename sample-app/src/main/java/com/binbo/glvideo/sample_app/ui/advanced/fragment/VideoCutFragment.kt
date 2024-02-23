@@ -135,7 +135,7 @@ class VideoCutFragment : Fragment() {
                     createMediaGraph()
                     prepare()
                     start()
-                    waitUntilDone()
+                    awaitDone()
                 }
             }
 
