@@ -1,0 +1,4 @@
+com.arthenica.ffmpegkit
+raw license
+raw license_cpu_features
+raw source
