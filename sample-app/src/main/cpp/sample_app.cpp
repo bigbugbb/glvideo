@@ -1,5 +1,12 @@
 #include <jni.h>
-
+// ffmpeg is written in C, It links different than C++ due to name mangling
+extern "C" {
+    #include "config.h"
+    #include "libavcodec/jni.h"
+    #include "libavutil/bprint.h"
+    #include "libavutil/file.h"
+    #include "libavutil/log.h"
+}
 
 /**
  * Called when 'sample_app' native library is loaded.
@@ -16,6 +23,7 @@ extern "C" JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *reserved) {
 
     // Here you can register native methods if not using the automatic registration
     // through naming convention (Java_packageName_ClassName_methodName).
+    av_jni_set_java_vm(vm, NULL);
 
     return JNI_VERSION_1_6; // Must return the required JNI version.
 }

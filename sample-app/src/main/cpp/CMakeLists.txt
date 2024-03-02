@@ -36,14 +36,17 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
 # project_root/ffmpeg/{ABI}/lib where {ABI} could be arm64-v8a, armeabi-v7a, etc.
 # And FFmpeg headers are in project_root/ffmpeg/include
 
+set(NEON_SUPPORTED true)
+set(MY_LIBS_DIR ${PROJECT_SOURCE_DIR}/../../../../libs)
+message("Value of MY_LIBS_DIR: ${MY_LIBS_DIR}")
+
 # Provide path to the include files
-#include_directories(${PROJECT_SOURCE_DIR}/ffmpeg/include)
+include_directories("${MY_LIBS_DIR}/ffmpeg-kit/${ANDROID_ABI}/include")
 
 # Helper macro to create imported target for FFmpeg libraries
 macro(create_ffmpeg_lib name)
     add_library(${name} SHARED IMPORTED)
-    set_target_properties(${name} PROPERTIES IMPORTED_LOCATION
-            ${PROJECT_SOURCE_DIR}/../../../../libs/${ANDROID_ABI}/lib${name}.so)
+    set_target_properties(${name} PROPERTIES IMPORTED_LOCATION ${MY_LIBS_DIR}/ffmpeg-kit/${ANDROID_ABI}/lib${name}.so)
 endmacro(create_ffmpeg_lib)
 
 # Use the macro to create imported targets for each FFmpeg library
@@ -57,5 +60,5 @@ create_ffmpeg_lib(swscale)
 # Link the native library with the log library and FFmpeg libraries
 target_link_libraries(${CMAKE_PROJECT_NAME}
         android
-        log)
-        #avcodec avfilter avformat avutil swresample swscale)
+        log
+        avcodec avfilter avformat avutil swresample swscale)
