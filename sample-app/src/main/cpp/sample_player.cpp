@@ -1,15 +1,14 @@
-#include <jni.h>
 // ffmpeg is written in C, It links different than C++ due to name mangling
+#include "sample_player.h"
 extern "C" {
     #include "config.h"
     #include "libavcodec/jni.h"
     #include "libavutil/bprint.h"
     #include "libavutil/file.h"
-    #include "libavutil/log.h"
 }
 
 /**
- * Called when 'sample_app' native library is loaded.
+ * Called when 'sample_player' native library is loaded.
  *
  * @param vm pointer to the running virtual machine
  * @param reserved reserved
