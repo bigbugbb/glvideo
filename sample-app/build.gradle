@@ -14,12 +14,18 @@ android {
         targetSdk 33
         versionCode 1
         versionName "1.0"
+        externalNativeBuild {
+            cmake {
+                cppFlags ''
+            }
+        }
     }
 
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
         }
     }
     compileOptions {
@@ -31,6 +37,12 @@ android {
     }
     buildFeatures {
         viewBinding true
+    }
+    externalNativeBuild {
+        cmake {
+            path file('src/main/cpp/CMakeLists.txt')
+            version '3.22.1'
+        }
     }
 }
 
@@ -65,6 +77,8 @@ dependencies {
     implementation 'com.github.tbruyelle:rxpermissions:0.12'
 
     implementation 'de.hdodenhof:circleimageview:3.1.0'
+
+    api 'com.arthenica:smart-exception-java:0.2.1'
 
     implementation project(path: ':core')
 
