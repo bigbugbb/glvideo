@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
         private const val TAG = "MainActivity"
 
         init {
-            System.loadLibrary("sample_player")
+            System.loadLibrary("ffmpeg_player")
         }
     }
 }

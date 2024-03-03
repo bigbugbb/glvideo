@@ -78,6 +78,8 @@ dependencies {
 
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
+    api 'com.arthenica:smart-exception-java:0.2.1'
+
     implementation project(path: ':core')
 
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.8.1'
