@@ -36,17 +36,20 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
 # project_root/ffmpeg/{ABI}/lib where {ABI} could be arm64-v8a, armeabi-v7a, etc.
 # And FFmpeg headers are in project_root/ffmpeg/include
 
-set(NEON_SUPPORTED true)
+set(ENABLE_NEON_CHECK true)
 set(MY_LIBS_DIR ${PROJECT_SOURCE_DIR}/../../../../libs)
 message("Value of MY_LIBS_DIR: ${MY_LIBS_DIR}")
-
-# Provide path to the include files
-include_directories("${MY_LIBS_DIR}/ffmpeg-kit/${ANDROID_ABI}/include")
 
 # Helper macro to create imported target for FFmpeg libraries
 macro(create_ffmpeg_lib name)
     add_library(${name} SHARED IMPORTED)
-    set_target_properties(${name} PROPERTIES IMPORTED_LOCATION ${MY_LIBS_DIR}/ffmpeg-kit/${ANDROID_ABI}/lib${name}.so)
+    if(ANDROID_ABI STREQUAL "armeabi-v7a" AND ENABLE_NEON_CHECK)
+        include_directories("${MY_LIBS_DIR}/ffmpeg-kit/${ANDROID_ABI}/include_neon")
+        set_target_properties(${name} PROPERTIES IMPORTED_LOCATION ${MY_LIBS_DIR}/ffmpeg-kit/${ANDROID_ABI}/lib${name}_neon.so)
+    else()
+        include_directories("${MY_LIBS_DIR}/ffmpeg-kit/${ANDROID_ABI}/include")
+        set_target_properties(${name} PROPERTIES IMPORTED_LOCATION ${MY_LIBS_DIR}/ffmpeg-kit/${ANDROID_ABI}/lib${name}.so)
+    endif()
 endmacro(create_ffmpeg_lib)
 
 # Use the macro to create imported targets for each FFmpeg library
