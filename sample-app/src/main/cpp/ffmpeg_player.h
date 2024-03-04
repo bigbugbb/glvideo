@@ -51,7 +51,7 @@ JNIEXPORT void JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPla
 JNIEXPORT jint JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_getNativeLogLevel(JNIEnv *env, jclass object);
 
 /**
- * Enables log and statistics redirection.
+ * Disables log redirection.
  *
  * @param env pointer to native method interface
  * @param object reference to the class on which this method is invoked
@@ -59,7 +59,7 @@ JNIEXPORT jint JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPla
 JNIEXPORT void JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_enableNativeRedirection(JNIEnv *env, jclass object);
 
 /**
- * Disables log and statistics redirection.
+ * Disables log redirection.
  *
  * @param env pointer to native method interface
  * @param object reference to the class on which this method is invoked

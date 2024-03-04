@@ -12,7 +12,6 @@
 #include "libavutil/mem.h"
 
 # define LogType 1
-# define StatisticsType 2
 
 /** Callback data structure */
 struct CallbackData {
@@ -36,7 +35,6 @@ struct CallbackData {
 /** Session control variables */
 #define SESSION_MAP_SIZE 1000
 static atomic_short sessionMap[SESSION_MAP_SIZE];
-static atomic_int sessionInTransitMessageCountMap[SESSION_MAP_SIZE];
 
 /** Redirection control variables */
 static pthread_mutex_t lockMutex;
@@ -57,9 +55,6 @@ static jclass configClass;
 
 /** Global reference of log redirection method in Java */
 static jmethodID logMethod;
-
-/** Global reference of statistics redirection method in Java */
-static jmethodID statisticsMethod;
 
 /** Global reference of safOpen method in Java */
 static jmethodID safOpenMethod;
@@ -103,9 +98,6 @@ JNINativeMethod configMethods[] = {
     {"setNativeEnvironmentVariable", "(Ljava/lang/String;Ljava/lang/String;)I", (void*) Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_setNativeEnvironmentVariable},
     {"ignoreNativeSignal", "(I)V", (void*) Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_ignoreNativeSignal},
 };
-
-/** Forward declaration for function defined in fftools_ffmpeg.c */
-int ffmpeg_execute(int argc, char **argv);
 
 static const char *avutil_log_get_level_str(int level) {
     switch (level) {
@@ -280,52 +272,6 @@ void logCallbackDataAdd(int level, AVBPrint *data) {
     mutexUnlock();
 
     monitorNotify();
-
-    atomic_fetch_add(&sessionInTransitMessageCountMap[globalSessionId % SESSION_MAP_SIZE], 1);
-}
-
-/**
- * Adds statistics data to the end of callback data list.
- */
-void statisticsCallbackDataAdd(int frameNumber, float fps, float quality, int64_t size, double time, double bitrate, double speed) {
-
-    // CREATE DATA STRUCT FIRST
-    struct CallbackData *newData = (struct CallbackData*)av_malloc(sizeof(struct CallbackData));
-    newData->type = StatisticsType;
-    newData->sessionId = globalSessionId;
-    newData->statisticsFrameNumber = frameNumber;
-    newData->statisticsFps = fps;
-    newData->statisticsQuality = quality;
-    newData->statisticsSize = size;
-    newData->statisticsTime = time;
-    newData->statisticsBitrate = bitrate;
-    newData->statisticsSpeed = speed;
-
-    newData->next = NULL;
-
-    mutexLock();
-
-    // INSERT IT TO THE END OF QUEUE
-    if (callbackDataTail == NULL) {
-        callbackDataTail = newData;
-
-        if (callbackDataHead != NULL) {
-            LOGE("Dangling callback data head detected. This can cause memory leak.");
-        } else {
-            callbackDataHead = newData;
-        }
-    } else {
-        struct CallbackData *oldTail = callbackDataTail;
-        oldTail->next = newData;
-
-        callbackDataTail = newData;
-    }
-
-    mutexUnlock();
-
-    monitorNotify();
-
-    atomic_fetch_add(&sessionInTransitMessageCountMap[globalSessionId % SESSION_MAP_SIZE], 1);
 }
 
 /**
@@ -402,15 +348,6 @@ int cancelRequested(long id) {
 }
 
 /**
- * Resets the number of messages in transmit for this session.
- *
- * @param id session id
- */
-void resetMessagesInTransmit(long id) {
-    atomic_store(&sessionInTransitMessageCountMap[id % SESSION_MAP_SIZE], 0);
-}
-
-/**
  * Callback function for FFmpeg logs.
  *
  * @param ptr pointer to AVClass struct
@@ -475,14 +412,13 @@ void *callbackThreadFunction() {
 
     LOGD("Async callback block started.\n");
 
-    while(redirectionEnabled) {
+    while (redirectionEnabled) {
 
         struct CallbackData *callbackData = callbackDataRemove();
         if (callbackData != NULL) {
             if (callbackData->type == LogType) {
 
                 // LOG CALLBACK
-
                 int size = callbackData->logData.len;
 
                 jbyteArray byteArray = (jbyteArray) (*env)->NewByteArray(env, size);
@@ -492,20 +428,7 @@ void *callbackThreadFunction() {
 
                 // CLEAN LOG DATA
                 av_bprint_finalize(&callbackData->logData, NULL);
-
-            } else {
-
-                // STATISTICS CALLBACK
-
-                (*env)->CallStaticVoidMethod(env, configClass, statisticsMethod,
-                                             (jlong) callbackData->sessionId, callbackData->statisticsFrameNumber,
-                                             callbackData->statisticsFps, callbackData->statisticsQuality,
-                                             callbackData->statisticsSize, callbackData->statisticsTime,
-                                             callbackData->statisticsBitrate, callbackData->statisticsSpeed);
-
             }
-
-            atomic_fetch_sub(&sessionInTransitMessageCountMap[callbackData->sessionId % SESSION_MAP_SIZE], 1);
 
             // CLEAN STRUCT
             callbackData->next = NULL;
@@ -603,12 +526,6 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
         return JNI_FALSE;
     }
 
-    statisticsMethod = (*env)->GetStaticMethodID(env, localConfigClass, "statistics", "(JIFFJDDD)V");
-    if (statisticsMethod == NULL) {
-        LOGE("OnLoad thread failed to GetStaticMethodID for %s.\n", "statistics");
-        return JNI_FALSE;
-    }
-
     safOpenMethod = (*env)->GetStaticMethodID(env, localConfigClass, "safOpen", "(I)I");
     if (safOpenMethod == NULL) {
         LOGE("OnLoad thread failed to GetStaticMethodID for %s.\n", "safOpen");
@@ -635,9 +552,8 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
     callbackDataHead = NULL;
     callbackDataTail = NULL;
 
-    for(int i = 0; i<SESSION_MAP_SIZE; i++) {
+    for (int i = 0; i < SESSION_MAP_SIZE; i++) {
         atomic_init(&sessionMap[i], 0);
-        atomic_init(&sessionInTransitMessageCountMap[i], 0);
     }
 
     mutexInit();
@@ -653,43 +569,18 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
     return JNI_VERSION_1_6;
 }
 
-/**
- * Sets log level.
- *
- * @param env pointer to native method interface
- * @param object reference to the class on which this method is invoked
- * @param level log level
- */
 JNIEXPORT void JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_setNativeLogLevel(JNIEnv *env, jclass object, jint level) {
     configuredLogLevel = level;
 }
 
-/**
- * Returns current log level.
- *
- * @param env pointer to native method interface
- * @param object reference to the class on which this method is invoked
- */
 JNIEXPORT jint JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_getNativeLogLevel(JNIEnv *env, jclass object) {
     return configuredLogLevel;
 }
 
-/**
- * Enables log and statistics redirection.
- *
- * @param env pointer to native method interface
- * @param object reference to the class on which this method is invoked
- */
 JNIEXPORT void JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_enableNativeRedirection(JNIEnv *env, jclass object) {
     enableNativeRedirection();
 }
 
-/**
- * Disables log and statistics redirection.
- *
- * @param env pointer to native method interface
- * @param object reference to the class on which this method is invoked
- */
 JNIEXPORT void JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_disableNativeRedirection(JNIEnv *env, jclass object) {
     mutexLock();
 
@@ -717,26 +608,10 @@ JNIEXPORT jstring JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpeg
     return (*env)->NewStringUTF(env, FFMPEG_VERSION);
 }
 
-/**
- * Returns FFmpegKit library version natively.
- *
- * @param env pointer to native method interface
- * @param object reference to the class on which this method is invoked
- * @return FFmpegKit version string
- */
 JNIEXPORT jstring JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_getNativeVersion(JNIEnv *env, jclass object) {
     return (*env)->NewStringUTF(env, FFMPEG_KIT_VERSION);
 }
 
-/**
- * Sets an environment variable natively
- *
- * @param env pointer to native method interface
- * @param object reference to the class on which this method is invoked
- * @param variableName environment variable name
- * @param variableValue environment variable value
- * @return zero on success, non-zero on error
- */
 JNIEXPORT int JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_setNativeEnvironmentVariable(JNIEnv *env, jclass object, jstring variableName, jstring variableValue) {
     const char *variableNameString = (*env)->GetStringUTFChars(env, variableName, 0);
     const char *variableValueString = (*env)->GetStringUTFChars(env, variableValue, 0);
@@ -748,13 +623,6 @@ JNIEXPORT int JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlay
     return rc;
 }
 
-/**
- * Registers a new ignored signal. Ignored signals are not handled by the library.
- *
- * @param env pointer to native method interface
- * @param object reference to the class on which this method is invoked
- * @param signum signal number
- */
 JNIEXPORT void JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_ignoreNativeSignal(JNIEnv *env, jclass object, jint signum) {
     if (signum == SIGQUIT) {
         handleSIGQUIT = 0;
