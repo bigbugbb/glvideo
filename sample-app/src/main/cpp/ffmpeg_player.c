@@ -32,10 +32,6 @@ struct CallbackData {
     struct CallbackData *next;
 };
 
-/** Session control variables */
-#define SESSION_MAP_SIZE 1000
-static atomic_short sessionMap[SESSION_MAP_SIZE];
-
 /** Redirection control variables */
 static pthread_mutex_t lockMutex;
 static pthread_mutex_t monitorMutex;
@@ -275,15 +271,6 @@ void logCallbackDataAdd(int level, AVBPrint *data) {
 }
 
 /**
- * Adds a session id to the session map.
- *
- * @param id session id
- */
-void addSession(long id) {
-    atomic_store(&sessionMap[id % SESSION_MAP_SIZE], 1);
-}
-
-/**
  * Removes head of callback data list.
  */
 struct CallbackData *callbackDataRemove() {
@@ -313,38 +300,6 @@ struct CallbackData *callbackDataRemove() {
     mutexUnlock();
 
     return currentData;
-}
-
-/**
- * Removes a session id from the session map.
- *
- * @param id session id
- */
-void removeSession(long id) {
-    atomic_store(&sessionMap[id % SESSION_MAP_SIZE], 0);
-}
-
-/**
- * Adds a cancel session request to the session map.
- *
- * @param id session id
- */
-void cancelSession(long id) {
-    atomic_store(&sessionMap[id % SESSION_MAP_SIZE], 2);
-}
-
-/**
- * Checks whether a cancel request for the given session id exists in the session map.
- *
- * @param id session id
- * @return 1 if exists, false otherwise
- */
-int cancelRequested(long id) {
-    if (atomic_load(&sessionMap[id % SESSION_MAP_SIZE]) == 2) {
-        return 1;
-    } else {
-        return 0;
-    }
 }
 
 /**
@@ -551,10 +506,6 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
 
     callbackDataHead = NULL;
     callbackDataTail = NULL;
-
-    for (int i = 0; i < SESSION_MAP_SIZE; i++) {
-        atomic_init(&sessionMap[i], 0);
-    }
 
     mutexInit();
     monitorInit();
