@@ -5,6 +5,7 @@
 #include <sys/stat.h>
 
 #include "ffmpeg_player.h"
+#include "player_interface.h"
 #include "config.h"
 #include "libavcodec/jni.h"
 #include "libavutil/bprint.h"
@@ -61,6 +62,9 @@ static jmethodID safCloseMethod;
 /** Global reference of String class in Java */
 static jclass stringClass;
 
+/** Global reference of IllegalArgumentException class in Java */
+static jclass exceptionClass;
+
 /** Global reference of String constructor in Java */
 static jmethodID stringConstructor;
 
@@ -69,6 +73,9 @@ const char *configClassName = "com/binbo/glvideo/sample_app/utils/player/FFmpegP
 
 /** Full name of String class */
 const char *stringClassName = "java/lang/String";
+
+/** Full name of IllegalArgumentException class */
+const char *exceptionClassName = "java/lang/IllegalArgumentException";
 
 /** Fields that control the handling of SIGNALs */
 volatile int handleSIGQUIT = 1;
@@ -93,6 +100,8 @@ JNINativeMethod configMethods[] = {
     {"getNativeVersion", "()Ljava/lang/String;", (void*) Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_getNativeVersion},
     {"setNativeEnvironmentVariable", "(Ljava/lang/String;Ljava/lang/String;)I", (void*) Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_setNativeEnvironmentVariable},
     {"ignoreNativeSignal", "(I)V", (void*) Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_ignoreNativeSignal},
+    {"createPlayer", "(Ljava/lang/String;)I", (void*) Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_createPlayer},
+    {"destroyPlayer", "()I", (void*) Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_destroyPlayer},
 };
 
 static const char *avutil_log_get_level_str(int level) {
@@ -473,6 +482,12 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
         return JNI_FALSE;
     }
 
+    jclass localExceptionClass = (*env)->FindClass(env, exceptionClassName);
+    if (localExceptionClass == NULL) {
+        LOGE("OnLoad failed to FindClass %s.\n", exceptionClassName);
+        return JNI_FALSE;
+    }
+
     (*env)->GetJavaVM(env, &globalVm);
 
     logMethod = (*env)->GetStaticMethodID(env, localConfigClass, "log", "(JI[B)V");
@@ -503,6 +518,7 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
 
     configClass = (jclass) ((*env)->NewGlobalRef(env, localConfigClass));
     stringClass = (jclass) ((*env)->NewGlobalRef(env, localStringClass));
+    exceptionClass = (jclass) ((*env)->NewGlobalRef(env, localExceptionClass));
 
     callbackDataHead = NULL;
     callbackDataTail = NULL;
@@ -586,4 +602,26 @@ JNIEXPORT void JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPla
     } else if (signum == SIGPIPE) {
         handleSIGPIPE = 0;
     }
+}
+
+JNIEXPORT jint JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_createPlayer(JNIEnv *env, jclass object, jstring path) {
+    if (path == NULL) {
+        // Handle null jString if necessary.
+        return -1;
+    }
+
+    // Step 1: Convert jstring to const char*
+    const char* szPath = (*env)->GetStringUTFChars(env, path, NULL);
+    if (szPath == NULL) {
+        char buffer[256];
+        snprintf(buffer, sizeof(buffer), "Invalid path: %s", szPath);
+        (*env)->ThrowNew(env, exceptionClass, buffer);
+        return -1;
+    }
+    jint result = CreatePlayer(szPath);
+    return result;
+}
+
+JNIEXPORT jint JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_destroyPlayer(JNIEnv *env, jclass object) {
+    return DestroyPlayer();
 }

@@ -20,14 +20,18 @@ project("ffmpeg_player" C CXX)
 # In this top level CMakeLists.txt, ${CMAKE_PROJECT_NAME} is used to define
 # the target library name; in the sub-module's CMakeLists.txt, ${PROJECT_NAME}
 # is preferred for the same purpose.
-#
+
+# Recursively match all .cpp files in the specified directory
+file(GLOB_RECURSE PLAYER_SOURCES "player/*.cpp")
+
 # In order to load a library into your app from Java/Kotlin, you must call
 # System.loadLibrary() and pass the name of the library defined here;
 # for GameActivity/NativeActivity derived applications, the same library name must be
 # used in the AndroidManifest.xml file.
 add_library(${CMAKE_PROJECT_NAME} SHARED
         # List C/C++ source files with relative paths to this CMakeLists.txt.
-        ffmpeg_player.c)
+        ffmpeg_player.c
+        ${PLAYER_SOURCES})
 
 # Specifies a path to native header files.
 #include_directories(include/)

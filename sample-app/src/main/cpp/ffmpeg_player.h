@@ -104,4 +104,23 @@ JNIEXPORT int JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlay
  */
 JNIEXPORT void JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_ignoreNativeSignal(JNIEnv *env, jclass object, jint signum);
 
+/**
+ * Create the player powered by FFmpeg.
+ *
+ * @param env pointer to native method interface
+ * @param object reference to the class on which this method is invoked
+ * @param path the path of the media from local file or network
+ * @return zero on success, non-zero on error
+ */
+JNIEXPORT int JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_createPlayer(JNIEnv *env, jclass object, jstring path);
+
+/**
+ * Create the player powered by FFmpeg.
+ *
+ * @param env pointer to native method interface
+ * @param object reference to the class on which this method is invoked
+ * @return zero on success, non-zero on error
+ */
+JNIEXPORT int JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_destroyPlayer(JNIEnv *env, jclass object);
+
 #endif /* SAMPLE_PLAYER_H */

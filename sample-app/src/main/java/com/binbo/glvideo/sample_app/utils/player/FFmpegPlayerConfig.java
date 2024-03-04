@@ -516,4 +516,8 @@ public class FFmpegPlayerConfig {
      * @param signum signal number
      */
     private native static void ignoreNativeSignal(final int signum);
+
+    public native static int createPlayer(final String path);
+
+    public native static int destroyPlayer();
 }

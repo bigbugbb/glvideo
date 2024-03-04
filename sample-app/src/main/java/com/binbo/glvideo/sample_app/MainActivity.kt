@@ -9,6 +9,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.binbo.glvideo.sample_app.databinding.ActivityMainBinding
+import com.binbo.glvideo.sample_app.utils.player.FFmpegPlayerConfig
 import com.binbo.glvideo.sample_app.utils.rxbus.HeartBeatManager
 import com.tbruyelle.rxpermissions3.RxPermissions
 
@@ -30,6 +31,8 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         binding.viewNav.setupWithNavController(navController)
+
+        FFmpegPlayerConfig.createPlayer("bbb")
 
         RxPermissions(this)
             .request(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
