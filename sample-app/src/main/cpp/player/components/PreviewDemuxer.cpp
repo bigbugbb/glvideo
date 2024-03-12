@@ -45,10 +45,7 @@ int CPreviewDemuxer::InitialConfig(const char* szURL, double lfOffset, BOOL bRem
     m_strURL   = szURL;
     m_lfOffset = FFMIN(FFMAX(0, lfOffset), 1.0);
     m_bRemote  = bRemote;
-    
-    avio_set_remote(bRemote);
-    av_set_notify_cb(AV_NOTIFY_RECONNECT, m_bRemote ? notify_reconnect_cb : NULL, &m_format);
-    
+
     return S_OK;
 }
 
@@ -75,7 +72,7 @@ int CPreviewDemuxer::Load()
         NotifyEvent(EVENT_ENCOUNTER_ERROR, E_BADPREVIEW, 0, NULL);
         return E_FAIL;
     }
-    if (av_find_stream_info(m_format.pFormatContext) < 0) {
+    if (avformat_find_stream_info(m_format.pFormatContext, NULL) < 0) {
         NotifyEvent(EVENT_ENCOUNTER_ERROR, E_BADPREVIEW, 0, NULL);
         return E_FAIL;
     }
@@ -169,11 +166,6 @@ int CPreviewDemuxer::SetEOS()
     Log("CPreviewDemuxer::SetEOS\n");
     
     return CFFmpegDemuxer::SetEOS();
-}
-
-int CPreviewDemuxer::RebuildIndexEntries(AVFormatContext* pFmtCtx, AVCodecContext* pVideoCtx, AVCodecContext* pAudioCtx)
-{
-    return E_FAIL;
 }
 
 THREAD_RETURN CPreviewDemuxer::ThreadProc()

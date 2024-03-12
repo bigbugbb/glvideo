@@ -14,6 +14,8 @@
 //#define LOG_AUDIO_PCM
 //#define LOG_VIDEO_RGB
 //#define iOS
+#ifndef ANDROID
 #define ANDROID
+#endif
 
 #endif

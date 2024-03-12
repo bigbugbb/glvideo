@@ -25,19 +25,17 @@ CFFmpegVideoDecoder::CFFmpegVideoDecoder(const GUID& guid, IDependency* pDepend,
     m_bJumpBack  = FALSE;
     m_pCodecCtx  = NULL;
     m_pFramePool = NULL;
-    avcodec_get_frame_defaults(&m_YUV);
+    av_frame_unref(&m_YUV);
     
 #ifdef iOS
     m_pSwsCtx = NULL;
 #endif
-    m_eDstFmt = PIX_FMT_RGB565;
+    m_eDstFmt = AV_PIX_FMT_RGB565;
 
     m_llLastInputTS  = AV_NOPTS_VALUE;
     m_llLastOutputTS = AV_NOPTS_VALUE;
     
     m_bLoopFilter = TRUE;
-    avcodec_set_loop_filter_probe_cb(avcodec_is_loop_filter);
-    avcodec_enable_loop_filter(TRUE);
 }
 
 CFFmpegVideoDecoder::~CFFmpegVideoDecoder()
@@ -117,13 +115,11 @@ int CFFmpegVideoDecoder::EnableLoopFilter(BOOL bEnable)
 inline
 int CFFmpegVideoDecoder::EnableLoopFilter2(AVCodecContext* pCodecCtx)
 {
-    if (m_bLoopFilter) {
-        m_pCodecCtx->skip_loop_filter = AVDISCARD_DEFAULT;
-        avcodec_enable_loop_filter(TRUE);
-    } else {
-        m_pCodecCtx->skip_loop_filter = AVDISCARD_ALL;
-        avcodec_enable_loop_filter(FALSE);
-    }
+//    if (m_bLoopFilter) {
+//        m_pCodecCtx->skip_loop_filter = AVDISCARD_ALL;
+//    } else {
+//        m_pCodecCtx->skip_loop_filter = AVDISCARD_DEFAULT;
+//    }
     
     return S_OK;
 }
@@ -236,13 +232,14 @@ int CFFmpegVideoDecoder::Decode(AVPacket* pPacket, AVCodecContext* pCodecCtx, co
     if (m_pFramePool->GetEmpty(sample) != S_OK) {
         return E_RETRY; // wait the decoded frames to be delivered
     }
+
+    avcodec_send_packet(pCodecCtx, pPacket);
     
-    int nGotPic = 0;
-    int nResult = avcodec_decode_video2(pCodecCtx, &m_YUV, &nGotPic, pPacket);
+    int nRet = avcodec_receive_frame(pCodecCtx, &m_YUV);
 
     CFrame& frame = *(CFrame*)sample.m_pExten;
     // resize & re-allocate the memory used for buffering decoded frames
-    if (nGotPic && nResult > 0) {
+    if (nRet == 0) {
         if (frame.m_nWidth != m_YUV.width || frame.m_nHeight != m_YUV.height) {
             int nResult = S_OK;
 #ifdef ANDROID
@@ -278,21 +275,22 @@ int CFFmpegVideoDecoder::Decode(AVPacket* pPacket, AVCodecContext* pCodecCtx, co
     
     frame.m_nType     = m_YUV.pict_type;
     //Log("nGotPic: %d, waitI: %d, ignore: %d\n", nGotPic, !IsWaitingKeyFrame(), sampleIn.m_bIgnore);
-    frame.m_bShow     = nGotPic && !IsWaitingKeyFrame() && !sampleIn.m_bIgnore;
+    frame.m_bShow     = nRet == 0 && !IsWaitingKeyFrame() && !sampleIn.m_bIgnore;
     frame.m_nDuration = pPacket->duration;
     if (frame.m_bShow) {
 #ifdef iOS
         AVFrame* pRGB = &frame.m_frame;
         sws_scale(m_pSwsCtx, m_YUV.data, m_YUV.linesize, 0, m_nHeight, pRGB->data, pRGB->linesize);
 #else
-        av_picture_copy((AVPicture*)&frame.m_frame, (AVPicture*)&m_YUV, pCodecCtx->pix_fmt, m_nWidth, m_nHeight);
+        av_image_copy(const_cast<uint8_t **>(frame.m_frame.data), frame.m_frame.linesize,
+                      m_YUV.data, m_YUV.linesize, pCodecCtx->pix_fmt, m_nWidth, m_nHeight);
 #endif
     }
     sample.m_bIgnore     = sampleIn.m_bIgnore;
-    sample.m_llTimestamp = nGotPic ? AdjustTimestamp(m_YUV.best_effort_timestamp, frame.m_nDuration) : pPacket->pts;
+    sample.m_llTimestamp = nRet == 0 ? AdjustTimestamp(m_YUV.best_effort_timestamp, frame.m_nDuration) : pPacket->pts;
     sample.m_llSyncPoint = sampleIn.m_llSyncPoint;
     //Log("best effort ts: %lld, last input ts: %lld, last output ts: %lld\n", m_pYUV->best_effort_timestamp, m_llLastInputTS, m_llLastOutputTS);
-    m_llLastInputTS  = nGotPic ? m_YUV.best_effort_timestamp : pPacket->pts;
+    m_llLastInputTS  = nRet == 0 ? m_YUV.best_effort_timestamp : pPacket->pts;
     m_llLastOutputTS = sample.m_llTimestamp;
     AssertValid(!sampleIn.m_bIgnore);
     //Log("pts: %lld, syncpt: %lld, frame type: %d, show: %d\n", sample.m_llTimestamp, sample.m_llSyncPoint, frame.m_nType, frame.m_bShow);
@@ -316,7 +314,7 @@ LONGLONG CFFmpegVideoDecoder::AdjustTimestamp(LONGLONG llTimestamp, int nDuratio
     return llTimestamp;
 }
 
-int CFFmpegVideoDecoder::Resize(int nWidth, int nHeight, PixelFormat eSrcFmt)
+int CFFmpegVideoDecoder::Resize(int nWidth, int nHeight, AVPixelFormat eSrcFmt)
 {
     int nResult = S_OK;
     
@@ -341,10 +339,10 @@ int CFFmpegVideoDecoder::OnVideoSizeChanged()
     return S_OK;
 }
 
-BOOL CFFmpegVideoDecoder::IsIntraOnly(CodecID id)
+BOOL CFFmpegVideoDecoder::IsIntraOnly(AVCodecID id)
 {
-    if (id == CODEC_ID_MSVIDEO1 || id == CODEC_ID_TSCC || id == CODEC_ID_BINKVIDEO || 
-        id == CODEC_ID_BMP || id == CODEC_ID_JPEG2000) { // should be more
+    if (id == AV_CODEC_ID_MSVIDEO1 || id == AV_CODEC_ID_TSCC || id == AV_CODEC_ID_BINKVIDEO ||
+        id == AV_CODEC_ID_BMP || id == AV_CODEC_ID_JPEG2000) { // should be more
         return TRUE;
     }
     

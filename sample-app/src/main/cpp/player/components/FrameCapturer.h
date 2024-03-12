@@ -25,7 +25,7 @@ public:
     static CFrameCapturer* GetInstance(IDependency* pDepend);
     
     int  CaptureFrame(CMediaObject* pSender, void* pData);
-    void SetCaptureFormat(PixelFormat eFormat);
+    void SetCaptureFormat(AVPixelFormat eFormat);
     
 protected:
     int SendMessage(const Message& msg);
@@ -35,7 +35,7 @@ protected:
     
     CLock             m_csCapture;
     CEvent            m_etCapture;
-    PixelFormat       m_eDstFmt;
+    AVPixelFormat     m_eDstFmt;
     SwsContext*       m_pSwsCtx;
     CMessageQueue     m_MsgQueue;
 };

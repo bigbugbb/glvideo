@@ -22,15 +22,15 @@ public:
     CFrame();
     virtual ~CFrame();
     
-    int Resize(int nWidth, int nHeight, enum PixelFormat ePixFmt);
+    int Resize(int nWidth, int nHeight, enum AVPixelFormat ePixFmt);
     
-    int         m_nType;
-    BOOL        m_bShow;
-    int         m_nDuration;
-    int         m_nWidth;
-    int         m_nHeight;
-    AVFrame     m_frame;
-    PixelFormat m_ePixFmt;
+    int           m_nType;
+    BOOL          m_bShow;
+    int           m_nDuration;
+    int           m_nWidth;
+    int           m_nHeight;
+    AVFrame       m_frame;
+    AVPixelFormat m_ePixFmt;
 
 protected:
     int  Alloc(int nWidth, int nHeight);

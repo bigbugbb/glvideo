@@ -9,7 +9,7 @@
 #ifndef QVOD_MemRing_h
 #define QVOD_MemRing_h
 
-#include "Utinities.h"
+#include "Utils.h"
 using ios_qvod_player::CLock;
 
 struct Cell

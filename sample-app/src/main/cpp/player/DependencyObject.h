@@ -10,7 +10,7 @@
 #define QvodPlayer_DependencyObject_h
 
 #include "BaseObject.h"
-#include "Utinities.h"
+#include "Utils.h"
 
 struct IDependency
 {

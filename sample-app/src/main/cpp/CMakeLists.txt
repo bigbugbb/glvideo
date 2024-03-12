@@ -31,6 +31,7 @@ file(GLOB_RECURSE PLAYER_SOURCES "player/*.cpp")
 add_library(${CMAKE_PROJECT_NAME} SHARED
         # List C/C++ source files with relative paths to this CMakeLists.txt.
         ffmpeg_player.c
+        player_interface.cpp
         ${PLAYER_SOURCES})
 
 # Specifies a path to native header files.

@@ -17,8 +17,8 @@ CFrame::CFrame()
     m_nDuration = 0;
     m_nWidth    = 0;
     m_nHeight   = 0;
-    
-    avcodec_get_frame_defaults(&m_frame);
+
+    av_frame_unref(&m_frame);
 }
 
 CFrame::~CFrame()
@@ -26,7 +26,7 @@ CFrame::~CFrame()
     Free();
 }
 
-int CFrame::Resize(int nWidth, int nHeight, enum PixelFormat ePixFmt)
+int CFrame::Resize(int nWidth, int nHeight, enum AVPixelFormat ePixFmt)
 {
 	Log("CFrame::Resize, width: %d, height: %d\n", nWidth, nHeight);
     int nResult = S_OK;
@@ -48,7 +48,7 @@ int CFrame::Alloc(int nWidth, int nHeight)
     AssertValid(nWidth > 0 && nHeight > 0);
 //    int nSize = avpicture_get_size(m_ePixFmt, nWidth, nHeight);
 //    
-//    if ((m_pFrame = avcodec_alloc_frame()) == NULL) {
+//    if ((m_pFrame = av_frame_alloc()) == NULL) {
 //        return E_OUTOFMEMORY;
 //    }
 //    if ((m_pData = (BYTE*)align_malloc(nSize, nAlign)) == NULL) {
@@ -59,7 +59,7 @@ int CFrame::Alloc(int nWidth, int nHeight)
 //    if (avpicture_fill((AVPicture*)m_pFrame, m_pData, m_ePixFmt, nWidth, nHeight) < 0) {
 //        return E_FAIL;
 //    }
-    if (avpicture_alloc((AVPicture*)&m_frame, m_ePixFmt, nWidth, nHeight) < 0) {
+    if (av_image_alloc(const_cast<uint8_t **>(m_frame.data), m_frame.linesize, nWidth, nHeight, m_ePixFmt, 32) < 0) {
         return E_FAIL;
     }
 
@@ -75,11 +75,10 @@ int CFrame::Alloc(int nWidth, int nHeight)
 void CFrame::Free()
 {
     if (m_frame.data[0]) {
-    	avpicture_free((AVPicture*)&m_frame);
-    	m_frame.data[0] = NULL;
+        av_freep(&m_frame.data[0]);
     }
 
-    avcodec_get_frame_defaults(&m_frame);
+    av_frame_unref(&m_frame);
 }
 
 

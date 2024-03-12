@@ -96,9 +96,7 @@ int CPlayerGraphManager::BuildGraph()
     
     if (!m_Graph.Prepare()) return E_FAIL;
     m_pSource = m_Graph.GetSource();
-    
-    av_set_notify_cb(AV_NOTIFY_READ_SIZE, notify_recv_size_cb, this);
-    
+
     return S_OK;
 }
 

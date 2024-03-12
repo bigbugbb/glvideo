@@ -67,7 +67,7 @@ int CMessageQueue::Shrink(BOOL bShrinkAll)
 {
     CAutoLock cObjectLock(this);
     
-    for (list<Message>::iterator iter = m_listMsgs.begin(); iter != m_listMsgs.end();) 
+    for (auto iter = m_listMsgs.begin(); iter != m_listMsgs.end();)
     {
         Message& msg = *iter;
         if (msg.bIgnore || bShrinkAll) {

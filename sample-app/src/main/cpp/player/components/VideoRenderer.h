@@ -71,8 +71,8 @@ protected:
     CFrameCapturer*    m_pCapturer;
     
 #ifdef ANDROID
-    PixelFormat m_eDstFmt;
-    SwsContext* m_pSwsCtx;
+    AVPixelFormat m_eDstFmt;
+    SwsContext*   m_pSwsCtx;
 #endif
 private:
     void PrepareSeek(BOOL bPrepare = TRUE);

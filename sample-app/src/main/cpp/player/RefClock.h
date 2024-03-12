@@ -10,7 +10,7 @@
 #define QVOD_RefClock_h
 
 #include "DependencyObject.h"
-#include "Utinities.h"
+#include "Utils.h"
 using ios_qvod_player::CLock;
 
 struct IReferenceClock

@@ -9,7 +9,7 @@
 #ifndef QVOD_GUIDs_h
 #define QVOD_GUIDs_h
 
-#include "../Utinities.h"
+#include "../Utils.h"
 
 const GUID GUID_DEMUXER = {
     0xc79ae520, 0x5d39, 0x4538, 0x93, 0x48, 0x2, 0x25, 0xad, 0xd5, 0xb7, 0x7c

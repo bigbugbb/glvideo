@@ -9,7 +9,7 @@
 #ifndef QVOD_IQvodPlayer_h
 #define QVOD_IQvodPlayer_h
 
-#include "Utinities.h"
+#include "Utils.h"
 
 typedef int (*PCallback)(void* pUserData, void* pReserved);
 

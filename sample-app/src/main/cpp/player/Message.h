@@ -9,7 +9,7 @@
 #ifndef QVOD_Message_h
 #define QVOD_Message_h
 
-#include "Utinities.h"
+#include "Utils.h"
 
 #include <list>
 using namespace ios_qvod_player;

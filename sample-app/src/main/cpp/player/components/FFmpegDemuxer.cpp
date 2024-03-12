@@ -39,15 +39,11 @@ CFFmpegDemuxer::CFFmpegDemuxer(const GUID& guid, IDependency* pDepend, int* pRes
     memset(&m_video,  0, sizeof(VideoInfo));
     memset(&m_audio,  0, sizeof(AudioInfo));
     memset(&m_format, 0, sizeof(FormatInfo));
-    
-    avcodec_init();
-    av_register_all();
-    
-    avio_set_remoteprobe_cb(avio_is_remote);
-    avio_set_interrupt_cb(avio_interrupt_cb);
-    av_set_notify_cb(AV_NOTIFY_SEEK_POSITION, notify_seek_pos_cb, this);
-    av_set_notify_cb(AV_NOTIFY_BUFFER_SIZE, notify_buf_size_cb, this);
-    av_set_notify_cb(AV_NOTIFY_READ_INDEX, notify_read_index_cb, this);
+
+#if CONFIG_AVDEVICE
+    avdevice_register_all();
+#endif
+    avformat_network_init();
 }
 
 CFFmpegDemuxer::~CFFmpegDemuxer()
@@ -64,10 +60,7 @@ int CFFmpegDemuxer::InitialConfig(const char* szURL, double lfOffset, BOOL bRemo
     m_strURL   = szURL;
     m_lfOffset = lfOffset;
     m_bRemote  = bRemote;
-    
-    avio_set_remote(bRemote);
-    av_set_notify_cb(AV_NOTIFY_RECONNECT, m_bRemote ? notify_reconnect_cb : NULL, &m_format);
-    
+
     return S_OK;
 }
 
@@ -127,7 +120,7 @@ int CFFmpegDemuxer::GetMediaBitrate(int* pBitrate)
 int CFFmpegDemuxer::GetMediaFormatName(char *pName)
 {
     AssertValid(pName);
-    AVInputFormat* pInputFormat = m_format.pFormatContext->iformat;
+    const AVInputFormat* pInputFormat = m_format.pFormatContext->iformat;
     
     if (!pInputFormat) {
         return E_FAIL;
@@ -340,10 +333,10 @@ void CFFmpegDemuxer::DiscardPackets(int nCount)
 inline
 void CFFmpegDemuxer::DuplicatePacket(AVPacket* pTo, const AVPacket* pFrom)
 {
-    BYTE* pData = (BYTE*)align_malloc(pFrom->size + FF_INPUT_BUFFER_PADDING_SIZE, 16);
+    BYTE* pData = (BYTE*)align_malloc(pFrom->size + AV_INPUT_BUFFER_PADDING_SIZE, 16);
     
     memcpy(pData, pFrom->data, pFrom->size);
-    memset(pData + pFrom->size, 0, FF_INPUT_BUFFER_PADDING_SIZE);
+    memset(pData + pFrom->size, 0, AV_INPUT_BUFFER_PADDING_SIZE);
     memcpy(pTo, pFrom, sizeof(AVPacket));
     pTo->data = pData;
     
@@ -365,9 +358,9 @@ BOOL CFFmpegDemuxer::FillPacketPool(AVPacket* pPktFrom)
         if (m_format.bDecodeAudio) {
             FillAudioPacketPool(pPktFrom);
         }
-    } 
-    
-    av_free_packet(pPktFrom);
+    }
+
+    av_packet_unref(pPktFrom);
     
     return TRUE;
 }
@@ -467,16 +460,20 @@ THREAD_RETURN CFFmpegDemuxer::ThreadProc()
 void CFFmpegDemuxer::ReleaseResources()
 {
     if (m_format.pVideoContext) {
-        avcodec_close(m_format.pVideoContext);
+        avcodec_free_context(&m_format.pVideoContext);
     }
     for (int i = 0; i < MAX_AUDIO_TRACKS; ++i) {
         if (m_format.pAudioContext[i]) {
-            avcodec_close(m_format.pAudioContext[i]);
+            avcodec_free_context(m_format.pAudioContext + i);
         }
+    }
+
+    if (m_format.pSubtitleContext) {
+        avcodec_free_context(&m_format.pSubtitleContext);
     }
     
     if (m_format.pFormatContext) {
-        av_close_input_file(m_format.pFormatContext);
+        avformat_close_input(&m_format.pFormatContext);
     }
     
     memset(&m_format, 0, sizeof(FormatInfo));
@@ -494,7 +491,7 @@ int CFFmpegDemuxer::Load()
         NotifyEvent(EVENT_ENCOUNTER_ERROR, E_IO, 0, NULL);
         return E_FAIL;
     }
-    if (av_find_stream_info(m_format.pFormatContext) < 0) {
+    if (avformat_find_stream_info (m_format.pFormatContext, NULL) < 0) {
         NotifyEvent(EVENT_ENCOUNTER_ERROR, E_BADSTREAM, 0, NULL);
         return E_FAIL;
     }
@@ -624,9 +621,7 @@ int CFFmpegDemuxer::Unload()
     
     memset(&m_video,  0, sizeof(VideoInfo));
     memset(&m_audio,  0, sizeof(AudioInfo));
-    
-    av_set_notify_cb(AV_NOTIFY_RECONNECT, NULL, &m_format);
-    
+
     m_llStartTime   = AV_NOPTS_VALUE;
     m_llLastAudioTS = AV_NOPTS_VALUE;
     m_llLastVideoTS = AV_NOPTS_VALUE;
@@ -640,7 +635,6 @@ int CFFmpegDemuxer::Unload()
 int CFFmpegDemuxer::SetEOS()
 {
     CMediaObject::SetEOS();
-
     
     return S_OK;
 }
@@ -654,7 +648,8 @@ int CFFmpegDemuxer::Seek(double lfOffset)
         return E_FAIL;
     }
 
-    int64_t llStartTS = pStream->index_entries ? pStream->index_entries[0].timestamp : 0;
+    const AVIndexEntry* pEntry = avformat_index_get_entry(pStream, 0);
+    int64_t llStartTS = pEntry ? pEntry->timestamp : 0;
     int64_t llTargetStart = (lfOffset + llStartTS * lfTimebase) * AV_TIME_BASE;
     int64_t llSeekStart = av_rescale_q(llTargetStart, AV_TIME_BASE_Q, pStream->time_base);
     avformat_seek_file(m_format.pFormatContext, m_format.bDecodeVideo ? m_format.nVideoStreamIdx : m_format.nAudioStreamIdx, INT64_MIN, llSeekStart, INT64_MAX, AVSEEK_FLAG_BACKWARD);
@@ -704,8 +699,9 @@ void CFFmpegDemuxer::UpdateSyncPoint(LONGLONG llTime)
     if (!pStream) {
         return;
     }
-    
-    int64_t llStartTS = pStream->index_entries ? pStream->index_entries[0].timestamp : 0;
+
+    const AVIndexEntry* pEntry = avformat_index_get_entry(pStream, 0);
+    int64_t llStartTS = pEntry ? pEntry->timestamp : 0;
     int64_t llTargetStart = (llTime + llStartTS * lfTimebase) * AV_TIME_BASE;
     int64_t llStartTime = av_rescale_q(llTargetStart, AV_TIME_BASE_Q, pStream->time_base);
     
@@ -722,15 +718,15 @@ void CFFmpegDemuxer::UpdateSyncPoint2(LONGLONG llTime)
         index = av_index_search_timestamp(pStream, llTime, AVSEEK_FLAG_ANY);
     }
     index = FFMAX(index, 0);
-    AVIndexEntry* pEntry = &pStream->index_entries[index];
+    const AVIndexEntry* pEntry = avformat_index_get_entry(pStream, index);
     //Log("index = %d, pEntry = %x\n", index, pEntry);
     
     if (pEntry == NULL) {
         m_llSyncPoint = 0; // assumes that the first pts == 0, fixme
     } else if (pEntry->timestamp <= llTime || pEntry->pos == pEntry->min_distance){
-        m_llSyncPoint = pStream->index_entries[index].timestamp;
+        m_llSyncPoint = pEntry->timestamp;
     } else {
-        m_llSyncPoint = pStream->index_entries[0].timestamp;
+        m_llSyncPoint = avformat_index_get_entry(pStream, 0)->timestamp;
     }
     
     if (m_llStartTime == AV_NOPTS_VALUE) { // first time
@@ -754,35 +750,30 @@ BOOL CFFmpegDemuxer::PrepareCodecs(AVFormatContext* pFmtCtx)
     m_format.nVideoStreamIdx = -1;
     
     for (int i = 0; i < pFmtCtx->nb_streams; ++i) {
-        if (!pStreams[i] || !pStreams[i]->codec)
-            continue;
-        
-        AVCodec* pCodec = avcodec_find_decoder(pStreams[i]->codec->codec_id);
+        AVCodecContext *pCodecCtx = avcodec_alloc_context3(NULL); // TODO: call avcodec_free_context
+        const AVCodec* pCodec = avcodec_find_decoder(pStreams[i]->codecpar->codec_id);
         // zero: successful, negative value: error occurs
         
-        AVMediaType nCodecType = pStreams[i]->codec->codec_type;
+        AVMediaType nCodecType = pStreams[i]->codecpar->codec_type;
         if (AVMEDIA_TYPE_VIDEO == nCodecType) {
-            if (!pCodec || avcodec_open(pStreams[i]->codec, pCodec) != 0)
+            if (!pCodec || avcodec_open2(pCodecCtx, pCodec, NULL) != 0)
                 continue;
             m_format.pVideoCodec = pCodec;
             m_format.nVideoStreamIdx = i;
-            m_format.pVideoContext = pStreams[i]->codec;
+            m_format.pVideoContext = pCodecCtx;
             m_format.pVideoContext->skip_loop_filter = AVDISCARD_ALL;
         } else if (AVMEDIA_TYPE_AUDIO == nCodecType) {
-            pStreams[i]->codec->request_channels = pStreams[i]->codec->channels > 0 ? 
-                FFMIN(2, pStreams[i]->codec->channels) : 2;
-            if (!pCodec || avcodec_open(pStreams[i]->codec, pCodec) != 0)
+            if (!pCodec || avcodec_open2(pCodecCtx, pCodec, NULL) != 0)
                 continue;
-            pStreams[i]->codec->codec = pCodec;
             m_format.pAudioCodec[m_audio.nTrackCount] = pCodec;
             m_format.nAudioStreamIdx = i;
-            m_format.pAudioContext[m_audio.nTrackCount++] = pStreams[i]->codec;
+            m_format.pAudioContext[m_audio.nTrackCount++] = pCodecCtx;
         } else if (AVMEDIA_TYPE_SUBTITLE == nCodecType) {
-            if (!pCodec || avcodec_open(pStreams[i]->codec, pCodec) != 0)
+            if (!pCodec || avcodec_open2(pCodecCtx, pCodec, NULL) != 0)
                 continue;
             m_format.pSubtitleCodec = pCodec;
             m_format.nSubtitleStreamIdx = i;
-            m_format.pSubtitleContext = pStreams[i]->codec;
+            m_format.pSubtitleContext = pCodecCtx;
         }
     }
     
@@ -825,126 +816,13 @@ BOOL CFFmpegDemuxer::PrepareVideoData(AVFormatContext* pFmtCtx)
         m_video.lfTimebase = pVideoStream->time_base.num / (double)pVideoStream->time_base.den;
     }
     
-    if (!m_bRemote) {
-        RebuildIndexEntries(pFmtCtx, pVideoCtx, m_format.pAudioContext[0]);
-    }
+//    if (!m_bRemote) {
+//        RebuildIndexEntries(pFmtCtx, pVideoCtx, m_format.pAudioContext[0]);
+//    }
     int nDuration = FFMAX(m_video.llFormatDuration / AV_TIME_BASE, 0);
     m_nJumpLimit = nDuration <= 60 ? 2 : nDuration <= 270 ? 4 : 0x7FFFFFFF;
  
     return TRUE;
-}
-
-int CFFmpegDemuxer::RebuildIndexEntries(AVFormatContext* pFmtCtx, AVCodecContext* pVideoCtx, AVCodecContext* pAudioCtx)
-{
-    AVStream* pVideoStream = pFmtCtx->streams[m_format.nVideoStreamIdx];
-    AVInputFormat* pInputFormat = pFmtCtx->iformat;
-    BOOL bAddIndex = FALSE;
-    int nTotalFrames = 0, nStartFrame = 0, nEndFrame = 0;
-    double lfVideoDuration = 0;
-    
-    // flv files do not have and need index
-    if (strcmp(pInputFormat->name, "flv") == 0) {
-        return E_FAIL;
-    }
-    if (strcmp(pInputFormat->name, "qmv") == 0) {
-        return E_FAIL;
-    }
-    // file types that index should be added by ourselves
-    if (strcmp(pInputFormat->name, "asf") == 0) {
-        bAddIndex = TRUE;
-    } else if (strcmp(pInputFormat->name, "rm") == 0) { // adjust rm files' wrong media duration if needed
-        bAddIndex = FALSE; // do nothing
-    } 
-    
-    // scan the whole file if index is in need
-    if (pVideoStream->nb_index_entries <= REBUILD_INDEX_THRESHOLD) {
-        AVPacket pkt;
-        int64_t llStartTS = AV_NOPTS_VALUE, llEndTS = AV_NOPTS_VALUE;
-        
-        while (!url_feof(pFmtCtx->pb)) {
-            if (av_read_frame(pFmtCtx, &pkt) < 0 || avio_interrupt_cb())
-                break;
-            if (pkt.stream_index == m_format.nVideoStreamIdx) { // handle video stream is enough now
-                if (pkt.pos > 0) {
-                    ++nTotalFrames; // used for adjusting media duration
-                    if (llStartTS == AV_NOPTS_VALUE) {
-                        // assume the first available pts or dts does not have time jump
-                        if (pkt.pts != AV_NOPTS_VALUE) { 
-                            llStartTS = pkt.pts; 
-                            nStartFrame = nTotalFrames;
-                        } else if (pkt.dts != AV_NOPTS_VALUE) {
-                            llStartTS = pkt.dts;
-                            nStartFrame = nTotalFrames;
-                        }
-                    }
-                    if (pkt.pts != AV_NOPTS_VALUE) { 
-                        llEndTS = pkt.pts; 
-                        nEndFrame = nTotalFrames;
-                    } else if (pkt.dts != AV_NOPTS_VALUE) {
-                        llEndTS = pkt.dts;
-                        nEndFrame = nTotalFrames;
-                    }
-                }
-                if (bAddIndex) {
-                    LONGLONG llTS = (pkt.pts != AV_NOPTS_VALUE) ? pkt.pts : pkt.dts;
-                    av_add_index_entry(pFmtCtx->streams[m_format.nVideoStreamIdx], pkt.pos, llTS,
-                                       0, 0, pkt.flags & AV_PKT_FLAG_KEY ? AVINDEX_KEYFRAME : 0);
-                } 
-            }
-            av_free_packet(&pkt);
-        }
-        
-        // correct wrong fps or media duration if it is available
-        if (llStartTS != AV_NOPTS_VALUE && llEndTS != AV_NOPTS_VALUE && nEndFrame > nStartFrame) {
-            double fps = (nEndFrame - nStartFrame) / ((llEndTS - llStartTS) * m_video.lfTimebase);
-            if (fps > 0 && FFABS(fps - m_video.lfFPS) >= 2) {
-                m_video.lfFPS = fps;
-            }
-            
-            lfVideoDuration = nTotalFrames / m_video.lfFPS;
-            lfVideoDuration = FFMAX(lfVideoDuration, 0);
-            if (lfVideoDuration > 0 && FFABS(lfVideoDuration - (double)m_video.llFormatDuration / AV_TIME_BASE) >= 8) {
-                m_video.llFormatDuration = lfVideoDuration * AV_TIME_BASE;
-            }
-        }
-        // return to the start position at last
-        av_seek_frame(pFmtCtx, m_format.nVideoStreamIdx, FFMAX(llStartTS, 0), AVSEEK_FLAG_ANY);
-    } else { // if we have enough index data, adjust wrong media duration only
-        AVIndexEntry* pVideoIE = pVideoStream->index_entries;
-        int n = pVideoStream->nb_index_entries - 1;
-        if (pVideoIE) {
-            int64_t llMaxTS, llMinTS;
-            int nSkipFrame = 0;
-            
-            while (n >= 0) {
-                if ((llMaxTS = pVideoIE[n--].timestamp) != AV_NOPTS_VALUE) {
-                    break;
-                }
-                ++nSkipFrame;
-            }
-            n = 0;
-            while (n < pVideoStream->nb_index_entries) {
-                if ((llMinTS = pVideoIE[n++].timestamp) != AV_NOPTS_VALUE) {
-                    break;
-                }
-                ++nSkipFrame;
-            }
-            lfVideoDuration = (llMaxTS - llMinTS) * m_video.lfTimebase + (1000 / m_video.lfFPS) * nSkipFrame * 0.001;
-            lfVideoDuration = FFMAX(lfVideoDuration, 0);
-        }
-        
-        if (lfVideoDuration > 0 && FFABS(lfVideoDuration - (double)m_video.llFormatDuration / AV_TIME_BASE) >= 8) {
-            int64_t llFileSize = avio_size(pFmtCtx->pb);
-            if (pVideoCtx->bit_rate > 0 && pVideoCtx->bit_rate < MAX_BIT_RATE) { 
-                int nBitrate = pVideoCtx->bit_rate + (m_format.bDecodeAudio ? pAudioCtx->bit_rate : 0);
-                if (FFABS((nBitrate >> 3) * lfVideoDuration - llFileSize) < llFileSize * 0.2) {
-                    m_video.llFormatDuration = lfVideoDuration * AV_TIME_BASE;
-                } 
-            } 
-        }
-    }
-    
-    return S_OK;
 }
 
 BOOL CFFmpegDemuxer::PrepareAudioData(AVFormatContext* pFmtCtx)

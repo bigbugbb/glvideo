@@ -53,7 +53,8 @@ protected:
     ISamplePool*    m_pPcmPool;
     ISamplePool*    m_pAudioPool;
     CMediaObject*   m_pRenderer;
-    
+
+    AVFrame         m_PCM;
     AudioInfo*      m_pAudio;
 };
 

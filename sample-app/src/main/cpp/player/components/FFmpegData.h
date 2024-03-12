@@ -17,7 +17,9 @@ extern "C" {
 #include "libavformat/url.h"
 #include "libswscale/swscale.h"
 #include "libavutil/mathematics.h"
+#include "libavutil/imgutils.h"
 #include "libavcodec/avcodec.h"
+#include "libavdevice/avdevice.h"
     
 #ifdef __cplusplus
 }
@@ -25,6 +27,7 @@ extern "C" {
 
 
 #define MAX_AUDIO_TRACKS    8
+#define AVCODEC_MAX_AUDIO_FRAME_SIZE    192000
 
 struct FormatInfo
 {
@@ -34,16 +37,16 @@ struct FormatInfo
     AVCodecContext*  pAudioContext[MAX_AUDIO_TRACKS];
     AVCodecContext*	 pSubtitleContext;
     
-    AVCodec*    pVideoCodec;
-    AVCodec*    pAudioCodec[MAX_AUDIO_TRACKS];
-    AVCodec*    pSubtitleCodec;
+    const AVCodec*   pVideoCodec;
+    const AVCodec*   pAudioCodec[MAX_AUDIO_TRACKS];
+    const AVCodec*   pSubtitleCodec;
 
-    int         nVideoStreamIdx;
-    int         nAudioStreamIdx;
-    int         nSubtitleStreamIdx;
+    int              nVideoStreamIdx;
+    int              nAudioStreamIdx;
+    int              nSubtitleStreamIdx;
     
-    bool        bDecodeAudio;
-    bool        bDecodeVideo;
+    bool             bDecodeAudio;
+    bool             bDecodeVideo;
 };
 
 struct VideoInfo
@@ -58,7 +61,7 @@ struct VideoInfo
     double      lfTimebase;
 };
 
-typedef enum SampleFormat SampleFormat;
+typedef enum AVSampleFormat SampleFormat;
 
 struct AudioInfo
 {

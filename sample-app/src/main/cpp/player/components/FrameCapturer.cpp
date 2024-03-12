@@ -17,7 +17,7 @@
 CFrameCapturer::CFrameCapturer(IDependency* pDepend)
     : CDependencyObject(pDepend)
 {
-    SetCaptureFormat(PIX_FMT_RGB565);
+    SetCaptureFormat(AV_PIX_FMT_RGB565);
     
     Create();
     Start();
@@ -40,7 +40,7 @@ CFrameCapturer* CFrameCapturer::GetInstance(IDependency* pDepend)
     return &s_FrmCap;
 }
 
-void CFrameCapturer::SetCaptureFormat(PixelFormat eFormat)
+void CFrameCapturer::SetCaptureFormat(AVPixelFormat eFormat)
 {
     CAutoLock cObjectLock(&m_csCapture);
     
@@ -52,11 +52,11 @@ int CFrameCapturer::CaptureFrame(CMediaObject* pSender, void* pData)
     CAutoLock cObjectLock(&m_csCapture);
     
     AVFrame* pSrc = static_cast<AVFrame*>(pData);
-    PixelFormat eSrcFmt = (PixelFormat)pSrc->format;
+    AVPixelFormat eSrcFmt = (AVPixelFormat)pSrc->format;
     Message msg(MSG_OTHER, FALSE, FRAME_CAPTURED);
     
-    AVFrame* pCapture = avcodec_alloc_frame();
-    if (!pCapture || avpicture_alloc((AVPicture*)pCapture, m_eDstFmt, pSrc->width, pSrc->height) < 0) {
+    AVFrame* pCapture = av_frame_alloc();
+    if (!pCapture || av_image_alloc(const_cast<uint8_t **>(pCapture->data), pCapture->linesize, pSrc->width, pSrc->height, m_eDstFmt, 32) < 0) {
         goto fail;
     }
 #ifdef iOS
@@ -68,7 +68,7 @@ int CFrameCapturer::CaptureFrame(CMediaObject* pSender, void* pData)
     if (!m_pSwsCtx) {
         goto fail;
     }
-    if (!sws_scale(m_pSwsCtx, pSrc->data, pSrc->linesize, 0, pSrc->height, pCapture->data, pCapture->linesize)) {
+    if (!sws_scale(m_pSwsCtx, pSrc->data, pSrc->linesize, 0, pSrc->height, const_cast<uint8_t **>(pCapture->data), pCapture->linesize)) {
         goto fail;
     }
 #endif
@@ -86,9 +86,9 @@ int CFrameCapturer::CaptureFrame(CMediaObject* pSender, void* pData)
 fail:
     if (pCapture) {
         if (pCapture->data[0]) {
-            avpicture_free((AVPicture*)pCapture); pCapture->data[0] = NULL;
+            av_freep(&pCapture->data[0]);
         }
-        av_free(pCapture);
+        av_frame_free(&pCapture);
     }
     
     return E_FAIL;
@@ -133,8 +133,8 @@ THREAD_RETURN CFrameCapturer::ThreadProc()
                 NotifyEvent(EVENT_PREVIEW_CAPTURED, 0, 0, pCapture);
                 break;
             }
-            avpicture_free((AVPicture*)pCapture);
-            av_free(pCapture);
+            av_freep(&pCapture->data[0]);
+            av_frame_free(&pCapture);
             
             m_etCapture.Signal();
         }

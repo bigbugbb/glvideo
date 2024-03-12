@@ -37,11 +37,11 @@ struct FRAMEINFO
         memset(this, 0, sizeof(FRAMEINFO));
     }
     
-    int    nWidth;
-    int    nHeight;
-    int    nStride;
-    int    nFormat;
-    void*  pContent;
+    int         nWidth;
+    int         nHeight;
+    int         nStride;
+    int         nFormat;
+    const void* pContent;
 };
 
 struct PREVIEWINFO

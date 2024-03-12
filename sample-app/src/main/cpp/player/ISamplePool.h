@@ -9,7 +9,7 @@
 #ifndef QVOD_ISamplePool_h
 #define QVOD_ISamplePool_h
 
-#include "Utinities.h"
+#include "Utils.h"
 
 class CMediaSample;
 

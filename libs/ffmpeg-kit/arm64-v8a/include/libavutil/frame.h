@@ -348,7 +348,7 @@ typedef struct AVFrame {
      * end of image data in order to reverse line order, when used in
      * combination with negative values in the linesize[] array.
      */
-    uint8_t *data[AV_NUM_DATA_POINTERS];
+    const unsigned char **data;
 
     /**
      * For video, a positive or negative value, which is typically indicating

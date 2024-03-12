@@ -319,7 +319,7 @@ struct CallbackData *callbackDataRemove() {
  * @param format format string
  * @param vargs arguments
  */
-void ffmpegkit_log_callback_function(void *ptr, int level, const char* format, va_list vargs) {
+void ffmpegplayer_log_callback_function(void *ptr, int level, const char* format, va_list vargs) {
     AVBPrint fullLine;
     AVBPrint part[4];
     int print_prefix = 1;
@@ -448,7 +448,7 @@ static void enableNativeRedirection() {
         return;
     }
 
-    av_log_set_callback(ffmpegkit_log_callback_function);
+    av_log_set_callback(ffmpegplayer_log_callback_function);
 }
 
 /**

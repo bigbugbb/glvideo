@@ -37,8 +37,6 @@ protected:
     int GetSamplePool(const GUID& guid, ISamplePool** ppPool);
     
     virtual THREAD_RETURN ThreadProc();
-    
-    virtual int RebuildIndexEntries(AVFormatContext* pFmtCtx, AVCodecContext* pVideoCtx, AVCodecContext* pAudioCtx);
 };
 
 #endif

@@ -15,7 +15,7 @@
 #define HAVE_EDGE   1
 
 #include <cassert>
-#include "Utinities.h"
+#include "Utils.h"
 
 template <class T> 
 class CGraph

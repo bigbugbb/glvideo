@@ -22,7 +22,7 @@ CVideoRenderer::CVideoRenderer(const GUID& guid, IDependency* pDepend, int* pRes
     m_pQCtrl  = NULL;
 #ifdef ANDROID
     m_pSwsCtx = NULL;
-    m_eDstFmt = PIX_FMT_RGB565;
+    m_eDstFmt = AV_PIX_FMT_RGB565;
 #endif
 
     m_pCapturer = CFrameCapturer::GetInstance(pDepend);
@@ -118,8 +118,7 @@ int CVideoRenderer::WaitForResources(BOOL bWait)
 {
     Log("CVideoRenderer::WaitForResources\n");
     CMediaObject::WaitForResources(bWait);
-    
-    
+
     return S_OK;
 }
 
@@ -323,7 +322,7 @@ int CVideoRenderer::DeliverFrameReflection(BYTE* pDst, void* pSrc, int nStride)
     BYTE* pOut[4] = { pDst, NULL, NULL, NULL };
     int nLinesize[4] = { nStride, 0, 0, 0 };
 
-	m_pSwsCtx = sws_getCachedContext(m_pSwsCtx, pYUV->width, pYUV->height, (PixelFormat)pYUV->format,
+	m_pSwsCtx = sws_getCachedContext(m_pSwsCtx, pYUV->width, pYUV->height, (AVPixelFormat)pYUV->format,
             pYUV->width, pYUV->height, m_eDstFmt, SWS_FAST_BILINEAR, NULL, NULL, NULL);
 	if (!m_pSwsCtx) {
 		Log("DisplayVideoFrame m_pSwsCtx NULL\n");

@@ -71,8 +71,7 @@ protected:
     virtual THREAD_RETURN ThreadProc();
     
     virtual BOOL FillPacketPool(AVPacket* pPacket);
-    virtual int RebuildIndexEntries(AVFormatContext* pFmtCtx, AVCodecContext* pVideoCtx, AVCodecContext* pAudioCtx);
-    
+
     BOOL PrepareCodecs(AVFormatContext* pFmtCtx);
     BOOL PrepareAudioData(AVFormatContext* pFmtCtx);
     BOOL PrepareVideoData(AVFormatContext* pFmtCtx);
