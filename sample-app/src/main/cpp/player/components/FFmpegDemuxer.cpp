@@ -29,10 +29,10 @@ CFFmpegDemuxer::CFFmpegDemuxer(const GUID& guid, IDependency* pDepend, int* pRes
     m_llLastVideoTS = AV_NOPTS_VALUE;
     
     POOL_PROPERTIES request, actual;
-    request.nSize  = sizeof(AVPacket);
+    request.nSize  = sizeof(AVPacket*);
     request.nCount = VIDEO_POOL_VOLUME;
     m_VideoPool.SetProperties(&request, &actual);
-    request.nSize  = sizeof(AVPacket);
+    request.nSize  = sizeof(AVPacket*);
     request.nCount = AUDIO_POOL_VOLUME;
     m_AudioPool.SetProperties(&request, &actual);
     
@@ -330,55 +330,49 @@ void CFFmpegDemuxer::DiscardPackets(int nCount)
     NotifyEvent(EVENT_DISCARD_VIDEO_PACKET, nCount, 0, NULL);
 }
 
-inline
-void CFFmpegDemuxer::DuplicatePacket(AVPacket* pTo, const AVPacket* pFrom)
+void CFFmpegDemuxer::UpdatePacket(AVPacket* pPacket)
 {
-    BYTE* pData = (BYTE*)align_malloc(pFrom->size + AV_INPUT_BUFFER_PADDING_SIZE, 16);
-    
-    memcpy(pData, pFrom->data, pFrom->size);
-    memset(pData + pFrom->size, 0, AV_INPUT_BUFFER_PADDING_SIZE);
-    memcpy(pTo, pFrom, sizeof(AVPacket));
-    pTo->data = pData;
-    
-    if (pTo->pts == AV_NOPTS_VALUE && pTo->dts != AV_NOPTS_VALUE) {
-        pTo->pts = pTo->dts;
+    if (pPacket->pts == AV_NOPTS_VALUE && pPacket->dts != AV_NOPTS_VALUE) {
+        pPacket->pts = pPacket->dts;
     }
 }
 
-inline
-BOOL CFFmpegDemuxer::FillPacketPool(AVPacket* pPktFrom)
+// save AVPacket to the pool and pass it to the decoder
+BOOL CFFmpegDemuxer::FillPacketPool(AVPacket* pPacket)
 {
     AssertValid(pPktFrom);
     
-    if (pPktFrom->stream_index == m_format.nVideoStreamIdx) {
+    if (pPacket->stream_index == m_format.nVideoStreamIdx) {
         if (m_format.bDecodeVideo) {
-            FillVideoPacketPool(pPktFrom);
+            FillVideoPacketPool(pPacket);
         }
-    } else if (pPktFrom->stream_index == m_format.nAudioStreamIdx) {
+    } else if (pPacket->stream_index == m_format.nAudioStreamIdx) {
         if (m_format.bDecodeAudio) {
-            FillAudioPacketPool(pPktFrom);
+            FillAudioPacketPool(pPacket);
         }
     }
 
-    av_packet_unref(pPktFrom);
+    /**
+     * av_packet_unref(pPacket); will be called by the decoder
+     */
     
     return TRUE;
 }
 
 inline
-void CFFmpegDemuxer::FillVideoPacketPool(AVPacket* pPktFrom)
+void CFFmpegDemuxer::FillVideoPacketPool(AVPacket* pPacket)
 {
-    AVPacket packet;
     CMediaSample sample;
-    
-    DuplicatePacket(&packet, pPktFrom);
+
+    UpdatePacket(pPacket);
+
     m_VideoPool.GetEmpty(sample); // no need to check here
     
     sample.m_Type = SAMPLE_PACKET;
-    memcpy(sample.m_pBuf, &packet, sizeof(AVPacket));
+    memcpy(sample.m_pBuf, &pPacket, sizeof(AVPacket*));
     sample.m_pSpecs = &m_video;
     sample.m_pExten = m_format.pVideoContext;
-    sample.m_llTimestamp = packet.pts != AV_NOPTS_VALUE ? packet.pts : m_llLastVideoTS + packet.duration;
+    sample.m_llTimestamp = pPacket->pts != AV_NOPTS_VALUE ? pPacket->pts : m_llLastVideoTS + pPacket->duration;
     if (FFABS(sample.m_llTimestamp - m_llLastVideoTS) > m_llDisconThreshold) {
         if (m_llLastVideoTS != AV_NOPTS_VALUE) {
             sample.m_bDiscon = TRUE;
@@ -394,20 +388,19 @@ void CFFmpegDemuxer::FillVideoPacketPool(AVPacket* pPktFrom)
 }
 
 inline
-void CFFmpegDemuxer::FillAudioPacketPool(AVPacket* pPktFrom)
+void CFFmpegDemuxer::FillAudioPacketPool(AVPacket* pPacket)
 {
-    AVPacket packet;
     CMediaSample sample;
-    
-    DuplicatePacket(&packet, pPktFrom);
+
+    UpdatePacket(pPacket);
     m_AudioPool.GetEmpty(sample);
     
     sample.m_Type = SAMPLE_PACKET;
-    if (packet.duration == 0) packet.duration = AUDIO_FRAME_DURATION / m_audio.lfTimebase;
-    memcpy(sample.m_pBuf, &packet, sizeof(AVPacket));
+    if (pPacket->duration == 0) pPacket->duration = AUDIO_FRAME_DURATION / m_audio.lfTimebase;
+    memcpy(sample.m_pBuf, &pPacket, sizeof(AVPacket*));
     sample.m_pSpecs = &m_audio;
     sample.m_pExten = m_format.pAudioContext[m_audio.nCurTrack];
-    sample.m_llTimestamp = packet.pts != AV_NOPTS_VALUE ? packet.pts : m_llLastAudioTS + packet.duration;
+    sample.m_llTimestamp = pPacket->pts != AV_NOPTS_VALUE ? pPacket->pts : m_llLastAudioTS + pPacket->duration;
     sample.m_llSyncPoint = m_format.bDecodeVideo ? m_llSyncPoint * m_lfConvert : m_llSyncPoint;
     double llStartTime = m_format.bDecodeVideo ? m_llStartTime * m_lfConvert : m_llStartTime;
     sample.m_bIgnore = m_lfOffset - (sample.m_llTimestamp - llStartTime) * m_audio.lfTimebase > m_nJumpLimit;
@@ -440,6 +433,7 @@ THREAD_RETURN CFFmpegDemuxer::ThreadProc()
             }
         } else if (nAudioSize == 0 && nVideoSize == VIDEO_POOL_VOLUME) {
             if (m_format.bDecodeAudio && m_bDiscard) {
+                // the video decoder will poll the AVPackets from the video pool without decoding them
                 DiscardPackets(VIDEO_POOL_VOLUME * 0.9);
                 nWait = 5;
             } else {
@@ -491,7 +485,7 @@ int CFFmpegDemuxer::Load()
         NotifyEvent(EVENT_ENCOUNTER_ERROR, E_IO, 0, NULL);
         return E_FAIL;
     }
-    if (avformat_find_stream_info (m_format.pFormatContext, NULL) < 0) {
+    if (avformat_find_stream_info(m_format.pFormatContext, NULL) < 0) {
         NotifyEvent(EVENT_ENCOUNTER_ERROR, E_BADSTREAM, 0, NULL);
         return E_FAIL;
     }
@@ -545,7 +539,6 @@ int CFFmpegDemuxer::WaitForResources(BOOL bWait)
 {
     Log("CFFmpegDemuxer::WaitForResources\n");
     CMediaObject::WaitForResources(bWait);
-    
 
     return S_OK;
 }
@@ -808,7 +801,7 @@ BOOL CFFmpegDemuxer::PrepareVideoData(AVFormatContext* pFmtCtx)
     m_video.nFormatID = pVideoCtx->codec_id;
     m_video.nBitrate  = pVideoCtx->bit_rate;
     m_video.llFormatDuration = pFmtCtx->duration;
-    m_video.llDuration       = pVideoStream->duration;
+    m_video.llDuration       = pVideoStream->duration; // in stream time base
     if (pVideoStream->r_frame_rate.den) {
         m_video.lfFPS = (double)pVideoStream->r_frame_rate.num / pVideoStream->r_frame_rate.den;
     }
@@ -845,7 +838,7 @@ BOOL CFFmpegDemuxer::PrepareAudioData(AVFormatContext* pFmtCtx)
     
     m_audio.nSampleRate       = pAudioCtx->sample_rate;
     m_audio.nFormatID		  = pAudioCtx->codec_id;
-    m_audio.nChannelsPerFrame = pAudioCtx->channels;
+    m_audio.nChannelsPerFrame = pAudioCtx->ch_layout.nb_channels;
     m_audio.nFramesPerPacket  = pAudioCtx->frame_size;
     m_audio.nBitrate	      = pAudioCtx->bit_rate;
     m_audio.nSampleFormat     = pAudioCtx->sample_fmt;

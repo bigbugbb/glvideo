@@ -78,7 +78,7 @@ protected:
     void UpdateSyncPoint(LONGLONG llTime);
     void UpdateSyncPoint2(LONGLONG llTime);
     BOOL ReadPacket(AVFormatContext* pFmtCtx, AVPacket* pPacket);
-    void DuplicatePacket(AVPacket* pTo, const AVPacket* pFrom);
+    void UpdatePacket(AVPacket* pPacket);
     void FillAudioPacketPool(AVPacket* pPktFrom);
     void FillVideoPacketPool(AVPacket* pPktFrom);
     void ReleaseResources();

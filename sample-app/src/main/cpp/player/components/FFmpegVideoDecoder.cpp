@@ -91,11 +91,8 @@ int CFFmpegVideoDecoder::DiscardPackets(int nCount)
         int nResult = m_pVideoPool->GetUnused(sample);
         AssertValid(nResult == S_OK); // must be S_OK, or DiscardPackets should not be invoked
         
-        AVPacket* pPacket = (AVPacket*)sample.m_pBuf;
-        if (pPacket->data) {
-            align_free(pPacket->data);
-            pPacket->data = NULL;
-        }
+        AVPacket* pPacket = *(AVPacket**)sample.m_pBuf;
+        av_packet_unref(pPacket);
         
         m_pVideoPool->Recycle(sample);
     }
@@ -205,7 +202,7 @@ THREAD_RETURN CFFmpegVideoDecoder::ThreadProc()
 int CFFmpegVideoDecoder::OnReceive(CMediaSample& sample)
 {
     AssertValid(sample.m_nSize == sizeof(AVPacket));
-    AVPacket* pPacket = (AVPacket*)sample.m_pBuf;
+    AVPacket* pPacket = *(AVPacket**)sample.m_pBuf;
     m_pCodecCtx = (AVCodecContext*)sample.m_pExten; // always the same
     m_pVideo = (VideoInfo*)sample.m_pSpecs;
     
@@ -217,8 +214,7 @@ int CFFmpegVideoDecoder::OnReceive(CMediaSample& sample)
     
     int nResult = Decode(pPacket, m_pCodecCtx, sample);
     if (nResult != E_RETRY) {
-        align_free(pPacket->data);
-        pPacket->data = NULL;
+        av_packet_unref(pPacket);
     }
     
     return nResult;

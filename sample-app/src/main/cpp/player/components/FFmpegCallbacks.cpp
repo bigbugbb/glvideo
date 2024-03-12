@@ -21,8 +21,6 @@ extern CCallbackManager* g_CallbackManager;
 static int g_nInterrupt;
 static CLock g_csInterrupt;
 
-static int g_nRemote;
-
 int avio_interrupt_cb() // 通过url_set_interrupt_cb传给ffmpeg的回调函数，用于终止网络数据读写
 {
     CAutoLock cObjectLock(&g_csInterrupt);

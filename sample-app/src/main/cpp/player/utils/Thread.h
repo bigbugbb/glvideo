@@ -48,8 +48,9 @@ protected:
     static THREAD_RETURN InitialThreadProc(void* arg);                
     virtual THREAD_RETURN ThreadProc() = 0;
     
-    BOOL   m_bRun;
-    BOOL   m_bCreate;
+    volatile BOOL m_bRun;
+    volatile BOOL m_bCreate;
+
     thread_t m_tid;
 };
 

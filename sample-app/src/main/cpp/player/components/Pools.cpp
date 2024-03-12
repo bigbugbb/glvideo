@@ -18,9 +18,8 @@ int CPacketPool::Flush()
     CMediaSample sample;
     
     while (GetUnused(sample) == S_OK) {
-        AVPacket* pPacket = (AVPacket*)sample.m_pBuf;
-        align_free(pPacket->data);
-        pPacket->data = NULL;
+        AVPacket* pPacket = *(AVPacket**)sample.m_pBuf;
+        av_packet_unref(pPacket);
         Recycle(sample);
     }
     AssertValid(Size() == 0);

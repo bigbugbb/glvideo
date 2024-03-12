@@ -57,7 +57,7 @@ int CPlayerGraphManager::BuildGraph()
     int nResult = S_OK;
     CMediaObject *pDemuxer, *pVideoDecoder, *pAudioDecoder, *pVideoRenderer, *pAudioRenderer;
     
-    if (!(pDemuxer = new CFFmpegDemuxer(GUID_DEMUXER, m_pDepend, &nResult)) && nResult != S_OK) {
+    if (!(pDemuxer = new CFFmpegDemuxer(GUID_DEMUXER, m_pDepend, &nResult)) && nResult != S_OK) { // TODO: delete it if result is not S_OK
         return E_FAIL;
     }
     
@@ -105,7 +105,7 @@ int CPlayerGraphManager::DestroyGraph()
     for (int i = 0; i < m_vecObjs.size(); ++i) {
         if (m_vecObjs[i]) {
             delete m_vecObjs[i];
-            m_vecObjs[i] = NULL;
+            m_vecObjs[i] = nullptr;
         }
     }
     

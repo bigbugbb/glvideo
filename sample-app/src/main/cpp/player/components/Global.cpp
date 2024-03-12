@@ -9,15 +9,10 @@
 #include <iostream>
 #include "Global.h"
 
-void* align_malloc(size_t size, size_t align)
+void* align_malloc(size_t size, size_t align) // align should be smaller than 255
 {
     char* data = (char*)malloc(size + align);
-    int offset = align - (size_t)data % align;
-    
-    if (offset == align) {
-        *(data + align - 1) = align;
-        return data + align;
-    }
+    int offset = align - (uintptr_t)data % align;
     *(data + offset - 1) = offset;
     
     return data + offset;

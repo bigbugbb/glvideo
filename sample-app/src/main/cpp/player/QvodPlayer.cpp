@@ -85,9 +85,9 @@ CQvodPlayer::CQvodPlayer(int* pResult)
     m_pVideoRenderer = dynamic_cast<IVideoRenderer*>(m_pPlayerManager->GetComponent(GUID_VIDEO_RENDERER));
     m_pAudioRenderer = dynamic_cast<IAudioRenderer*>(m_pPlayerManager->GetComponent(GUID_AUDIO_RENDERER));
     
-    static CPreviewGraphManager s_PreviewGraphMgr(this, pResult);
-    m_pPreviewManager = &s_PreviewGraphMgr;
-    m_pPreviewDemuxer = dynamic_cast<IFFmpegDemuxer*>(m_pPreviewManager->GetComponent(GUID_PREVIEW_DEMUXER));
+//    static CPreviewGraphManager s_PreviewGraphMgr(this, pResult);
+//    m_pPreviewManager = &s_PreviewGraphMgr;
+//    m_pPreviewDemuxer = dynamic_cast<IFFmpegDemuxer*>(m_pPreviewManager->GetComponent(GUID_PREVIEW_DEMUXER));
 
     *pResult = S_OK;
 }

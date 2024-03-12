@@ -71,7 +71,7 @@ int CThread::Start()
 
 THREAD_RETURN CThread::InitialThreadProc(void* arg)
 {
-    THREAD_RETURN ret;
+    THREAD_RETURN ret = nullptr;
     CThread* pThread = static_cast<CThread*>(arg);
 
     if (pThread) {
