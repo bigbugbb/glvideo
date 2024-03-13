@@ -736,37 +736,42 @@ void CFFmpegDemuxer::UpdateSyncPoint2(LONGLONG llTime)
 
 BOOL CFFmpegDemuxer::PrepareCodecs(AVFormatContext* pFmtCtx)
 {
-    AVStream** pStreams = pFmtCtx->streams;
     AssertValid(m_audio.nTrackCount == 0);
     
     m_format.nAudioStreamIdx = -1;
     m_format.nVideoStreamIdx = -1;
     
     for (int i = 0; i < pFmtCtx->nb_streams; ++i) {
-        AVCodecContext *pCodecCtx = avcodec_alloc_context3(NULL); // TODO: call avcodec_free_context
-        const AVCodec* pCodec = avcodec_find_decoder(pStreams[i]->codecpar->codec_id);
-        // zero: successful, negative value: error occurs
-        
-        AVMediaType nCodecType = pStreams[i]->codecpar->codec_type;
-        if (AVMEDIA_TYPE_VIDEO == nCodecType) {
-            if (!pCodec || avcodec_open2(pCodecCtx, pCodec, NULL) != 0)
+        AVStream *pStream = pFmtCtx->streams[i];
+        AVCodecParameters *pCodecPar = pStream->codecpar;
+        const AVCodec* pCodec = avcodec_find_decoder(pCodecPar->codec_id);
+        if (pCodec) {
+            AVMediaType nCodecType = pCodecPar->codec_type;
+            AVCodecContext *pCodecCtx = avcodec_alloc_context3(pCodec);
+            avcodec_parameters_to_context(pCodecCtx, pCodecPar);
+
+            if (avcodec_open2(pCodecCtx, pCodec, NULL) != 0) {
+                Log("avcodec_open2 failed\n");
+                avcodec_free_context(&pCodecCtx);
                 continue;
-            m_format.pVideoCodec = pCodec;
-            m_format.nVideoStreamIdx = i;
-            m_format.pVideoContext = pCodecCtx;
-            m_format.pVideoContext->skip_loop_filter = AVDISCARD_ALL;
-        } else if (AVMEDIA_TYPE_AUDIO == nCodecType) {
-            if (!pCodec || avcodec_open2(pCodecCtx, pCodec, NULL) != 0)
-                continue;
-            m_format.pAudioCodec[m_audio.nTrackCount] = pCodec;
-            m_format.nAudioStreamIdx = i;
-            m_format.pAudioContext[m_audio.nTrackCount++] = pCodecCtx;
-        } else if (AVMEDIA_TYPE_SUBTITLE == nCodecType) {
-            if (!pCodec || avcodec_open2(pCodecCtx, pCodec, NULL) != 0)
-                continue;
-            m_format.pSubtitleCodec = pCodec;
-            m_format.nSubtitleStreamIdx = i;
-            m_format.pSubtitleContext = pCodecCtx;
+            }
+
+            if (AVMEDIA_TYPE_VIDEO == nCodecType) {
+                m_format.pVideoCodec = pCodec;
+                m_format.nVideoStreamIdx = i;
+                m_format.pVideoContext = pCodecCtx;
+//                m_format.pVideoContext->skip_loop_filter = AVDISCARD_ALL;
+            } else if (AVMEDIA_TYPE_AUDIO == nCodecType) {
+                m_format.pAudioCodec[m_audio.nTrackCount] = pCodec;
+                m_format.nAudioStreamIdx = i;
+                m_format.pAudioContext[m_audio.nTrackCount++] = pCodecCtx;
+            } else if (AVMEDIA_TYPE_SUBTITLE == nCodecType) {
+                m_format.pSubtitleCodec = pCodec;
+                m_format.nSubtitleStreamIdx = i;
+                m_format.pSubtitleContext = pCodecCtx;
+            }
+        } else {
+            // TODO: log the failure
         }
     }
     
