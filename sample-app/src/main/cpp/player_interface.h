@@ -90,8 +90,7 @@ extern "C" {
 #define CALLBACK_PREVIEW_STARTED             14
 #define CALLBACK_PREVIEW_STOPPED             15
 #define CALLBACK_FRAME_CAPTURED              16
-#define CALLBACK_PREVIEW_CAPTURED            17
-#define CALLBACK_CHECK_DEVICE                18
+#define CALLBACK_CHECK_DEVICE                17
 typedef int (*PCallback)(void* pUserData, void* pReserved);
     
 typedef struct _EMSG
@@ -109,16 +108,6 @@ typedef struct _FRAMEINFO
     int    nFormat;
     void*  pContent;
 } FRAMEINFO;
-
-typedef struct _PREVIEWINFO
-{
-    int       nBitRate;
-    double    lfDuration;
-    char      szArtist[64];
-    char      szTitle[256];
-    char      szAlbum[256];
-    FRAMEINFO fi;
-} PREVIEWINFO;
     
 int CreatePlayer(const char* szPath);
 int DestroyPlayer();

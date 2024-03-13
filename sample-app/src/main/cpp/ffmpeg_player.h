@@ -123,4 +123,52 @@ JNIEXPORT int JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlay
  */
 JNIEXPORT int JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_destroyPlayer(JNIEnv *env, jclass object);
 
+/**
+ * Create the player powered by FFmpeg.
+ *
+ * @param env pointer to native method interface
+ * @param object reference to the class on which this method is invoked
+ * @param path the path of the media from local file or network
+ * @param offset the offset in the media
+ * @return zero on success, non-zero on error
+ */
+JNIEXPORT int JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_openPlayer(JNIEnv *env, jclass clazz, jstring path, jdouble offset);
+
+/**
+ * Close the player opened.
+ *
+ * @param env pointer to native method interface
+ * @param object reference to the class on which this method is invoked
+ * @return zero on success, non-zero on error
+ */
+JNIEXPORT jint JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_closePlayer(JNIEnv *env, jclass clazz);
+
+/**
+ * Start playing.
+ *
+ * @param env pointer to native method interface
+ * @param object reference to the class on which this method is invoked
+ * @return zero on success, non-zero on error
+ */
+JNIEXPORT jint JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_play(JNIEnv *env, jclass clazz);
+
+/**
+ * Seek to a time offset.
+ *
+ * @param env pointer to native method interface
+ * @param object reference to the class on which this method is invoked
+ * @param offset the offset in the media
+ * @return zero on success, non-zero on error
+ */
+JNIEXPORT jint JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_seek(JNIEnv *env, jclass clazz, jdouble offset);
+
+/**
+ * Pause playing.
+ *
+ * @param env pointer to native method interface
+ * @param object reference to the class on which this method is invoked
+ * @return zero on success, non-zero on error
+ */
+JNIEXPORT jint JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_pause(JNIEnv *env, jclass clazz);
+
 #endif /* SAMPLE_PLAYER_H */

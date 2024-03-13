@@ -22,14 +22,6 @@ struct CallbackData {
     int logLevel;             // log level
     AVBPrint logData;         // log data
 
-    int statisticsFrameNumber;        // statistics frame number
-    float statisticsFps;              // statistics fps
-    float statisticsQuality;          // statistics quality
-    int64_t statisticsSize;           // statistics size
-    double statisticsTime;            // statistics time
-    double statisticsBitrate;         // statistics bitrate
-    double statisticsSpeed;           // statistics speed
-
     struct CallbackData *next;
 };
 
@@ -604,13 +596,12 @@ JNIEXPORT void JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPla
     }
 }
 
-JNIEXPORT jint JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_createPlayer(JNIEnv *env, jclass object, jstring path) {
+JNIEXPORT jint JNICALL
+Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_createPlayer(JNIEnv *env, jclass object, jstring path) {
     if (path == NULL) {
-        // Handle null jString if necessary.
         return -1;
     }
 
-    // Step 1: Convert jstring to const char*
     const char* szPath = (*env)->GetStringUTFChars(env, path, NULL);
     if (szPath == NULL) {
         char buffer[256];
@@ -618,10 +609,50 @@ JNIEXPORT jint JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPla
         (*env)->ThrowNew(env, exceptionClass, buffer);
         return -1;
     }
+
     jint result = CreatePlayer(szPath);
     return result;
 }
 
-JNIEXPORT jint JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_destroyPlayer(JNIEnv *env, jclass object) {
+JNIEXPORT jint JNICALL
+Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_destroyPlayer(JNIEnv *env, jclass object) {
     return DestroyPlayer();
+}
+
+JNIEXPORT jint JNICALL
+Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_openPlayer(JNIEnv *env, jclass clazz, jstring path, jdouble offset) {
+    if (path == NULL) {
+        return -1;
+    }
+
+    const char* szPath = (*env)->GetStringUTFChars(env, path, NULL);
+    if (szPath == NULL) {
+        char buffer[256];
+        snprintf(buffer, sizeof(buffer), "Invalid path: %s", szPath);
+        (*env)->ThrowNew(env, exceptionClass, buffer);
+        return -1;
+    }
+
+    jint result = Open(szPath, offset, 0);
+    return result;
+}
+
+JNIEXPORT jint JNICALL
+Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_closePlayer(JNIEnv *env, jclass clazz) {
+    return Close();
+}
+
+JNIEXPORT jint JNICALL
+Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_play(JNIEnv *env, jclass clazz) {
+    return Play();
+}
+
+JNIEXPORT jint JNICALL
+Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_seek(JNIEnv *env, jclass clazz, jdouble offset) {
+    return Seek(offset);
+}
+
+JNIEXPORT jint JNICALL
+Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_pause(JNIEnv *env, jclass clazz) {
+    return Pause();
 }
