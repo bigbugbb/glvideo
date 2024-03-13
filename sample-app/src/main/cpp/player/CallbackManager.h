@@ -39,10 +39,10 @@ public:
     static CCallbackManager* GetInstance();
     
     int SetCallback(int nType, PCallback pfnCallback, void* pUserData, void* pReserved);
-    CallbackData& GetCallbackData(int nType);
+    CallbackData* GetCallbackData(int nType);
     
 protected:
-    std::map<int, CallbackData> m_mapCallbacks;
+    std::map<int, CallbackData*> m_mapCallbacks;
 };
 
 #endif

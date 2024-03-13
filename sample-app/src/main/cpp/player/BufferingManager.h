@@ -66,10 +66,10 @@ private:
     BOOL  m_bBuffering;
     CLock m_csBuffering;
     
-    CallbackData    m_cbdBeg;
-    CallbackData    m_cbdBuf;
-    CallbackData    m_cbdEnd;
-    CallbackData    m_cbdSpd;
+    CallbackData*   m_pcbdBeg;
+    CallbackData*   m_pcbdBuf;
+    CallbackData*   m_pcbdEnd;
+    CallbackData*   m_pcbdSpd;
 };
 
 #endif

@@ -326,12 +326,6 @@ int CQvodPlayer::ReceiveEvent(void* pSender, int nEvent, DWORD dwParam1, DWORD d
     case EVENT_CLOSE_FINISHED:
         OnCloseFinished(pSender, param);
         break;
-    case EVENT_PREVIEW_STARTED:
-        OnPreviewStarted(pSender, param);
-        break;
-    case EVENT_PREVIEW_STOPPED:
-        OnPreviewStopped(pSender, param);
-        break;
     case EVENT_WAIT_FOR_RESOURCES:
         OnWaitForResources(pSender, param);
         break;
@@ -368,41 +362,51 @@ int CQvodPlayer::ReceiveEvent(void* pSender, int nEvent, DWORD dwParam1, DWORD d
 
 void CQvodPlayer::OnCreateAudio(void* pSender, EventParam& param)
 {
-    CallbackData cbd = g_CallbackManager->GetCallbackData(CALLBACK_CREATE_AUDIO_SERVICE);
-    
-    (*cbd.pfnCallback)(cbd.pUserData, param.pUserData);
+    CallbackData* pcbd = g_CallbackManager->GetCallbackData(CALLBACK_CREATE_AUDIO_SERVICE);
+
+    if (pcbd) {
+        (*pcbd->pfnCallback)(pcbd->pUserData, param.pUserData);
+    }
 }
 
 void CQvodPlayer::OnCreateVideo(void* pSender, EventParam& param)
 {
-    CallbackData cbd = g_CallbackManager->GetCallbackData(CALLBACK_CREATE_VIDEO_SERVICE);
+    CallbackData* pcbd = g_CallbackManager->GetCallbackData(CALLBACK_CREATE_VIDEO_SERVICE);
     DWORD dwDimension = param.dwParam1 | (param.dwParam2 << 16);
-    
-    (*cbd.pfnCallback)(cbd.pUserData, &dwDimension);
+
+    if (pcbd) {
+        (*pcbd->pfnCallback)(pcbd->pUserData, &dwDimension);
+    }
 }
 
 void CQvodPlayer::OnUpdatePictureSize(void* pSender, EventParam& param)
 {
-    CallbackData cbd = g_CallbackManager->GetCallbackData(CALLBACK_UPDATE_PICTURE_SIZE);
+    CallbackData* pcbd = g_CallbackManager->GetCallbackData(CALLBACK_UPDATE_PICTURE_SIZE);
     DWORD dwDimension = param.dwParam1 | (param.dwParam2 << 16);
-    
-    (*cbd.pfnCallback)(cbd.pUserData, &dwDimension);
+
+    if (pcbd) {
+        (*pcbd->pfnCallback)(pcbd->pUserData, &dwDimension);
+    }
 }
 
 inline
 void CQvodPlayer::OnDeliverFrame(void* pSender, EventParam& param)
 {
-    CallbackData cbd = g_CallbackManager->GetCallbackData(CALLBACK_DELIVER_FRAME);
-    
-    (*cbd.pfnCallback)(cbd.pUserData, param.pUserData);    
+    CallbackData* pcbd = g_CallbackManager->GetCallbackData(CALLBACK_DELIVER_FRAME);
+
+    if (pcbd) {
+        (*pcbd->pfnCallback)(pcbd->pUserData, param.pUserData);
+    }
 }
 
 void CQvodPlayer::OnFrameCaptured(void* pSender, EventParam& param)
 {
-    CallbackData cbd = g_CallbackManager->GetCallbackData(CALLBACK_FRAME_CAPTURED);
+    CallbackData* pcbd = g_CallbackManager->GetCallbackData(CALLBACK_FRAME_CAPTURED);
     
     if (param.pUserData == NULL) {
-        (*cbd.pfnCallback)(cbd.pUserData, NULL);
+        if (pcbd) {
+            (*pcbd->pfnCallback)(pcbd->pUserData, NULL);
+        }
         return;
     }
     
@@ -418,15 +422,18 @@ void CQvodPlayer::OnFrameCaptured(void* pSender, EventParam& param)
 #ifdef LOG_RGB
     LOG_RGB(fi.pContent, fi.nStride, fi.nHeight);
 #endif
-    
-    (*cbd.pfnCallback)(cbd.pUserData, &fi);
+    if (pcbd) {
+        (*pcbd->pfnCallback)(pcbd->pUserData, &fi);
+    }
 }
 
 void CQvodPlayer::OnOpenFinished(void* pSender, EventParam& param)
 {
-    CallbackData cbd = g_CallbackManager->GetCallbackData(CALLBACK_OPEN_FINISHED);
-    
-    (*cbd.pfnCallback)(cbd.pUserData, param.pUserData);
+    CallbackData* pcbd = g_CallbackManager->GetCallbackData(CALLBACK_OPEN_FINISHED);
+
+    if (pcbd) {
+        (*pcbd->pfnCallback)(pcbd->pUserData, param.pUserData);
+    }
 }
 
 void CQvodPlayer::OnExecuteFinished(void* pSender, EventParam& param)
@@ -440,23 +447,11 @@ void CQvodPlayer::OnPauseFinished(void* pSender, EventParam& param)
 
 void CQvodPlayer::OnCloseFinished(void* pSender, EventParam& param)
 {
-    CallbackData cbd = g_CallbackManager->GetCallbackData(CALLBACK_CLOSE_FINISHED);
-    
-    (*cbd.pfnCallback)(cbd.pUserData, param.pUserData);
-}
+    CallbackData* pcbd = g_CallbackManager->GetCallbackData(CALLBACK_CLOSE_FINISHED);
 
-void CQvodPlayer::OnPreviewStarted(void* pSender, EventParam& param)
-{
-    CallbackData cbd = g_CallbackManager->GetCallbackData(CALLBACK_PREVIEW_STARTED);
-    
-    (*cbd.pfnCallback)(cbd.pUserData, param.pUserData);
-}
-
-void CQvodPlayer::OnPreviewStopped(void* pSender, EventParam& param)
-{
-    CallbackData cbd = g_CallbackManager->GetCallbackData(CALLBACK_PREVIEW_STOPPED);
-    
-    (*cbd.pfnCallback)(cbd.pUserData, param.pUserData);
+    if (pcbd) {
+        (*pcbd->pfnCallback)(pcbd->pUserData, param.pUserData);
+    }
 }
 
 void CQvodPlayer::OnWaitForResources(void* pSender, EventParam& param)
@@ -466,9 +461,11 @@ void CQvodPlayer::OnWaitForResources(void* pSender, EventParam& param)
 
 void CQvodPlayer::OnEncounterError(void* pSender, EventParam& param)
 {
-    CallbackData cbd = g_CallbackManager->GetCallbackData(CALLBACK_ERROR);
-    
-    (*cbd.pfnCallback)(cbd.pUserData, (void*)param.dwParam1);
+    CallbackData* pcbd = g_CallbackManager->GetCallbackData(CALLBACK_ERROR);
+
+    if (pcbd) {
+        (*pcbd->pfnCallback)(pcbd->pUserData, (void *) param.dwParam1);
+    }
 }
 
 void CQvodPlayer::OnAudioOnly(void* pSender, EventParam& param)
@@ -497,8 +494,10 @@ void CQvodPlayer::OnAudioEOS(void* pSender, EventParam& param)
 {
     m_pPlayerManager->SetAudioEOS(TRUE);
     if (m_pPlayerManager->IsVideoEOS()) {
-        CallbackData cbd = g_CallbackManager->GetCallbackData(CALLBACK_PLAYBACK_FINISHED);
-        (*cbd.pfnCallback)(cbd.pUserData, param.pUserData);
+        CallbackData* pcbd = g_CallbackManager->GetCallbackData(CALLBACK_PLAYBACK_FINISHED);
+        if (pcbd) {
+            (*pcbd->pfnCallback)(pcbd->pUserData, param.pUserData);
+        }
     }
 }
 
@@ -506,16 +505,20 @@ void CQvodPlayer::OnVideoEOS(void* pSender, EventParam& param)
 {
     m_pPlayerManager->SetVideoEOS(TRUE);
     if (m_pPlayerManager->IsAudioEOS()) {
-        CallbackData cbd = g_CallbackManager->GetCallbackData(CALLBACK_PLAYBACK_FINISHED);
-        (*cbd.pfnCallback)(cbd.pUserData, param.pUserData);
+        CallbackData* pcbd = g_CallbackManager->GetCallbackData(CALLBACK_PLAYBACK_FINISHED);
+        if (pcbd) {
+            (*pcbd->pfnCallback)(pcbd->pUserData, param.pUserData);
+        }
     }
 }
 
 void CQvodPlayer::OnCheckDevice(void* pSender, EventParam& param)
 {
-    CallbackData cbd = g_CallbackManager->GetCallbackData(CALLBACK_CHECK_DEVICE);
-    
-    (*cbd.pfnCallback)(cbd.pUserData, param.pUserData);
+    CallbackData* pcbd = g_CallbackManager->GetCallbackData(CALLBACK_CHECK_DEVICE);
+
+    if (pcbd) {
+        (*pcbd->pfnCallback)(pcbd->pUserData, param.pUserData);
+    }
 }
 
 

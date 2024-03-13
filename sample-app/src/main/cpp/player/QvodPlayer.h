@@ -79,8 +79,6 @@ protected:
     void OnExecuteFinished(void* pSender, EventParam& param);
     void OnPauseFinished(void* pSender, EventParam& param);
     void OnCloseFinished(void* pSender, EventParam& param);
-    void OnPreviewStarted(void* pSender, EventParam& param);
-    void OnPreviewStopped(void* pSender, EventParam& param);
     void OnWaitForResources(void* pSender, EventParam& param);
     void OnEncounterError(void* pSender, EventParam& param);
     void OnAudioOnly(void* pSender, EventParam& param);

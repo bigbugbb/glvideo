@@ -86,16 +86,14 @@ const int EVENT_OPEN_FINISHED           = 8;
 const int EVENT_EXECUTE_FINISHED        = 9;
 const int EVENT_PAUSE_FINISHED          = 10;
 const int EVENT_CLOSE_FINISHED          = 11;
-const int EVENT_PREVIEW_STARTED         = 12;
-const int EVENT_PREVIEW_STOPPED         = 13;
-const int EVENT_WAIT_FOR_RESOURCES      = 14;
-const int EVENT_ENCOUNTER_ERROR         = 15;
-const int EVENT_AUDIO_EOS               = 16;
-const int EVENT_VIDEO_EOS               = 17;
-const int EVENT_AUDIO_ONLY              = 18;
-const int EVENT_VIDEO_ONLY              = 19;
-const int EVENT_DISCARD_VIDEO_PACKET    = 20;
-const int EVENT_AUDIO_NEED_DATA         = 21;
-const int EVENT_CHECK_DEVICE            = 22;
+const int EVENT_WAIT_FOR_RESOURCES      = 12;
+const int EVENT_ENCOUNTER_ERROR         = 13;
+const int EVENT_AUDIO_EOS               = 14;
+const int EVENT_VIDEO_EOS               = 15;
+const int EVENT_AUDIO_ONLY              = 16;
+const int EVENT_VIDEO_ONLY              = 17;
+const int EVENT_DISCARD_VIDEO_PACKET    = 18;
+const int EVENT_AUDIO_NEED_DATA         = 19;
+const int EVENT_CHECK_DEVICE            = 20;
 
 #endif

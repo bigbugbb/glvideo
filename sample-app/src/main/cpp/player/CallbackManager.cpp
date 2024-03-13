@@ -19,7 +19,12 @@ CCallbackManager::CCallbackManager()
 
 CCallbackManager::~CCallbackManager()
 {
-    
+    for (const auto& [nType, pCallback] : m_mapCallbacks) {
+        if (pCallback) {
+            delete pCallback;
+        }
+    }
+    m_mapCallbacks.clear();
 }
 
 CCallbackManager* CCallbackManager::GetInstance()
@@ -31,20 +36,23 @@ CCallbackManager* CCallbackManager::GetInstance()
 
 int CCallbackManager::SetCallback(int nType, PCallback pfnCallback, void* pUserData, void* pReserved)
 {
-    CallbackData cbd;
-    
-    cbd.nCallbackType = nType;
-    cbd.pfnCallback   = pfnCallback;
-    cbd.pUserData    = pUserData;
-    cbd.pReserved    = pReserved;
+    CallbackData* pData = new CallbackData();
+
+    pData->nCallbackType = nType;
+    pData->pfnCallback   = pfnCallback;
+    pData->pUserData     = pUserData;
+    pData->pReserved     = pReserved;
     AssertValid(pfnCallback);
-    
-    m_mapCallbacks[nType] = cbd;
+
+    if (m_mapCallbacks[nType]) {
+        delete m_mapCallbacks[nType];
+    }
+    m_mapCallbacks[nType] = pData;
     
     return S_OK;
 }
 
-CallbackData& CCallbackManager::GetCallbackData(int nType)
+CallbackData* CCallbackManager::GetCallbackData(int nType)
 {
     return m_mapCallbacks[nType];
 }

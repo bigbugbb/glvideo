@@ -222,8 +222,6 @@ int CAudioRenderer::WaitForResources(BOOL bWait)
     Log("CAudioRenderer::WaitForResources\n");
     CMediaObject::WaitForResources(bWait);
     
-    
-    
     return S_OK;
 }
 
@@ -277,7 +275,6 @@ int CAudioRenderer::Pause()
 {
     Log("CAudioRenderer::Pause\n");
 
-    
     CMediaObject::Pause();
     return S_OK;
 }
