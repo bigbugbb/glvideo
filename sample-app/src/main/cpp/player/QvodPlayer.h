@@ -42,8 +42,6 @@ public:
     virtual int Seek(double lfOffset);
     virtual int Pause();
     virtual int CaptureFrame();
-    virtual int StartPreview(const char* pszURL, double lfOffset, int nFrameCount);
-    virtual int StopPreview();
     virtual int SetParameter(int nParam, void* pValue);
     virtual int GetParameter(int nParam, void* pValue);
     virtual int SetCallback(int nType, PCallback pfnCallback, void* pUserData, void* pReserved);
@@ -77,7 +75,6 @@ protected:
     void OnUpdatePictureSize(void* pSender, EventParam& param);
     void OnDeliverFrame(void* pSender, EventParam& param);
     void OnFrameCaptured(void* pSender, EventParam& param);
-    void OnPreviewCaptured(void* pSender, EventParam& param);
     void OnOpenFinished(void* pSender, EventParam& param);
     void OnExecuteFinished(void* pSender, EventParam& param);
     void OnPauseFinished(void* pSender, EventParam& param);

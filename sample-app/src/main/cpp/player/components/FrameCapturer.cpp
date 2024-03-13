@@ -129,9 +129,6 @@ THREAD_RETURN CFrameCapturer::ThreadProc()
             case FRAME_CAPTURED:
                 NotifyEvent(EVENT_FRAME_CAPTURED, 0, 0, pCapture);
                 break;
-            case PREVIEW_CAPTURED:
-                NotifyEvent(EVENT_PREVIEW_CAPTURED, 0, 0, pCapture);
-                break;
             }
             av_freep(&pCapture->data[0]);
             av_frame_free(&pCapture);

@@ -14,7 +14,6 @@
 #include "components/FFmpegCallbacks.h"
 #include "CallbackManager.h"
 #include "PlayerGraphManager.h"
-#include "PreviewGraphManager.h"
 
 #ifdef LOG_VIDEO_RGB
     extern std::string strPathRGB;
@@ -186,33 +185,6 @@ int CQvodPlayer::CaptureFrame()
     return S_OK;
 }
 
-int CQvodPlayer::StartPreview(const char* pszURL, double lfOffset, int nFrameCount)
-{
-    Message msg(MSG_OPEN);
-    
-    m_pPreviewDemuxer->InitialConfig(pszURL, lfOffset, 0);
-    m_pPreviewManager->SendMessage(msg);
-    
-    if (nFrameCount > 1) {
-        Message msg(MSG_PLAY);
-        m_pPreviewManager->SendMessage(msg);
-    }
-    
-    return S_OK;
-}
-
-int CQvodPlayer::StopPreview()
-{
-    Message msg(MSG_CLOSE);
-    
-    m_pPreviewManager->ShrinkMessage(TRUE);
-    m_pPreviewManager->SendMessage(msg);
-    
-    interrupt_avio();
-
-    return S_OK;
-}
-
 int CQvodPlayer::SetParameter(int nParam, void* pValue)
 {
     AssertValid(pValue);
@@ -333,7 +305,7 @@ int CQvodPlayer::ReceiveEvent(void* pSender, int nEvent, DWORD dwParam1, DWORD d
     case EVENT_CREATE_VIDEO:
         OnCreateVideo(pSender, param);
         break;
-    case EVENT_UPDATE_PICTURE_SIZE:
+    case EVENT_UPDATE_VIDEO_FRAME_SIZE:
         OnUpdatePictureSize(pSender, param);
         break;
     case EVENT_DELIVER_FRAME:
@@ -342,9 +314,6 @@ int CQvodPlayer::ReceiveEvent(void* pSender, int nEvent, DWORD dwParam1, DWORD d
     case EVENT_FRAME_CAPTURED:
         OnFrameCaptured(pSender, param);
         break;
-    case EVENT_PREVIEW_CAPTURED:
-        OnPreviewCaptured(pSender, param);
-        break;     
     case EVENT_OPEN_FINISHED:
         OnOpenFinished(pSender, param);
         break;
@@ -451,30 +420,6 @@ void CQvodPlayer::OnFrameCaptured(void* pSender, EventParam& param)
 #endif
     
     (*cbd.pfnCallback)(cbd.pUserData, &fi);
-}
-
-void CQvodPlayer::OnPreviewCaptured(void* pSender, EventParam& param)
-{
-    CallbackData cbd = g_CallbackManager->GetCallbackData(CALLBACK_PREVIEW_CAPTURED);
-    
-    if (param.pUserData == NULL) {
-        (*cbd.pfnCallback)(cbd.pUserData, NULL);
-        return;
-    }
-    
-    AVFrame* pFrame = (AVFrame*)param.pUserData;
-    IFFmpegDemuxer* pDemuxer = dynamic_cast<IFFmpegDemuxer*>(m_pPreviewManager->GetComponent(GUID_PREVIEW_DEMUXER));
-    PREVIEWINFO pvi;
-    
-    pDemuxer->GetMediaBitrate(&pvi.nBitRate);
-    pDemuxer->GetMediaDuration(&pvi.lfDuration);
-    pvi.fi.nWidth   = pFrame->width;
-    pvi.fi.nHeight  = pFrame->height;
-    pvi.fi.nStride  = pFrame->linesize[0];
-    pvi.fi.nFormat  = pFrame->format;
-    pvi.fi.pContent = pFrame->data[0]; // maybe not good, fixme
-    
-    (*cbd.pfnCallback)(cbd.pUserData, &pvi);
 }
 
 void CQvodPlayer::OnOpenFinished(void* pSender, EventParam& param)

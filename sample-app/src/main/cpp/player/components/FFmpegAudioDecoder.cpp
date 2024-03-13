@@ -28,12 +28,12 @@ CFFmpegAudioDecoder::CFFmpegAudioDecoder(const GUID& guid, IDependency* pDepend,
     : CMediaObject(guid, pDepend), m_pPcmPool(NULL)
 {
     m_pAudio = NULL;
-    av_frame_unref(&m_PCM);
+    m_pFrame = av_frame_alloc();
 }
 
 CFFmpegAudioDecoder::~CFFmpegAudioDecoder()
 {
-    
+    av_frame_free(&m_pFrame);
 }
 
 // IFFmpegAudioDecoder
@@ -213,15 +213,15 @@ THREAD_RETURN CFFmpegAudioDecoder::ThreadProc()
 
 int CFFmpegAudioDecoder::OnReceive(CMediaSample& sample)
 {
-    AssertValid(sample.m_nSize == sizeof(AVPacket));
-    AVPacket* pPacket = (AVPacket*)sample.m_pBuf;
+    AssertValid(sample.m_nSize == sizeof(AVPacket*));
+    AVPacket* pPacket = *(AVPacket**)sample.m_pBuf;
     AVCodecContext* pCodecCtx = (AVCodecContext*)sample.m_pExten;
     m_pAudio = (AudioInfo*)sample.m_pSpecs;
     
     int nResult = Decode(pPacket, pCodecCtx, sample);
     if (nResult != E_RETRY) {
-        align_free(pPacket->data);
-        pPacket->data = NULL;
+        av_packet_unref(pPacket);
+        av_packet_free(&pPacket);
     }
     
     return nResult;
@@ -242,42 +242,46 @@ int CFFmpegAudioDecoder::Decode(AVPacket* pPacket, AVCodecContext* pCodecCtx, co
         return E_RETRY;
     }
 
-    BYTE* pData = pPacket->data;
-    int  nTotal = pPacket->size;
-    BOOL bFirst = TRUE;
-//    while (pPacket->size > 0) {
-//        if ((nLength = avcodec_decode_audio3(pCodecCtx, (INT16*)sample.m_pBuf, &nSize, pPacket)) > 0) {
-//            if (bFirst) {
-//                LOG_PCM(sample.m_pBuf, nSize);
-//                sample.m_pCur        = sample.m_pBuf;
-//                sample.m_nActual     = nSize;
-//                sample.m_llTimestamp = sampleIn.m_llTimestamp;
-//                sample.m_llSyncPoint = sampleIn.m_llSyncPoint;
-//                //Log("packet duration: %d\n", pPacket->duration);
-//                //Log("timestamp = %lld, sync: %lld, size = %d\n", sampleIn.m_llTimestamp, sample.m_llSyncPoint, nSize);
-//                bFirst = FALSE;
-//            } else {
-//                sample.m_nActual += nSize;
-//            }
-//        } else {
-//            if (!bFirst)
-//                sample.m_pBuf = sample.m_pCur;
-//            pPacket->data = pData;
-//            pPacket->size = nTotal;
-//            //Log("avcodec_decode_audio3 fails!\n");
-//            return E_FAIL;
-//        }
-//
-//        sample.m_pBuf += nSize;
-//        pPacket->data += nLength;
-//        pPacket->size -= nLength;
-//        nSize = AVCODEC_MAX_AUDIO_FRAME_SIZE;
-//    }
-//    sample.m_pBuf = sample.m_pCur;
-//    pPacket->data = pData;
-//    pPacket->size = nTotal;
-//
-//    m_pPcmPool->Commit(sample);
+    if (avcodec_send_packet(pCodecCtx, pPacket) != 0) {
+        return E_FAIL;
+    }
+
+    while (avcodec_receive_frame(pCodecCtx, m_pFrame) == 0) {
+        int nChannels = m_pFrame->ch_layout.nb_channels;
+        int nSamples = m_pFrame->nb_samples;
+
+        if (av_sample_fmt_is_planar(pCodecCtx->sample_fmt)) {
+            for (int i = 0; i < nChannels; ++i) {
+                float* data = (float*)m_pFrame->data[i];
+                // TODO: Process your data here...
+            }
+        } else { // This means the data is interleaved
+            // Determine the sample format
+            if (m_pFrame->format == AV_SAMPLE_FMT_S16) { // 16-bit signed integers
+                int16_t *samples = (int16_t *)m_pFrame->data[0]; // All channels are in data[0]
+                for (int i = 0; i < nSamples; i++) {
+                    for (int ch = 0; ch < nChannels; ch++) {
+                        int16_t sample = samples[i * nChannels + ch];
+                        // TODO: Process the sample for channel 'ch' here...
+                    }
+                }
+            } else if (m_pFrame->format == AV_SAMPLE_FMT_FLT) { // Single-precision floating-point
+                float *samples = (float *)m_pFrame->data[0];
+                for (int i = 0; i < nSamples; i++) {
+                    for (int ch = 0; ch < nChannels; ch++) {
+                        float sample = samples[i * nChannels + ch];
+                        // TODO: Process the sample for channel 'ch' here...
+                    }
+                }
+            }
+            // Add more conditions for other sample formats as needed
+        }
+    }
+
+    sample.m_llTimestamp = sampleIn.m_llTimestamp;
+    sample.m_llSyncPoint = sampleIn.m_llSyncPoint;
+
+    m_pPcmPool->Commit(sample);
 
     return S_OK;
 }

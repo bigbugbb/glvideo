@@ -111,28 +111,6 @@ int Seek(double lfTime)
     return nResult;
 }
 
-int StartPreview(const char* pszURL, double lfOffset, int nFrameCount)
-{
-    if (!g_pPlayer) {
-        return E_FAIL;
-    }
-    
-    int nResult = g_pPlayer->StartPreview(pszURL, lfOffset, 1);
-    
-    return nResult;
-}
-
-int StopPreview()
-{
-    if (!g_pPlayer) {
-        return E_FAIL;
-    }
-    
-    int nResult = g_pPlayer->StopPreview();
-    
-    return nResult;
-}
-
 int CaptureFrame()
 {
     if (!g_pPlayer) {

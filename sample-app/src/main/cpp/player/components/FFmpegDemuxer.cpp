@@ -330,17 +330,29 @@ void CFFmpegDemuxer::DiscardPackets(int nCount)
     NotifyEvent(EVENT_DISCARD_VIDEO_PACKET, nCount, 0, NULL);
 }
 
-void CFFmpegDemuxer::UpdatePacket(AVPacket* pPacket)
+BOOL CFFmpegDemuxer::CopyPacket(AVPacket** ppDstPacket, AVPacket* pSrcPacket)
 {
-    if (pPacket->pts == AV_NOPTS_VALUE && pPacket->dts != AV_NOPTS_VALUE) {
-        pPacket->pts = pPacket->dts;
+    AVPacket* pDstPacket = av_packet_alloc();
+    if (!pDstPacket) {
+        return FALSE;
     }
+
+    if (av_packet_ref(pDstPacket, pSrcPacket) < 0) {
+        return FALSE;
+    }
+
+    if (pSrcPacket->pts == AV_NOPTS_VALUE && pSrcPacket->dts != AV_NOPTS_VALUE) {
+        pDstPacket->pts = pSrcPacket->dts;
+    }
+    *ppDstPacket = pDstPacket;
+
+    return TRUE;
 }
 
 // save AVPacket to the pool and pass it to the decoder
 BOOL CFFmpegDemuxer::FillPacketPool(AVPacket* pPacket)
 {
-    AssertValid(pPktFrom);
+    AssertValid(pPacket);
     
     if (pPacket->stream_index == m_format.nVideoStreamIdx) {
         if (m_format.bDecodeVideo) {
@@ -352,27 +364,28 @@ BOOL CFFmpegDemuxer::FillPacketPool(AVPacket* pPacket)
         }
     }
 
-    /**
-     * av_packet_unref(pPacket); will be called by the decoder
-     */
+    av_packet_unref(pPacket);
     
     return TRUE;
 }
 
 inline
-void CFFmpegDemuxer::FillVideoPacketPool(AVPacket* pPacket)
+void CFFmpegDemuxer::FillVideoPacketPool(AVPacket* pSrcPacket)
 {
     CMediaSample sample;
 
-    UpdatePacket(pPacket);
+    AVPacket* pDstPacket = NULL;
+    if (!CopyPacket(&pDstPacket, pSrcPacket)) {
+        return;
+    }
 
     m_VideoPool.GetEmpty(sample); // no need to check here
     
     sample.m_Type = SAMPLE_PACKET;
-    memcpy(sample.m_pBuf, &pPacket, sizeof(AVPacket*));
+    memcpy(sample.m_pBuf, &pDstPacket, sizeof(AVPacket*));
     sample.m_pSpecs = &m_video;
     sample.m_pExten = m_format.pVideoContext;
-    sample.m_llTimestamp = pPacket->pts != AV_NOPTS_VALUE ? pPacket->pts : m_llLastVideoTS + pPacket->duration;
+    sample.m_llTimestamp = pDstPacket->pts != AV_NOPTS_VALUE ? pDstPacket->pts : m_llLastVideoTS + pDstPacket->duration;
     if (FFABS(sample.m_llTimestamp - m_llLastVideoTS) > m_llDisconThreshold) {
         if (m_llLastVideoTS != AV_NOPTS_VALUE) {
             sample.m_bDiscon = TRUE;
@@ -388,19 +401,25 @@ void CFFmpegDemuxer::FillVideoPacketPool(AVPacket* pPacket)
 }
 
 inline
-void CFFmpegDemuxer::FillAudioPacketPool(AVPacket* pPacket)
+void CFFmpegDemuxer::FillAudioPacketPool(AVPacket* pSrcPacket)
 {
     CMediaSample sample;
 
-    UpdatePacket(pPacket);
+    AVPacket* pDstPacket = NULL;
+    if (!CopyPacket(&pDstPacket, pSrcPacket)) {
+        return;
+    }
+
     m_AudioPool.GetEmpty(sample);
     
     sample.m_Type = SAMPLE_PACKET;
-    if (pPacket->duration == 0) pPacket->duration = AUDIO_FRAME_DURATION / m_audio.lfTimebase;
-    memcpy(sample.m_pBuf, &pPacket, sizeof(AVPacket*));
+    if (pDstPacket->duration == 0) {
+        pDstPacket->duration = AUDIO_FRAME_DURATION / m_audio.lfTimebase;
+    }
+    memcpy(sample.m_pBuf, &pDstPacket, sizeof(AVPacket*));
     sample.m_pSpecs = &m_audio;
     sample.m_pExten = m_format.pAudioContext[m_audio.nCurTrack];
-    sample.m_llTimestamp = pPacket->pts != AV_NOPTS_VALUE ? pPacket->pts : m_llLastAudioTS + pPacket->duration;
+    sample.m_llTimestamp = pDstPacket->pts != AV_NOPTS_VALUE ? pDstPacket->pts : m_llLastAudioTS + pDstPacket->duration;
     sample.m_llSyncPoint = m_format.bDecodeVideo ? m_llSyncPoint * m_lfConvert : m_llSyncPoint;
     double llStartTime = m_format.bDecodeVideo ? m_llStartTime * m_lfConvert : m_llStartTime;
     sample.m_bIgnore = m_lfOffset - (sample.m_llTimestamp - llStartTime) * m_audio.lfTimebase > m_nJumpLimit;
@@ -740,7 +759,7 @@ BOOL CFFmpegDemuxer::PrepareCodecs(AVFormatContext* pFmtCtx)
     
     m_format.nAudioStreamIdx = -1;
     m_format.nVideoStreamIdx = -1;
-    
+
     for (int i = 0; i < pFmtCtx->nb_streams; ++i) {
         AVStream *pStream = pFmtCtx->streams[i];
         AVCodecParameters *pCodecPar = pStream->codecpar;
@@ -776,7 +795,7 @@ BOOL CFFmpegDemuxer::PrepareCodecs(AVFormatContext* pFmtCtx)
     }
     
     m_audio.nCurTrack = FFMAX(m_audio.nTrackCount - 1, 0);
-    if (!m_format.pVideoCodec && !m_format.pAudioCodec) { // audio/video codec都找不到
+    if (!m_format.pVideoCodec && !m_format.pAudioCodec[0]) { // audio/video codec都找不到
         return FALSE;
     }
     
@@ -825,10 +844,10 @@ BOOL CFFmpegDemuxer::PrepareVideoData(AVFormatContext* pFmtCtx)
 
 BOOL CFFmpegDemuxer::PrepareAudioData(AVFormatContext* pFmtCtx)
 {
-    if (!m_format.pAudioCodec) {
+    if (!m_format.pAudioCodec[0]) {
         return FALSE;
     }
-    
+
     AVStream* pAudioStream = pFmtCtx->streams[m_format.nAudioStreamIdx];
     if (!pAudioStream) {
         Log("no audio stream found!\n");

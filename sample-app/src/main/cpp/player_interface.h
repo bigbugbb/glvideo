@@ -128,8 +128,6 @@ int Play();
 int Pause();
 int Seek(double lfTime);
 int CaptureFrame();
-int StartPreview(const char* pszURL, double lfOffset, int nFrameCount);
-int StopPreview();
 int SetParameter(int nParam, void* pValue);
 int GetParameter(int nParam, void* pValue);
 int SetCallback(int nType, PCallback pfnCallback, void* pUserData, void* pReserved);

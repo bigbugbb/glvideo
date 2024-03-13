@@ -28,7 +28,7 @@ CFrame::~CFrame()
 
 int CFrame::Resize(int nWidth, int nHeight, enum AVPixelFormat ePixFmt)
 {
-	Log("CFrame::Resize, width: %d, height: %d\n", nWidth, nHeight);
+	Log("CFrame::OnFrameResize, width: %d, height: %d\n", nWidth, nHeight);
     int nResult = S_OK;
 
     m_ePixFmt = ePixFmt;
@@ -39,7 +39,7 @@ int CFrame::Resize(int nWidth, int nHeight, enum AVPixelFormat ePixFmt)
         return nResult;
     }
     
-    Log("CFrame::Resize end");
+    Log("CFrame::OnFrameResize end");
     return S_OK;
 }
 

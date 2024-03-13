@@ -15,8 +15,5 @@
 #include "components/FFmpegAudioDecoder.h"
 #include "components/VideoRenderer.h"
 #include "components/AudioRenderer.h"
-#include "components/PreviewDemuxer.h"
-#include "components/PreviewVideoDecoder.h"
-#include "components/PreviewVideoRenderer.h"
 
 #endif

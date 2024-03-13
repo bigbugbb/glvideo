@@ -25,8 +25,8 @@ CFFmpegVideoDecoder::CFFmpegVideoDecoder(const GUID& guid, IDependency* pDepend,
     m_bJumpBack  = FALSE;
     m_pCodecCtx  = NULL;
     m_pFramePool = NULL;
-    av_frame_unref(&m_YUV);
-    
+    m_pFrame = av_frame_alloc();
+
 #ifdef iOS
     m_pSwsCtx = NULL;
 #endif
@@ -40,6 +40,7 @@ CFFmpegVideoDecoder::CFFmpegVideoDecoder(const GUID& guid, IDependency* pDepend,
 
 CFFmpegVideoDecoder::~CFFmpegVideoDecoder()
 {
+    av_frame_free(&m_pFrame);
 }
 
 int CFFmpegVideoDecoder::GetVideoWidth(int* pWidth)
@@ -93,6 +94,7 @@ int CFFmpegVideoDecoder::DiscardPackets(int nCount)
         
         AVPacket* pPacket = *(AVPacket**)sample.m_pBuf;
         av_packet_unref(pPacket);
+        av_packet_free(&pPacket);
         
         m_pVideoPool->Recycle(sample);
     }
@@ -201,7 +203,7 @@ THREAD_RETURN CFFmpegVideoDecoder::ThreadProc()
 
 int CFFmpegVideoDecoder::OnReceive(CMediaSample& sample)
 {
-    AssertValid(sample.m_nSize == sizeof(AVPacket));
+    AssertValid(sample.m_nSize == sizeof(AVPacket*));
     AVPacket* pPacket = *(AVPacket**)sample.m_pBuf;
     m_pCodecCtx = (AVCodecContext*)sample.m_pExten; // always the same
     m_pVideo = (VideoInfo*)sample.m_pSpecs;
@@ -215,6 +217,7 @@ int CFFmpegVideoDecoder::OnReceive(CMediaSample& sample)
     int nResult = Decode(pPacket, m_pCodecCtx, sample);
     if (nResult != E_RETRY) {
         av_packet_unref(pPacket);
+        av_packet_free(&pPacket);
     }
     
     return nResult;
@@ -229,24 +232,28 @@ int CFFmpegVideoDecoder::Decode(AVPacket* pPacket, AVCodecContext* pCodecCtx, co
         return E_RETRY; // wait the decoded frames to be delivered
     }
 
-    avcodec_send_packet(pCodecCtx, pPacket);
+    if (avcodec_send_packet(pCodecCtx, pPacket) != 0) {
+        return E_FAIL;
+    }
     
-    int nRet = avcodec_receive_frame(pCodecCtx, &m_YUV);
+    int nRet = avcodec_receive_frame(pCodecCtx, m_pFrame);
 
     CFrame& frame = *(CFrame*)sample.m_pExten;
     // resize & re-allocate the memory used for buffering decoded frames
     if (nRet == 0) {
-        if (frame.m_nWidth != m_YUV.width || frame.m_nHeight != m_YUV.height) {
+        if (frame.m_nWidth != m_pFrame->width || frame.m_nHeight != m_pFrame->height) {
             int nResult = S_OK;
 #ifdef ANDROID
             m_eDstFmt = pCodecCtx->pix_fmt; // on iOS, m_eDstFmt's default value is PIX_FMT_RGB565
 #endif
-            if ((nResult = frame.Resize(m_YUV.width, m_YUV.height, m_eDstFmt)) != S_OK) {
+            if ((nResult = frame.Resize(m_pFrame->width, m_pFrame->height, m_eDstFmt)) != S_OK) {
             	Log("CFFmpegVideoDecoder::Decode failed");
+                av_frame_unref(m_pFrame);
                 return nResult;
             }
-            if ((nResult = Resize(m_YUV.width, m_YUV.height, pCodecCtx->pix_fmt)) != S_OK) {
+            if ((nResult = OnFrameResize(m_pFrame->width, m_pFrame->height, pCodecCtx->pix_fmt)) != S_OK) {
             	Log("CFFmpegVideoDecoder::Decode failed");
+                av_frame_unref(m_pFrame);
                 return nResult;
             }
         }
@@ -263,35 +270,37 @@ int CFFmpegVideoDecoder::Decode(AVPacket* pPacket, AVCodecContext* pCodecCtx, co
         }
     }
 
-    if (m_YUV.pict_type == AV_PICTURE_TYPE_I) {
+    if (m_pFrame->pict_type == AV_PICTURE_TYPE_I) {
         WaitKeyFrame(FALSE);
-    } else if (m_YUV.pict_type == AV_PICTURE_TYPE_NONE) {
+    } else if (m_pFrame->pict_type == AV_PICTURE_TYPE_NONE) {
         if (IsIntraOnly(pCodecCtx->codec_id)) WaitKeyFrame(FALSE);
     }
     
-    frame.m_nType     = m_YUV.pict_type;
+    frame.m_nType     = m_pFrame->pict_type;
     //Log("nGotPic: %d, waitI: %d, ignore: %d\n", nGotPic, !IsWaitingKeyFrame(), sampleIn.m_bIgnore);
     frame.m_bShow     = nRet == 0 && !IsWaitingKeyFrame() && !sampleIn.m_bIgnore;
     frame.m_nDuration = pPacket->duration;
     if (frame.m_bShow) {
 #ifdef iOS
         AVFrame* pRGB = &frame.m_frame;
-        sws_scale(m_pSwsCtx, m_YUV.data, m_YUV.linesize, 0, m_nHeight, pRGB->data, pRGB->linesize);
+        sws_scale(m_pSwsCtx, m_videoFrame.data, m_videoFrame.linesize, 0, m_nHeight, pRGB->data, pRGB->linesize);
 #else
         av_image_copy(const_cast<uint8_t **>(frame.m_frame.data), frame.m_frame.linesize,
-                      m_YUV.data, m_YUV.linesize, pCodecCtx->pix_fmt, m_nWidth, m_nHeight);
+                      m_pFrame->data, m_pFrame->linesize, pCodecCtx->pix_fmt, m_nWidth, m_nHeight);
 #endif
     }
     sample.m_bIgnore     = sampleIn.m_bIgnore;
-    sample.m_llTimestamp = nRet == 0 ? AdjustTimestamp(m_YUV.best_effort_timestamp, frame.m_nDuration) : pPacket->pts;
+    sample.m_llTimestamp = nRet == 0 ? AdjustTimestamp(m_pFrame->best_effort_timestamp, frame.m_nDuration) : pPacket->pts;
     sample.m_llSyncPoint = sampleIn.m_llSyncPoint;
     //Log("best effort ts: %lld, last input ts: %lld, last output ts: %lld\n", m_pYUV->best_effort_timestamp, m_llLastInputTS, m_llLastOutputTS);
-    m_llLastInputTS  = nRet == 0 ? m_YUV.best_effort_timestamp : pPacket->pts;
+    m_llLastInputTS  = nRet == 0 ? m_pFrame->best_effort_timestamp : pPacket->pts;
     m_llLastOutputTS = sample.m_llTimestamp;
     AssertValid(!sampleIn.m_bIgnore);
     //Log("pts: %lld, syncpt: %lld, frame type: %d, show: %d\n", sample.m_llTimestamp, sample.m_llSyncPoint, frame.m_nType, frame.m_bShow);
 
     m_pFramePool->Commit(sample);
+
+    av_frame_unref(m_pFrame);
     
     return S_OK;
 }
@@ -310,7 +319,7 @@ LONGLONG CFFmpegVideoDecoder::AdjustTimestamp(LONGLONG llTimestamp, int nDuratio
     return llTimestamp;
 }
 
-int CFFmpegVideoDecoder::Resize(int nWidth, int nHeight, AVPixelFormat eSrcFmt)
+int CFFmpegVideoDecoder::OnFrameResize(int nWidth, int nHeight, AVPixelFormat eSrcFmt)
 {
     int nResult = S_OK;
     
@@ -323,7 +332,7 @@ int CFFmpegVideoDecoder::Resize(int nWidth, int nHeight, AVPixelFormat eSrcFmt)
             return E_FAIL;
         }
 #endif
-        NotifyEvent(EVENT_UPDATE_PICTURE_SIZE, nWidth, nHeight, NULL);
+        NotifyEvent(EVENT_UPDATE_VIDEO_FRAME_SIZE, nWidth, nHeight, NULL);
         OnVideoSizeChanged();
     }
 

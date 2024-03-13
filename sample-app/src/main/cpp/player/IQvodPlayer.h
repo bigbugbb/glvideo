@@ -21,8 +21,6 @@ struct IQvodPlayer
     virtual int Seek(double lfOffset) = 0;
     virtual int Pause() = 0;
     virtual int CaptureFrame() = 0;
-    virtual int StartPreview(const char* pszURL, double lfOffset, int nFrameCount) = 0;
-    virtual int StopPreview() = 0;
     virtual int SetParameter(int nParam, void* pValue) = 0;
     virtual int GetParameter(int nParam, void* pValue) = 0;
     virtual int SetCallback(int nType, PCallback pfnCallback, void* pUserData, void* pReserved) = 0;

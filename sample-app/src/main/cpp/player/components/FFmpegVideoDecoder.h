@@ -53,7 +53,7 @@ protected:
     
     virtual int OnVideoSizeChanged();
     virtual THREAD_RETURN ThreadProc();
-    int Resize(int nWidth, int nHeight, AVPixelFormat eSrcFmt);
+    int OnFrameResize(int nWidth, int nHeight, AVPixelFormat eSrcFmt);
     int EnableLoopFilter2(AVCodecContext* pCodecCtx);
     BOOL IsWaitingKeyFrame();
     BOOL IsIntraOnly(AVCodecID id);
@@ -74,7 +74,7 @@ protected:
     ISamplePool*    m_pFramePool;
     ISamplePool*    m_pVideoPool;
     
-    AVFrame         m_YUV;
+    AVFrame*        m_pFrame;
     AVPixelFormat   m_eDstFmt;
     CMediaObject*   m_pRenderer;
 #ifdef iOS
