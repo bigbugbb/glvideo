@@ -230,15 +230,12 @@ int CFFmpegAudioDecoder::OnReceive(CMediaSample& sample)
 inline
 int CFFmpegAudioDecoder::Decode(AVPacket* pPacket, AVCodecContext* pCodecCtx, const CMediaSample& sampleIn)
 {
-    int nLength = 0;
-    int nSize = AVCODEC_MAX_AUDIO_FRAME_SIZE;
-    
     if (sampleIn.m_bIgnore) {
         return S_OK;
     }
     
-    CMediaSample sample;
-    if (m_pPcmPool->GetEmpty(sample) != S_OK) {
+    CMediaSample mediaSample;
+    if (m_pPcmPool->GetEmpty(mediaSample) != S_OK) {
         return E_RETRY;
     }
 
@@ -278,10 +275,10 @@ int CFFmpegAudioDecoder::Decode(AVPacket* pPacket, AVCodecContext* pCodecCtx, co
         }
     }
 
-    sample.m_llTimestamp = sampleIn.m_llTimestamp;
-    sample.m_llSyncPoint = sampleIn.m_llSyncPoint;
+    mediaSample.m_llTimestamp = sampleIn.m_llTimestamp;
+    mediaSample.m_llSyncPoint = sampleIn.m_llSyncPoint;
 
-    m_pPcmPool->Commit(sample);
+    m_pPcmPool->Commit(mediaSample);
 
     return S_OK;
 }

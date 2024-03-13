@@ -226,9 +226,9 @@ int CFFmpegVideoDecoder::OnReceive(CMediaSample& sample)
 inline
 int CFFmpegVideoDecoder::Decode(AVPacket* pPacket, AVCodecContext* pCodecCtx, const CMediaSample& sampleIn)
 {
-    CMediaSample sample;
+    CMediaSample mediaSample;
     
-    if (m_pFramePool->GetEmpty(sample) != S_OK) {
+    if (m_pFramePool->GetEmpty(mediaSample) != S_OK) {
         return E_RETRY; // wait the decoded frames to be delivered
     }
 
@@ -238,7 +238,7 @@ int CFFmpegVideoDecoder::Decode(AVPacket* pPacket, AVCodecContext* pCodecCtx, co
     
     int nRet = avcodec_receive_frame(pCodecCtx, m_pFrame);
 
-    CFrame& frame = *(CFrame*)sample.m_pExten;
+    CFrame& frame = *(CFrame*)mediaSample.m_pExten;
     // resize & re-allocate the memory used for buffering decoded frames
     if (nRet == 0) {
         if (frame.m_nWidth != m_pFrame->width || frame.m_nHeight != m_pFrame->height) {
@@ -259,7 +259,7 @@ int CFFmpegVideoDecoder::Decode(AVPacket* pPacket, AVCodecContext* pCodecCtx, co
         }
     }
     
-    double lfJumpBack = (sampleIn.m_llTimestamp - sample.m_llSyncPoint) * m_pVideo->lfTimebase;
+    double lfJumpBack = (sampleIn.m_llTimestamp - mediaSample.m_llSyncPoint) * m_pVideo->lfTimebase;
     if (lfJumpBack < 0) {
         m_bJumpBack = TRUE;
         SetDecodeMode(DECODE_MODE_IP);
@@ -289,16 +289,16 @@ int CFFmpegVideoDecoder::Decode(AVPacket* pPacket, AVCodecContext* pCodecCtx, co
                       m_pFrame->data, m_pFrame->linesize, pCodecCtx->pix_fmt, m_nWidth, m_nHeight);
 #endif
     }
-    sample.m_bIgnore     = sampleIn.m_bIgnore;
-    sample.m_llTimestamp = nRet == 0 ? AdjustTimestamp(m_pFrame->best_effort_timestamp, frame.m_nDuration) : pPacket->pts;
-    sample.m_llSyncPoint = sampleIn.m_llSyncPoint;
+    mediaSample.m_bIgnore     = sampleIn.m_bIgnore;
+    mediaSample.m_llTimestamp = nRet == 0 ? AdjustTimestamp(m_pFrame->best_effort_timestamp, frame.m_nDuration) : pPacket->pts;
+    mediaSample.m_llSyncPoint = sampleIn.m_llSyncPoint;
     //Log("best effort ts: %lld, last input ts: %lld, last output ts: %lld\n", m_pYUV->best_effort_timestamp, m_llLastInputTS, m_llLastOutputTS);
     m_llLastInputTS  = nRet == 0 ? m_pFrame->best_effort_timestamp : pPacket->pts;
-    m_llLastOutputTS = sample.m_llTimestamp;
+    m_llLastOutputTS = mediaSample.m_llTimestamp;
     AssertValid(!sampleIn.m_bIgnore);
     //Log("pts: %lld, syncpt: %lld, frame type: %d, show: %d\n", sample.m_llTimestamp, sample.m_llSyncPoint, frame.m_nType, frame.m_bShow);
 
-    m_pFramePool->Commit(sample);
+    m_pFramePool->Commit(mediaSample);
 
     av_frame_unref(m_pFrame);
     
