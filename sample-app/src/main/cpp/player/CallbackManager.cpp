@@ -11,7 +11,6 @@
 #include "CallbackManager.h"
 using namespace::std;
 
-
 CCallbackManager::CCallbackManager()
 {
     

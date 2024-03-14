@@ -1,5 +1,5 @@
-#ifndef SAMPLE_PLAYER_H
-#define SAMPLE_PLAYER_H
+#ifndef GLVIDEO_FFMPEG_PLAYER_H
+#define GLVIDEO_FFMPEG_PLAYER_H
 
 #include <jni.h>
 #include <android/log.h>
@@ -171,4 +171,4 @@ JNIEXPORT jint JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPla
  */
 JNIEXPORT jint JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_pause(JNIEnv *env, jclass clazz);
 
-#endif /* SAMPLE_PLAYER_H */
+#endif /* GLVIDEO_FFMPEG_PLAYER_H */

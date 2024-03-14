@@ -91,6 +91,7 @@ extern "C" {
 #define CALLBACK_PREVIEW_STOPPED             15
 #define CALLBACK_FRAME_CAPTURED              16
 #define CALLBACK_CHECK_DEVICE                17
+
 typedef int (*PCallback)(void* pUserData, void* pReserved);
     
 typedef struct _EMSG

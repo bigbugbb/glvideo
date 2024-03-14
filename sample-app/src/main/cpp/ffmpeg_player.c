@@ -6,6 +6,7 @@
 
 #include "ffmpeg_player.h"
 #include "player_interface.h"
+#include "player_callbacks.h"
 #include "config.h"
 #include "libavcodec/jni.h"
 #include "libavutil/bprint.h"
@@ -611,6 +612,10 @@ Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_createPlayer(
     }
 
     jint result = CreatePlayer(szPath);
+//    char* psz = malloc(sizeof(char) * 128);
+//    strcpy(psz, "Hello, world!\n");
+//    SetCallback(CALLBACK_CREATE_AUDIO_SERVICE, onCreateAudio, psz, psz);
+//    SetCallback(CALLBACK_CREATE_VIDEO_SERVICE, onCreateVideo, psz, NULL);
     return result;
 }
 
