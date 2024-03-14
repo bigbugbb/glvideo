@@ -14,6 +14,7 @@ extern "C" {
 #endif
 
 #include "player/Config.h"
+#include "player/CallbackType.h"
 
 // Android中向Java层发送的消息号
 #define ON_OPENED					1
@@ -29,24 +30,6 @@ extern "C" {
 #define ON_NOTIFY_SEEK_POSITION		11
 #define ON_NOTIFY_READ_INDEX		12
 #define ON_ERROR       				13
-
-// 用于获取或设置播放器属性
-#define PLAYER_GET_STATE                   0  //获得播放器状态：
-#define PLAYER_GET_MEDIA_DURATION          1  //获得当前播放的音/视频长度(秒）
-#define PLAYER_GET_MEDIA_CURRENT_TIME      2  //获得当前播放的音/视频时间点（秒）
-#define PLAYER_GET_MEDIA_BITRATE           3
-#define PLAYER_GET_MEDIA_FORMAT_NAME       4
-#define PLAYER_GET_AUDIO_FORMAT_ID         5  //获得音频流的format id
-#define PLAYER_GET_AUDIO_CHANNEL_COUNT     6
-#define PLAYER_GET_AUDIO_TRACK_COUNT       7  //获得当前播放的音频流中channel总数
-#define PLAYER_GET_AUDIO_SAMPLE_FORMAT     8
-#define PLAYER_GET_AUDIO_SAMPLE_RATE       9  //获得音频的sample rate
-#define PLAYER_GET_AUDIO_CURRENT_TRACK    10  //获得当前的音频channel索引号
-#define PLAYER_GET_VIDEO_WIDTH            11  //获得当前图像的宽度（像素）
-#define PLAYER_GET_VIDEO_HEIGHT           12  //获得当前图像的高度（像素）
-#define PLAYER_GET_VIDEO_FORMAT_ID        13  //获得视频流的format id
-#define PLAYER_GET_VIDEO_FPS              14  //获得视频流的fps
-#define PLAYER_SET_VIDEO_LOOP_FILTER      15  
 
 // 外部请求的事件
 #define REQUEST_OUTPUT_AUDIO               0
@@ -71,26 +54,6 @@ extern "C" {
 #define STATE_INVALID             (1 << 5)
 #define STATE_UNLOADED            (1 << 6)
 #define STATE_NONE                (1 << 7)
-    
-// 需要实现的播放器外部回调函数码
-#define CALLBACK_CREATE_AUDIO_SERVICE        0
-#define CALLBACK_CREATE_VIDEO_SERVICE        1
-#define CALLBACK_UPDATE_PICTURE_SIZE         2
-#define CALLBACK_DELIVER_FRAME               3
-#define CALLBACK_PLAYBACK_FINISHED           4
-#define CALLBACK_ERROR                       5
-#define CALLBACK_BEGIN_BUFFERING             6
-#define CALLBACK_ON_BUFFERING                7
-#define CALLBACK_END_BUFFERING               8
-#define CALLBACK_SEEK_POSITION               9
-#define CALLBACK_READ_INDEX                  10
-#define CALLBACK_GET_DOWNLOAD_SPEED          11
-#define CALLBACK_OPEN_FINISHED               12
-#define CALLBACK_CLOSE_FINISHED              13
-#define CALLBACK_PREVIEW_STARTED             14
-#define CALLBACK_PREVIEW_STOPPED             15
-#define CALLBACK_FRAME_CAPTURED              16
-#define CALLBACK_CHECK_DEVICE                17
 
 typedef int (*PCallback)(int nType, void* pUserData, void* pReserved);
     
