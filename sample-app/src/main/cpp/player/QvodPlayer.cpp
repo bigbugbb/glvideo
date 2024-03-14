@@ -365,7 +365,7 @@ void CQvodPlayer::OnCreateAudio(void* pSender, EventParam& param)
     CallbackData* pcbd = g_CallbackManager->GetCallbackData(CALLBACK_CREATE_AUDIO_SERVICE);
 
     if (pcbd) {
-        (*pcbd->pfnCallback)(pcbd->pUserData, param.pUserData);
+        (*pcbd->pfnCallback)(pcbd->nCallbackType, pcbd->pUserData, param.pUserData);
     }
 }
 
@@ -375,7 +375,7 @@ void CQvodPlayer::OnCreateVideo(void* pSender, EventParam& param)
     DWORD dwDimension = param.dwParam1 | (param.dwParam2 << 16);
 
     if (pcbd) {
-        (*pcbd->pfnCallback)(pcbd->pUserData, &dwDimension);
+        (*pcbd->pfnCallback)(pcbd->nCallbackType, pcbd->pUserData, &dwDimension);
     }
 }
 
@@ -385,7 +385,7 @@ void CQvodPlayer::OnUpdatePictureSize(void* pSender, EventParam& param)
     DWORD dwDimension = param.dwParam1 | (param.dwParam2 << 16);
 
     if (pcbd) {
-        (*pcbd->pfnCallback)(pcbd->pUserData, &dwDimension);
+        (*pcbd->pfnCallback)(pcbd->nCallbackType, pcbd->pUserData, &dwDimension);
     }
 }
 
@@ -395,7 +395,7 @@ void CQvodPlayer::OnDeliverFrame(void* pSender, EventParam& param)
     CallbackData* pcbd = g_CallbackManager->GetCallbackData(CALLBACK_DELIVER_FRAME);
 
     if (pcbd) {
-        (*pcbd->pfnCallback)(pcbd->pUserData, param.pUserData);
+        (*pcbd->pfnCallback)(pcbd->nCallbackType, pcbd->pUserData, param.pUserData);
     }
 }
 
@@ -405,7 +405,7 @@ void CQvodPlayer::OnFrameCaptured(void* pSender, EventParam& param)
     
     if (param.pUserData == NULL) {
         if (pcbd) {
-            (*pcbd->pfnCallback)(pcbd->pUserData, NULL);
+            (*pcbd->pfnCallback)(pcbd->nCallbackType, pcbd->pUserData, NULL);
         }
         return;
     }
@@ -423,7 +423,7 @@ void CQvodPlayer::OnFrameCaptured(void* pSender, EventParam& param)
     LOG_RGB(fi.pContent, fi.nStride, fi.nHeight);
 #endif
     if (pcbd) {
-        (*pcbd->pfnCallback)(pcbd->pUserData, &fi);
+        (*pcbd->pfnCallback)(pcbd->nCallbackType, pcbd->pUserData, &fi);
     }
 }
 
@@ -432,7 +432,7 @@ void CQvodPlayer::OnOpenFinished(void* pSender, EventParam& param)
     CallbackData* pcbd = g_CallbackManager->GetCallbackData(CALLBACK_OPEN_FINISHED);
 
     if (pcbd) {
-        (*pcbd->pfnCallback)(pcbd->pUserData, param.pUserData);
+        (*pcbd->pfnCallback)(pcbd->nCallbackType, pcbd->pUserData, param.pUserData);
     }
 }
 
@@ -450,7 +450,7 @@ void CQvodPlayer::OnCloseFinished(void* pSender, EventParam& param)
     CallbackData* pcbd = g_CallbackManager->GetCallbackData(CALLBACK_CLOSE_FINISHED);
 
     if (pcbd) {
-        (*pcbd->pfnCallback)(pcbd->pUserData, param.pUserData);
+        (*pcbd->pfnCallback)(pcbd->nCallbackType, pcbd->pUserData, param.pUserData);
     }
 }
 
@@ -464,7 +464,7 @@ void CQvodPlayer::OnEncounterError(void* pSender, EventParam& param)
     CallbackData* pcbd = g_CallbackManager->GetCallbackData(CALLBACK_ERROR);
 
     if (pcbd) {
-        (*pcbd->pfnCallback)(pcbd->pUserData, (void *) param.dwParam1);
+        (*pcbd->pfnCallback)(pcbd->nCallbackType, pcbd->pUserData, (void *) param.dwParam1);
     }
 }
 
@@ -496,7 +496,7 @@ void CQvodPlayer::OnAudioEOS(void* pSender, EventParam& param)
     if (m_pPlayerManager->IsVideoEOS()) {
         CallbackData* pcbd = g_CallbackManager->GetCallbackData(CALLBACK_PLAYBACK_FINISHED);
         if (pcbd) {
-            (*pcbd->pfnCallback)(pcbd->pUserData, param.pUserData);
+            (*pcbd->pfnCallback)(pcbd->nCallbackType, pcbd->pUserData, param.pUserData);
         }
     }
 }
@@ -507,7 +507,7 @@ void CQvodPlayer::OnVideoEOS(void* pSender, EventParam& param)
     if (m_pPlayerManager->IsAudioEOS()) {
         CallbackData* pcbd = g_CallbackManager->GetCallbackData(CALLBACK_PLAYBACK_FINISHED);
         if (pcbd) {
-            (*pcbd->pfnCallback)(pcbd->pUserData, param.pUserData);
+            (*pcbd->pfnCallback)(pcbd->nCallbackType, pcbd->pUserData, param.pUserData);
         }
     }
 }
@@ -517,7 +517,7 @@ void CQvodPlayer::OnCheckDevice(void* pSender, EventParam& param)
     CallbackData* pcbd = g_CallbackManager->GetCallbackData(CALLBACK_CHECK_DEVICE);
 
     if (pcbd) {
-        (*pcbd->pfnCallback)(pcbd->pUserData, param.pUserData);
+        (*pcbd->pfnCallback)(pcbd->nCallbackType, pcbd->pUserData, param.pUserData);
     }
 }
 

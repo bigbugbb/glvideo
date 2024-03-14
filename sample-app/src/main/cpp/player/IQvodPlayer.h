@@ -11,7 +11,7 @@
 
 #include "Utils.h"
 
-typedef int (*PCallback)(void* pUserData, void* pReserved);
+typedef int (*PCallback)(int nType, void* pUserData, void* pReserved);
 
 struct IQvodPlayer
 {

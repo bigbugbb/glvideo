@@ -66,7 +66,7 @@ void CBufferingManager::Reset()
     
     if (m_bBuffering) {
         NotifyEvent(EVENT_WAIT_FOR_RESOURCES, FALSE, TRUE/*FORCE CANCEL*/, NULL); 
-        (*m_pcbdEnd->pfnCallback)(m_pcbdEnd->pUserData, m_pcbdEnd->pReserved);
+        (*m_pcbdEnd->pfnCallback)(m_pcbdEnd->nCallbackType, m_pcbdEnd->pUserData, m_pcbdEnd->pReserved);
         m_bBuffering = FALSE;
     }
     
@@ -144,7 +144,7 @@ int CBufferingManager::BeginBuffering()
     m_lfPart2Progress = 0;
     m_lfPart3Progress = 0;
     
-    (*m_pcbdBeg->pfnCallback)(m_pcbdBeg->pUserData, m_pcbdBeg->pReserved);
+    (*m_pcbdBeg->pfnCallback)(m_pcbdBeg->nCallbackType, m_pcbdBeg->pUserData, m_pcbdBeg->pReserved);
     
     gettimeofday(&m_tmLast, NULL);
     
@@ -165,9 +165,9 @@ int CBufferingManager::OnBuffering()
     }
     
     int nSpeed = 0;
-    (*m_pcbdSpd->pfnCallback)(m_pcbdBuf->pUserData, &nSpeed);
+    (*m_pcbdSpd->pfnCallback)(m_pcbdBuf->nCallbackType, m_pcbdBuf->pUserData, &nSpeed);
     if (nSpeed <= 0) {
-        (*m_pcbdBuf->pfnCallback)(m_pcbdBuf->pUserData, &m_lfProgress);
+        (*m_pcbdBuf->pfnCallback)(m_pcbdBuf->nCallbackType, m_pcbdBuf->pUserData, &m_lfProgress);
         return S_OK;
     }
     
@@ -186,7 +186,7 @@ int CBufferingManager::OnBuffering()
     m_lfPart3Progress = (m_lfPart3Progress >= m_lfPart3) ? m_lfPart3 : m_lfPart3Progress;
     
     m_lfProgress = m_lfPart1Progress + m_lfPart2Progress + m_lfPart3Progress;
-    (*m_pcbdBuf->pfnCallback)(m_pcbdBuf->pUserData, &m_lfProgress);
+    (*m_pcbdBuf->pfnCallback)(m_pcbdBuf->nCallbackType, m_pcbdBuf->pUserData, &m_lfProgress);
 
     return S_OK;
 }
@@ -196,8 +196,8 @@ int CBufferingManager::EndBuffering()
     m_lfProgress = 1;
     m_bBuffering = FALSE;
 
-    (*m_pcbdBuf->pfnCallback)(m_pcbdBuf->pUserData, &m_lfProgress);
-    (*m_pcbdEnd->pfnCallback)(m_pcbdEnd->pUserData, m_pcbdEnd->pReserved);
+    (*m_pcbdBuf->pfnCallback)(m_pcbdBuf->nCallbackType, m_pcbdBuf->pUserData, &m_lfProgress);
+    (*m_pcbdEnd->pfnCallback)(m_pcbdBuf->nCallbackType, m_pcbdEnd->pUserData, m_pcbdEnd->pReserved);
     
     NotifyEvent(EVENT_WAIT_FOR_RESOURCES, FALSE, FALSE, NULL);
     

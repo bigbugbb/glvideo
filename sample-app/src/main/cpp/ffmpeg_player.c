@@ -612,9 +612,9 @@ Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_createPlayer(
     }
 
     jint result = CreatePlayer(szPath);
-//    char* psz = malloc(sizeof(char) * 128);
-//    strcpy(psz, "Hello, world!\n");
-//    SetCallback(CALLBACK_CREATE_AUDIO_SERVICE, onCreateAudio, psz, psz);
+    char* psz = malloc(sizeof(char) * 128);
+    strcpy(psz, "Hello, world!\n");
+    SetCallback(CALLBACK_CREATE_AUDIO_SERVICE, onPlayerCallback, psz, psz);
 //    SetCallback(CALLBACK_CREATE_VIDEO_SERVICE, onCreateVideo, psz, NULL);
     return result;
 }

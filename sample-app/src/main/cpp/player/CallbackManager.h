@@ -12,7 +12,7 @@
 #include "DependencyObject.h"
 #include <map>
 
-typedef int (*PCallback)(void* pUserData, void* pReserved);
+typedef int (*PCallback)(int nType, void* pUserData, void* pReserved);
 
 struct CallbackData 
 {

@@ -7,12 +7,9 @@
 #include "ffmpeg_player.h"
 #include "player_interface.h"
 
-int onCreateAudio(void* pUserData, void* pReserved) {
-    LOGD("onCreateAudio");
+int onPlayerCallback(int nType, void* pUserData, void* pReserved) {
+    LOGD("onPlayerCallback %d", nType);
 }
 
-int onCreateVideo(void* pUserData, void* pReserved) {
-    LOGD("onCreateVideo");
-}
 
 

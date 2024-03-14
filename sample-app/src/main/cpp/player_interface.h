@@ -92,7 +92,7 @@ extern "C" {
 #define CALLBACK_FRAME_CAPTURED              16
 #define CALLBACK_CHECK_DEVICE                17
 
-typedef int (*PCallback)(void* pUserData, void* pReserved);
+typedef int (*PCallback)(int nType, void* pUserData, void* pReserved);
     
 typedef struct _EMSG
 {
