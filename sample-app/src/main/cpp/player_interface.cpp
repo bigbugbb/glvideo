@@ -35,12 +35,12 @@ int CreatePlayer(const char* szPath)
 #ifdef LOG_VIDEO_RGB
     strPathRGB = szPath;
     strPathRGB += "/rgb";
-#endif 
+#endif
 
 #ifdef LOG_TO_FILE
     strPathLog = szPath;
     strPathLog += "/player_log.txt";
-#endif    
+#endif
     
     g_pPlayer = CQvodPlayer::GetInstance();
     if (!g_pPlayer) {

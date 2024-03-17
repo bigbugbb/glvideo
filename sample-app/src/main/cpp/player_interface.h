@@ -24,45 +24,35 @@ extern "C" {
 #define ON_END_BUFFERING			5
 #define ON_BUFFERING				6
 #define ON_VIDEO_SIZE_CHANGED		7
-#define ON_PREVIEW_STARTED		    8
-#define ON_PREVIEW_CAPTURED			9
-#define ON_PREVIEW_STOPPED			10
-#define ON_NOTIFY_SEEK_POSITION		11
-#define ON_NOTIFY_READ_INDEX		12
-#define ON_ERROR       				13
+#define ON_NOTIFY_SEEK_POSITION		8
+#define ON_NOTIFY_READ_INDEX		9
+#define ON_ERROR       				10
 
 // 外部请求的事件
-#define REQUEST_OUTPUT_AUDIO               0
-#define REQUEST_OUTPUT_VIDEO               1
-#define REQUEST_INTERRUPT_AUDIO            2
+#define REQUEST_OUTPUT_AUDIO        0
+#define REQUEST_OUTPUT_VIDEO        1
+#define REQUEST_INTERRUPT_AUDIO     2
     
 // 外部用到的错误码
-#define S_OK                 0  
-#define E_FAIL              -1  
-#define E_NOIMPL            -2 
-#define E_OUTOFMEMORY       -3   
-#define E_IO                -4 
+#define S_OK                 0
+#define E_FAIL              -1
+#define E_NOIMPL            -2
+#define E_OUTOFMEMORY       -3
+#define E_IO                -4
 #define E_BADSTREAM         -5
 #define E_NOCODECS          -6
 #define E_UNSUPPORTED       -7
 #define E_BADPREVIEW        -8
     
 // 外部可能用到的播放器状态码
-#define STATE_LOADED              (1)
-#define STATE_EXECUTE             (1 << 3)
-#define STATE_PAUSE               (1 << 4)
-#define STATE_INVALID             (1 << 5)
-#define STATE_UNLOADED            (1 << 6)
-#define STATE_NONE                (1 << 7)
+#define STATE_LOADED        (1)
+#define STATE_EXECUTE       (1 << 3)
+#define STATE_PAUSE         (1 << 4)
+#define STATE_INVALID       (1 << 5)
+#define STATE_UNLOADED      (1 << 6)
+#define STATE_NONE          (1 << 7)
 
 typedef int (*PCallback)(int nType, void* pUserData, void* pReserved);
-    
-typedef struct _EMSG
-{
-    int    eID;
-    void*  pParam1;
-    void*  pParam2;
-} EMSG;
 
 typedef struct _FRAMEINFO
 {

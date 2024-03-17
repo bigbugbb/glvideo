@@ -534,13 +534,6 @@ int CFFmpegDemuxer::Load()
         NotifyEvent(EVENT_CREATE_VIDEO, 0, 0, NULL);
     }
 
-    BOOL bSupport = TRUE;
-    NotifyEvent(EVENT_CHECK_DEVICE, 0, 0, &bSupport);
-    if (!bSupport) {
-        NotifyEvent(EVENT_ENCOUNTER_ERROR, E_UNSUPPORTED, 0, NULL);
-        return E_FAIL;
-    }
-
     UpdateSyncPoint(0);
     m_llStartTime = m_llSyncPoint; // first key frame timestamp
     if (m_lfOffset > 0 && m_lfOffset <= m_video.llFormatDuration / AV_TIME_BASE) {

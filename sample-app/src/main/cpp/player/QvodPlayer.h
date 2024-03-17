@@ -87,8 +87,7 @@ protected:
     void OnAudioNeedData(void* pSender, EventParam& param);
     void OnAudioEOS(void* pSender, EventParam& param);
     void OnVideoEOS(void* pSender, EventParam& param);
-    void OnCheckDevice(void* pSender, EventParam& param);
-    
+
     CEvent  m_Respond[RESPOND_COUNT];
     
     IFFmpegDemuxer*       m_pDemuxer;

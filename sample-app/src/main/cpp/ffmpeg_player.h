@@ -34,77 +34,6 @@
 #define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, LIB_NAME, __VA_ARGS__)
 
 /**
- * Sets log level.
- *
- * @param env pointer to native method interface
- * @param object reference to the class on which this method is invoked
- * @param level log level
- */
-JNIEXPORT void JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_setNativeLogLevel(JNIEnv *env, jclass object, jint level);
-
-/**
- * Returns current log level.
- *
- * @param env pointer to native method interface
- * @param object reference to the class on which this method is invoked
- */
-JNIEXPORT jint JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_getNativeLogLevel(JNIEnv *env, jclass object);
-
-/**
- * Disables log redirection.
- *
- * @param env pointer to native method interface
- * @param object reference to the class on which this method is invoked
- */
-JNIEXPORT void JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_enableNativeRedirection(JNIEnv *env, jclass object);
-
-/**
- * Disables log redirection.
- *
- * @param env pointer to native method interface
- * @param object reference to the class on which this method is invoked
- */
-JNIEXPORT void JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_disableNativeRedirection(JNIEnv *env, jclass object);
-
-/**
- * Returns FFmpeg version bundled within the library natively.
- *
- * @param env pointer to native method interface
- * @param object reference to the class on which this method is invoked
- * @return FFmpeg version string
- */
-JNIEXPORT jstring JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_getNativeFFmpegVersion(JNIEnv *env, jclass object);
-
-/**
- * Returns FFmpegKit library version natively.
- *
- * @param env pointer to native method interface
- * @param object reference to the class on which this method is invoked
- * @return FFmpegKit version string
- */
-JNIEXPORT jstring JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_getNativeVersion(JNIEnv *env, jclass object);
-
-/**
- * Sets an environment variable natively
- *
- * @param env pointer to native method interface
- * @param object reference to the class on which this method is invoked
- * @param variableName environment variable name
- * @param variableValue environment variable value
- * @return zero on success, non-zero on error
- */
-JNIEXPORT int JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_setNativeEnvironmentVariable(JNIEnv *env, jclass object, jstring variableName, jstring variableValue);
-
-/**
- * Registers a new ignored signal. Ignored signals are not handled by the library.
- *
- * @param env pointer to native method interface
- * @param object reference to the class on which this method is invoked
- * @param signum signal number
- */
-JNIEXPORT void JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_ignoreNativeSignal(JNIEnv *env, jclass object, jint signum);
-
-/**
  * Create the player powered by FFmpeg.
  *
  * @param env pointer to native method interface
@@ -112,7 +41,7 @@ JNIEXPORT void JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPla
  * @param path the path of the media from local file or network
  * @return zero on success, non-zero on error
  */
-JNIEXPORT int JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_createPlayer(JNIEnv *env, jclass object, jstring path);
+JNIEXPORT int JNICALL FFmpegPlayer_createPlayer(JNIEnv *env, jclass object, jstring path);
 
 /**
  * Create the player powered by FFmpeg.
@@ -121,7 +50,7 @@ JNIEXPORT int JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlay
  * @param object reference to the class on which this method is invoked
  * @return zero on success, non-zero on error
  */
-JNIEXPORT int JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_destroyPlayer(JNIEnv *env, jclass object);
+JNIEXPORT int JNICALL FFmpegPlayer_destroyPlayer(JNIEnv *env, jclass object);
 
 /**
  * Create the player powered by FFmpeg.
@@ -132,7 +61,7 @@ JNIEXPORT int JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlay
  * @param offset the offset in the media
  * @return zero on success, non-zero on error
  */
-JNIEXPORT int JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_openPlayer(JNIEnv *env, jclass clazz, jstring path, jdouble offset);
+JNIEXPORT int JNICALL FFmpegPlayer_openPlayer(JNIEnv *env, jclass clazz, jstring path, jdouble offset);
 
 /**
  * Close the player opened.
@@ -141,7 +70,7 @@ JNIEXPORT int JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlay
  * @param object reference to the class on which this method is invoked
  * @return zero on success, non-zero on error
  */
-JNIEXPORT jint JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_closePlayer(JNIEnv *env, jclass clazz);
+JNIEXPORT jint JNICALL FFmpegPlayer_closePlayer(JNIEnv *env, jclass clazz);
 
 /**
  * Start playing.
@@ -150,7 +79,7 @@ JNIEXPORT jint JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPla
  * @param object reference to the class on which this method is invoked
  * @return zero on success, non-zero on error
  */
-JNIEXPORT jint JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_play(JNIEnv *env, jclass clazz);
+JNIEXPORT jint JNICALL FFmpegPlayer_play(JNIEnv *env, jclass clazz);
 
 /**
  * Seek to a time offset.
@@ -160,7 +89,7 @@ JNIEXPORT jint JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPla
  * @param offset the offset in the media
  * @return zero on success, non-zero on error
  */
-JNIEXPORT jint JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_seek(JNIEnv *env, jclass clazz, jdouble offset);
+JNIEXPORT jint JNICALL FFmpegPlayer_seek(JNIEnv *env, jclass clazz, jdouble offset);
 
 /**
  * Pause playing.
@@ -169,6 +98,6 @@ JNIEXPORT jint JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPla
  * @param object reference to the class on which this method is invoked
  * @return zero on success, non-zero on error
  */
-JNIEXPORT jint JNICALL Java_com_binbo_glvideo_sample_1app_utils_player_FFmpegPlayerConfig_pause(JNIEnv *env, jclass clazz);
+JNIEXPORT jint JNICALL FFmpegPlayer_pause(JNIEnv *env, jclass clazz);
 
 #endif /* GLVIDEO_FFMPEG_PLAYER_H */

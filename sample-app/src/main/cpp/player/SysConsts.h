@@ -59,6 +59,5 @@ const int EVENT_AUDIO_ONLY              = 16;
 const int EVENT_VIDEO_ONLY              = 17;
 const int EVENT_DISCARD_VIDEO_PACKET    = 18;
 const int EVENT_AUDIO_NEED_DATA         = 19;
-const int EVENT_CHECK_DEVICE            = 20;
 
 #endif

@@ -9,7 +9,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.binbo.glvideo.sample_app.databinding.ActivityMainBinding
-import com.binbo.glvideo.sample_app.utils.player.FFmpegPlayerConfig
+import com.binbo.glvideo.sample_app.utils.player.FFmpegPlayer
 import com.tbruyelle.rxpermissions3.RxPermissions
 
 class MainActivity : AppCompatActivity() {
@@ -31,8 +31,10 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         binding.viewNav.setupWithNavController(navController)
 
-        FFmpegPlayerConfig.createPlayer("/storage/emulated/0/Download/takongle.mp4")
-        FFmpegPlayerConfig.openPlayer("/storage/emulated/0/Download/takongle.mp4", 0.0);
+//        System.loadLibrary("ffmpeg_player")
+//
+//        FFmpegPlayer.createPlayer("/storage/emulated/0/Download/takongle.mp4")
+//        FFmpegPlayer.openPlayer("/storage/emulated/0/Download/takongle.mp4", 0.0);
 
         RxPermissions(this)
             .request(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -47,9 +49,5 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         private const val TAG = "MainActivity"
-
-        init {
-            System.loadLibrary("ffmpeg_player")
-        }
     }
 }
