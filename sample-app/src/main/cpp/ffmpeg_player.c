@@ -123,7 +123,7 @@ static int onPlayerCallback(int nType, void* pUserData, void* pReserved) {
             onFrameSizeUpdated(pReserved);
             break;
         case CALLBACK_FRAME_AVAILABLE:
-            onFrameAvailable(pUserData);
+            onFrameAvailable(pReserved);
             break;
         case CALLBACK_PLAYBACK_COMPLETED:
             onPlaybackCompleted();

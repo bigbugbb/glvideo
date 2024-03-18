@@ -303,7 +303,7 @@ inline
 void CVideoRenderer::DeliverFrame(CFrame* pFrame)
 {
 #ifdef iOS
-    NotifyEvent(EVENT_DELIVER_FRAME, 0, 0, pFrame->m_frame.data[0]);
+    NotifyEvent(EVENT_DELIVER_FRAME, 0, 0, pFrame->m_frame);
 #else
     NotifyEvent(EVENT_DELIVER_FRAME, 0, 0, &pFrame->m_frame);
 #endif

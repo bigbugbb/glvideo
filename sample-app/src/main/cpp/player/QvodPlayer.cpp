@@ -392,7 +392,7 @@ void CQvodPlayer::OnDeliverFrame(void* pSender, EventParam& param)
     CallbackData* pcbd = g_CallbackManager->GetCallbackData(CALLBACK_FRAME_AVAILABLE);
 
     if (pcbd) {
-        (*pcbd->pfnCallback)(pcbd->nCallbackType, param.pUserData, NULL);
+        (*pcbd->pfnCallback)(pcbd->nCallbackType, NULL, param.pUserData);
     }
 }
 
