@@ -6,6 +6,7 @@
 
 #include "ffmpeg_player.h"
 #include "player_interface.h"
+#include "player/components/FFmpegData.h"
 #include "config.h"
 #include "libavcodec/jni.h"
 #include "libavutil/bprint.h"
@@ -47,16 +48,18 @@ JNINativeMethod playerMethods[] = {
     {"pause", "()I", FFmpegPlayer_pause}
 };
 
-static void onAudioDecoderCreated() {
+static void onAudioDecoderCreated(struct AudioInfo* pAudioInfo) {
 
 }
 
-static void onVideoDecoderCreated() {
+static void onVideoDecoderCreated(struct VideoInfo* pVideoInfo) {
 
 }
 
-static void onFrameSizeUpdated() {
-
+static void onFrameSizeUpdated(int32_t* pDimen) {
+    int width = *pDimen & 0xFFFF;
+    int height = (*pDimen >> 16) & 0xFFFF;
+    LOGD("onFrameSizeUpdated %d %d", width, height);
 }
 
 static void onFrameAvailable(AVFrame* pFrame) {
@@ -76,6 +79,18 @@ static void onPlayerError() {
 
 }
 
+static void onBeginBuffering() {
+
+}
+
+static void onBuffering() {
+
+}
+
+static void onEndBuffering() {
+
+}
+
 static void onSeekPosition() {
 
 }
@@ -92,20 +107,20 @@ static void onPlayerClosed() {
 
 }
 
-static void onFrameCaptured() {
+static void onFrameCaptured(AVFrame* pFrame) {
 
 }
 
 static int onPlayerCallback(int nType, void* pUserData, void* pReserved) {
     switch (nType) {
         case CALLBACK_CREATE_AUDIO_SERVICE:
-            onAudioDecoderCreated();
+            onAudioDecoderCreated(pReserved);
             break;
         case CALLBACK_CREATE_VIDEO_SERVICE:
-            onVideoDecoderCreated();
+            onVideoDecoderCreated(pReserved);
             break;
         case CALLBACK_UPDATE_FRAME_SIZE:
-            onFrameSizeUpdated();
+            onFrameSizeUpdated(pReserved);
             break;
         case CALLBACK_FRAME_AVAILABLE:
             onFrameAvailable(pUserData);
@@ -117,10 +132,13 @@ static int onPlayerCallback(int nType, void* pUserData, void* pReserved) {
             onPlayerError();
             break;
         case CALLBACK_BEGIN_BUFFERING:
+            onBeginBuffering();
             break;
         case CALLBACK_ON_BUFFERING:
+            onBuffering();
             break;
         case CALLBACK_END_BUFFERING:
+            onEndBuffering();
             break;
         case CALLBACK_SEEK_POSITION:
             onSeekPosition();
@@ -137,7 +155,7 @@ static int onPlayerCallback(int nType, void* pUserData, void* pReserved) {
             onPlayerClosed();
             break;
         case CALLBACK_FRAME_CAPTURED:
-            onFrameCaptured();
+            onFrameCaptured(pReserved);
             break;
     }
 }

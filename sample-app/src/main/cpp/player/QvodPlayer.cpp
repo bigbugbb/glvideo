@@ -372,7 +372,7 @@ void CQvodPlayer::OnCreateVideo(void* pSender, EventParam& param)
     DWORD dwDimension = param.dwParam1 | (param.dwParam2 << 16);
 
     if (pcbd) {
-        (*pcbd->pfnCallback)(pcbd->nCallbackType, pcbd->pUserData, &dwDimension);
+        (*pcbd->pfnCallback)(pcbd->nCallbackType, pcbd->pUserData, param.pUserData);
     }
 }
 
@@ -402,7 +402,7 @@ void CQvodPlayer::OnFrameCaptured(void* pSender, EventParam& param)
     
     if (param.pUserData == NULL) {
         if (pcbd) {
-            (*pcbd->pfnCallback)(pcbd->nCallbackType, pcbd->pUserData, NULL);
+            (*pcbd->pfnCallback)(pcbd->nCallbackType, pcbd->pUserData, param.pUserData);
         }
         return;
     }

@@ -500,7 +500,9 @@ int CFFmpegDemuxer::Load()
     maintain_avio();
     ReleaseResources();
 
-    if (avformat_open_input(&m_format.pFormatContext, m_strURL.c_str(), NULL, NULL) != 0) {
+    int n = avformat_open_input(&m_format.pFormatContext, m_strURL.c_str(), NULL, NULL);
+    if (n != 0) {
+        Log("%s", buf)
         NotifyEvent(EVENT_ENCOUNTER_ERROR, E_IO, 0, NULL);
         return E_FAIL;
     }
@@ -528,10 +530,10 @@ int CFFmpegDemuxer::Load()
         return E_FAIL;
     }
     if (m_format.bDecodeAudio) {
-    	NotifyEvent(EVENT_CREATE_AUDIO, 0, 0, NULL);
+    	NotifyEvent(EVENT_CREATE_AUDIO, 0, 0, &m_audio);
     }
     if (m_format.bDecodeVideo) {
-        NotifyEvent(EVENT_CREATE_VIDEO, 0, 0, NULL);
+        NotifyEvent(EVENT_CREATE_VIDEO, 0, 0, &m_video);
     }
 
     UpdateSyncPoint(0);

@@ -273,7 +273,9 @@ int CFFmpegVideoDecoder::Decode(AVPacket* pPacket, AVCodecContext* pCodecCtx, co
     if (m_pFrame->pict_type == AV_PICTURE_TYPE_I || m_pFrame->pict_type == AV_PICTURE_TYPE_SI) {
         WaitKeyFrame(FALSE);
     } else if (m_pFrame->pict_type == AV_PICTURE_TYPE_NONE) {
-        if (IsIntraOnly(pCodecCtx->codec_id)) WaitKeyFrame(FALSE);
+        if (IsIntraOnly(pCodecCtx->codec_id)) {
+            WaitKeyFrame(FALSE);
+        }
     }
     
     frame.m_nType     = m_pFrame->pict_type;

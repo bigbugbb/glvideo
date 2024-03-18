@@ -4,7 +4,6 @@
 #include <jni.h>
 #include <android/log.h>
 
-#include "libavcodec/avcodec.h"
 #include "libavutil/log.h"
 #include "libavutil/ffversion.h"
 
