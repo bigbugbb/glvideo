@@ -72,7 +72,7 @@ protected:
     // Some event handlers
     void OnCreateAudio(void* pSender, EventParam& param);
     void OnCreateVideo(void* pSender, EventParam& param);
-    void OnUpdatePictureSize(void* pSender, EventParam& param);
+    void OnUpdateFrameSize(void* pSender, EventParam& param);
     void OnDeliverFrame(void* pSender, EventParam& param);
     void OnFrameCaptured(void* pSender, EventParam& param);
     void OnOpenFinished(void* pSender, EventParam& param);

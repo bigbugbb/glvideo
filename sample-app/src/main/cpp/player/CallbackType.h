@@ -12,7 +12,7 @@
 #define CALLBACK_CREATE_AUDIO_SERVICE        0
 #define CALLBACK_CREATE_VIDEO_SERVICE        1
 #define CALLBACK_UPDATE_FRAME_SIZE           2
-#define CALLBACK_DELIVER_FRAME               3
+#define CALLBACK_FRAME_AVAILABLE             3
 #define CALLBACK_PLAYBACK_COMPLETED          4
 #define CALLBACK_ERROR                       5
 #define CALLBACK_BEGIN_BUFFERING             6

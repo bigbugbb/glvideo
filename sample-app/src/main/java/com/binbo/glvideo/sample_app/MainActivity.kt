@@ -31,10 +31,10 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         binding.viewNav.setupWithNavController(navController)
 
-//        System.loadLibrary("ffmpeg_player")
-//
-//        FFmpegPlayer.createPlayer("/storage/emulated/0/Download/takongle.mp4")
-//        FFmpegPlayer.openPlayer("/storage/emulated/0/Download/takongle.mp4", 0.0);
+        System.loadLibrary("ffmpeg_player")
+
+        FFmpegPlayer.createPlayer("/storage/emulated/0/Download/takongle.mp4")
+        FFmpegPlayer.openPlayer("/storage/emulated/0/Download/takongle.mp4", 0.0)
 
         RxPermissions(this)
             .request(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)

@@ -59,8 +59,13 @@ static void onFrameSizeUpdated() {
 
 }
 
-static void onDeliverFrame() {
+static void onFrameAvailable(AVFrame* pFrame) {
+    int width = pFrame->width;
+    int height = pFrame->height;
+    uint8_t** data = pFrame->data;
+    int* linesize = pFrame->linesize;
 
+    LOGD("onFrameAvailable");
 }
 
 static void onPlaybackCompleted() {
@@ -102,8 +107,8 @@ static int onPlayerCallback(int nType, void* pUserData, void* pReserved) {
         case CALLBACK_UPDATE_FRAME_SIZE:
             onFrameSizeUpdated();
             break;
-        case CALLBACK_DELIVER_FRAME:
-            onDeliverFrame();
+        case CALLBACK_FRAME_AVAILABLE:
+            onFrameAvailable(pUserData);
             break;
         case CALLBACK_PLAYBACK_COMPLETED:
             onPlaybackCompleted();
@@ -141,7 +146,7 @@ static int registerPlayerCallbacks() {
     SetCallback(CALLBACK_CREATE_AUDIO_SERVICE, onPlayerCallback, NULL, NULL);
     SetCallback(CALLBACK_CREATE_VIDEO_SERVICE, onPlayerCallback, NULL, NULL);
     SetCallback(CALLBACK_UPDATE_FRAME_SIZE, onPlayerCallback, NULL, NULL);
-    SetCallback(CALLBACK_DELIVER_FRAME, onPlayerCallback, NULL, NULL);
+    SetCallback(CALLBACK_FRAME_AVAILABLE, onPlayerCallback, NULL, NULL);
     SetCallback(CALLBACK_PLAYBACK_COMPLETED, onPlayerCallback, NULL, NULL);
     SetCallback(CALLBACK_ERROR, onPlayerCallback, NULL, NULL);
     SetCallback(CALLBACK_BEGIN_BUFFERING, onPlayerCallback, NULL, NULL);

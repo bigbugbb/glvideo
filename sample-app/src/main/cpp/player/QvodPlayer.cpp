@@ -306,7 +306,7 @@ int CQvodPlayer::ReceiveEvent(void* pSender, int nEvent, DWORD dwParam1, DWORD d
         OnCreateVideo(pSender, param);
         break;
     case EVENT_UPDATE_VIDEO_FRAME_SIZE:
-        OnUpdatePictureSize(pSender, param);
+        OnUpdateFrameSize(pSender, param);
         break;
     case EVENT_DELIVER_FRAME:
         OnDeliverFrame(pSender, param);
@@ -376,7 +376,7 @@ void CQvodPlayer::OnCreateVideo(void* pSender, EventParam& param)
     }
 }
 
-void CQvodPlayer::OnUpdatePictureSize(void* pSender, EventParam& param)
+void CQvodPlayer::OnUpdateFrameSize(void* pSender, EventParam& param)
 {
     CallbackData* pcbd = g_CallbackManager->GetCallbackData(CALLBACK_UPDATE_FRAME_SIZE);
     DWORD dwDimension = param.dwParam1 | (param.dwParam2 << 16);
@@ -389,10 +389,10 @@ void CQvodPlayer::OnUpdatePictureSize(void* pSender, EventParam& param)
 inline
 void CQvodPlayer::OnDeliverFrame(void* pSender, EventParam& param)
 {
-    CallbackData* pcbd = g_CallbackManager->GetCallbackData(CALLBACK_DELIVER_FRAME);
+    CallbackData* pcbd = g_CallbackManager->GetCallbackData(CALLBACK_FRAME_AVAILABLE);
 
     if (pcbd) {
-        (*pcbd->pfnCallback)(pcbd->nCallbackType, pcbd->pUserData, param.pUserData);
+        (*pcbd->pfnCallback)(pcbd->nCallbackType, param.pUserData, NULL);
     }
 }
 
