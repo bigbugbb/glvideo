@@ -305,10 +305,10 @@ void CVideoRenderer::DeliverFrame(CFrame* pFrame)
 #ifdef iOS
     NotifyEvent(EVENT_DELIVER_FRAME, 0, 0, pFrame->m_frame);
 #else
-    NotifyEvent(EVENT_DELIVER_FRAME, 0, 0, &pFrame->m_frame);
+    NotifyEvent(EVENT_DELIVER_FRAME, 0, 0, pFrame->m_pFrame);
 #endif
     if (m_bCapture) { // no need to lock
-        m_pCapturer->CaptureFrame(this, &pFrame->m_frame);
+        m_pCapturer->CaptureFrame(this, pFrame->m_pFrame);
         m_bCapture = FALSE;
     }
 }

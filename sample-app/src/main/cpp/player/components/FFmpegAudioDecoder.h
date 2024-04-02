@@ -47,15 +47,20 @@ protected:
     
     virtual THREAD_RETURN ThreadProc();
     int Decode(AVPacket* pPacket, AVCodecContext* pCodecCtx, const CMediaSample& sampleIn);
+
+    int Resample(AVCodecContext* pCodec, CAudioFrame& audioFrame, AVFrame* pSrcFrame);
+    void InitOutFrame(int64_t dst_nb_samples);
     
     CEvent          m_sync;
 
-    ISamplePool*    m_pPcmPool;
+    ISamplePool*    m_pFramePool;
     ISamplePool*    m_pAudioPool;
     CMediaObject*   m_pRenderer;
 
     AVFrame*        m_pFrame;
     AudioInfo*      m_pAudio;
+
+    SwrContext*     m_pSwrContext;
 };
 
 #endif

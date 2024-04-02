@@ -20,43 +20,28 @@ public:
 
 const int FRAME_POOL_SIZE = 6;
 
-class CFramePool : public CSamplePool
+class CVideoFramePool : public CSamplePool
 {
 public:
-    CFramePool();
-    virtual ~CFramePool();
+    CVideoFramePool();
+    virtual ~CVideoFramePool();
     
     int Flush();
     int Reset();
 protected:
-    CFrame  m_Frames[FRAME_POOL_SIZE];
+    CVideoFrame m_Frames[FRAME_POOL_SIZE];
 };
 
-const int PCM_BUFFER_COUNT = 30;
-const int PCM_BUFFER_SIZE = AVCODEC_MAX_AUDIO_FRAME_SIZE * PCM_BUFFER_COUNT * 3 / 2;
-
-class CPcmPool : public CSamplePool
+class CAudioFramePool : public CSamplePool
 {
 public:
-    CPcmPool();
-    virtual ~CPcmPool();
+    CAudioFramePool();
+    virtual ~CAudioFramePool();
     
     int Flush();
-    int GetSize();
-    int Commit(const CMediaSample& sample);
-    void Consume(int nConsumed);
     
 protected:
-    int     m_nSize;
-    CLock   m_csSize;
-    
-    // I used to adopt the following DECLARE_ALIGNED to alloc a 16-byte-aligned buffer,
-    // which works well on iOS. However, it has no effect on android, perhaps
-    // this DECLARE_ALIGNED is not supported by the corresponding c++ compiler in NDK, 
-    // or perhaps that I have the incorrect configuration in the makefile. After all, 
-    // I decide to allocate the aliged memory dynamically all by myself.
-//    DECLARE_ALIGNED(DEFAULT_ALIGN_BYTE, BYTE, m_PCMs)[PCM_BUFFER_SIZE];
-    BYTE*   m_pPCMs;
+    CAudioFrame m_Frames[FRAME_POOL_SIZE];
 };
 
 #endif

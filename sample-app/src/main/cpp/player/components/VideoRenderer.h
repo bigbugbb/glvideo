@@ -65,7 +65,7 @@ protected:
     LONGLONG    m_llStartPTS;
     double      m_lfSeekTime;
     
-    CFramePool  m_FramePool;
+    CVideoFramePool m_FramePool;
     
     IQualityControl*   m_pQCtrl;
     CFrameCapturer*    m_pCapturer;

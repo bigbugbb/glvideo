@@ -107,7 +107,6 @@ public:
 typedef enum {
     SAMPLE_RAWDATA = 0,
     SAMPLE_PACKET,
-    SAMPLE_PCM,
     SAMPLE_FRAME,
     SAMPLE_MESSAGE,
     SAMPLE_NONE

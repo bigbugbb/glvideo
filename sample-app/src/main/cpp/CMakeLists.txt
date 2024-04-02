@@ -64,4 +64,5 @@ create_ffmpeg_lib(swscale)
 target_link_libraries(${CMAKE_PROJECT_NAME}
         android
         log
+        OpenSLES
         avcodec avfilter avformat avdevice avutil swresample swscale)

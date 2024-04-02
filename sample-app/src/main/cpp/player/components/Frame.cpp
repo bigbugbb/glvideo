@@ -12,13 +12,13 @@
 
 CFrame::CFrame()
 {
-    m_nType     = 0;
     m_bShow     = FALSE;
     m_nDuration = 0;
     m_nWidth    = 0;
     m_nHeight   = 0;
 
-    av_frame_unref(&m_frame);
+    m_pFrame = av_frame_alloc();
+    av_frame_unref(m_pFrame);
 }
 
 CFrame::~CFrame()
@@ -26,59 +26,87 @@ CFrame::~CFrame()
     Free();
 }
 
-int CFrame::Resize(int nWidth, int nHeight, enum AVPixelFormat ePixFmt)
+CVideoFrame::CVideoFrame()
 {
-	Log("CFrame::OnFrameResize, width: %d, height: %d\n", nWidth, nHeight);
+}
+
+CVideoFrame::~CVideoFrame() noexcept
+{
+}
+
+int CVideoFrame::Resize(int nWidth, int nHeight, enum AVPixelFormat ePixFmt)
+{
+    Log("CVideoFrame::OnFrameResize, width: %d, height: %d\n", nWidth, nHeight);
     int nResult = S_OK;
 
     m_ePixFmt = ePixFmt;
 
     Free();
     if ((nResult = Alloc(nWidth, nHeight)) != S_OK) {
-    	Log("CFrame::Alloc failed\n");
+        Log("CVideoFrame::Alloc failed\n");
         return nResult;
     }
-    
-    Log("CFrame::OnFrameResize end");
+
+    Log("CVideoFrame::OnFrameResize end");
     return S_OK;
 }
 
-int CFrame::Alloc(int nWidth, int nHeight)
+int CVideoFrame::Alloc(int nWidth, int nHeight)
 {
-    AssertValid(nWidth > 0 && nHeight > 0);
-//    int nSize = avpicture_get_size(m_ePixFmt, nWidth, nHeight);
-//    
-//    if ((m_pFrame = av_frame_alloc()) == NULL) {
-//        return E_OUTOFMEMORY;
-//    }
-//    if ((m_pData = (BYTE*)align_malloc(nSize, nAlign)) == NULL) {
-//        av_free(m_pFrame); m_pFrame = NULL;
-//        return E_OUTOFMEMORY;
-//    }
-//    
-//    if (avpicture_fill((AVPicture*)m_pFrame, m_pData, m_ePixFmt, nWidth, nHeight) < 0) {
-//        return E_FAIL;
-//    }
-    if (av_image_alloc(const_cast<uint8_t **>(m_frame.data), m_frame.linesize, nWidth, nHeight, m_ePixFmt, 32) < 0) {
+    if (av_image_alloc(const_cast<uint8_t **>(m_pFrame->data), m_pFrame->linesize, nWidth, nHeight, m_ePixFmt, 32) < 0) {
         return E_FAIL;
     }
 
     m_nWidth  = nWidth;
     m_nHeight = nHeight;
-    m_frame.width  = nWidth;
-    m_frame.height = nHeight;
-    m_frame.format = m_ePixFmt;
+    m_pFrame->width  = nWidth;
+    m_pFrame->height = nHeight;
+    m_pFrame->format = m_ePixFmt;
     
     return S_OK;
 }
 
-void CFrame::Free()
+void CVideoFrame::Free()
 {
-    if (m_frame.data[0]) {
-        av_freep(&m_frame.data[0]);
+    if (m_pFrame->data[0]) {
+        av_freep(&m_pFrame->data[0]);
     }
 
-    av_frame_unref(&m_frame);
+    av_frame_unref(m_pFrame);
+    av_frame_free(&m_pFrame);
+}
+
+CAudioFrame::CAudioFrame()
+{
+}
+
+CAudioFrame::~CAudioFrame() noexcept
+{
+}
+
+int CAudioFrame::Alloc(int nbSamples, int sampleRate, AVSampleFormat sampleFormat, AVChannelLayout channelLayout)
+{
+    if (m_pFrame) {
+        av_frame_free(&m_pFrame);
+    }
+    m_pFrame = av_frame_alloc();
+    m_pFrame->sample_rate = sampleRate;
+    m_pFrame->format = sampleFormat;
+    m_pFrame->ch_layout = channelLayout;
+    m_pFrame->nb_samples = nbSamples;
+    // 分配buffer
+    av_frame_get_buffer(m_pFrame,0);
+    av_frame_make_writable(m_pFrame);
+}
+
+void CAudioFrame::Free()
+{
+    if (m_pFrame->data[0]) {
+        av_freep(&m_pFrame->data[0]);
+    }
+
+    av_frame_unref(m_pFrame);
+    av_frame_free(&m_pFrame);
 }
 
 

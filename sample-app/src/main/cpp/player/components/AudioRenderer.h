@@ -62,7 +62,7 @@ protected:
     
     LONGLONG    m_llStartPTS;
     LONGLONG    m_llCurrentPTS;
-    CPcmPool    m_PcmPool;
+    CAudioFramePool    m_FramePool;
 };
 
 #endif

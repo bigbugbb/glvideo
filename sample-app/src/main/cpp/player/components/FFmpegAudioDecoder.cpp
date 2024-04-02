@@ -9,6 +9,7 @@
 #include <iostream>
 #include "GUIDs.h"
 #include "Global.h"
+#include "Frame.h"
 #include "FFmpegData.h"
 #include "FFmpegAudioDecoder.h"
 
@@ -25,7 +26,7 @@
 #endif
 
 CFFmpegAudioDecoder::CFFmpegAudioDecoder(const GUID& guid, IDependency* pDepend, int* pResult)
-    : CMediaObject(guid, pDepend), m_pPcmPool(NULL)
+    : CMediaObject(guid, pDepend), m_pFramePool(NULL)
 {
     m_pAudio = NULL;
     m_pFrame = av_frame_alloc();
@@ -33,6 +34,9 @@ CFFmpegAudioDecoder::CFFmpegAudioDecoder(const GUID& guid, IDependency* pDepend,
 
 CFFmpegAudioDecoder::~CFFmpegAudioDecoder()
 {
+    if (m_pSwrContext) {
+        swr_free(&m_pSwrContext);
+    }
     av_frame_free(&m_pFrame);
 }
 
@@ -89,8 +93,8 @@ int CFFmpegAudioDecoder::Load()
     if (!m_pRenderer) {
         return E_FAIL;
     }
-    m_pRenderer->GetSamplePool(GetGUID(), &m_pPcmPool);
-    if (!m_pPcmPool) {
+    m_pRenderer->GetSamplePool(GetGUID(), &m_pFramePool);
+    if (!m_pFramePool) {
         return E_FAIL;
     }
         
@@ -168,8 +172,8 @@ int CFFmpegAudioDecoder::Unload()
     Close();
     
     m_pRenderer  = NULL;
-    m_pPcmPool   = NULL;
     m_pAudioPool = NULL;
+    m_pFramePool = NULL;
     
     CMediaObject::Unload();
     return S_OK;
@@ -191,7 +195,7 @@ THREAD_RETURN CFFmpegAudioDecoder::ThreadProc()
     while (m_bRun) {
         m_sync.Wait();
         
-        NotifyEvent(EVENT_AUDIO_NEED_DATA, !m_pPcmPool->GetSize(), 0, NULL);
+//        NotifyEvent(EVENT_AUDIO_NEED_DATA, !m_pPcmPool->GetSize(), 0, NULL);
         
         if (Receive(m_pAudioPool) == E_RETRY) {
             nWait = 20;
@@ -235,7 +239,7 @@ int CFFmpegAudioDecoder::Decode(AVPacket* pPacket, AVCodecContext* pCodecCtx, co
     }
     
     CMediaSample mediaSample;
-    if (m_pPcmPool->GetEmpty(mediaSample) != S_OK) {
+    if (m_pFramePool->GetEmpty(mediaSample) != S_OK) {
         return E_RETRY;
     }
 
@@ -246,44 +250,107 @@ int CFFmpegAudioDecoder::Decode(AVPacket* pPacket, AVCodecContext* pCodecCtx, co
     while (avcodec_receive_frame(pCodecCtx, m_pFrame) == 0) {
         int nChannels = m_pFrame->ch_layout.nb_channels;
         int nSamples = m_pFrame->nb_samples;
+        CAudioFrame& frame = *(CAudioFrame*)mediaSample.m_pExten;
 
-        if (av_sample_fmt_is_planar(pCodecCtx->sample_fmt)) {
-            for (int i = 0; i < nChannels; ++i) {
-                float* data = (float*)m_pFrame->data[i];
-                // TODO: Process your data here...
-            }
-        } else { // This means the data is interleaved
-            // Determine the sample format
-            if (m_pFrame->format == AV_SAMPLE_FMT_S16) { // 16-bit signed integers
-                int16_t *samples = (int16_t *)m_pFrame->data[0]; // All channels are in data[0]
-                for (int i = 0; i < nSamples; i++) {
-                    for (int ch = 0; ch < nChannels; ch++) {
-                        int16_t sample = samples[i * nChannels + ch];
-                        // TODO: Process the sample for channel 'ch' here...
-                    }
-                }
-            } else if (m_pFrame->format == AV_SAMPLE_FMT_FLT) { // Single-precision floating-point
-                float *samples = (float *)m_pFrame->data[0];
-                for (int i = 0; i < nSamples; i++) {
-                    for (int ch = 0; ch < nChannels; ch++) {
-                        float sample = samples[i * nChannels + ch];
-                        // TODO: Process the sample for channel 'ch' here...
-                    }
-                }
-            }
-            // Add more conditions for other sample formats as needed
-        }
+//        if (av_sample_fmt_is_planar(pCodecCtx->sample_fmt)) {
+//            for (int i = 0; i < nChannels; ++i) {
+//                float* data = (float*)m_pFrame->data[i];
+//                // TODO: Process your data here...
+//            }
+//        } else { // This means the data is interleaved
+//            // Determine the sample format
+//            if (m_pFrame->format == AV_SAMPLE_FMT_S16) { // 16-bit signed integers
+//                int16_t *samples = (int16_t *)m_pFrame->data[0]; // All channels are in data[0]
+//                for (int i = 0; i < nSamples; i++) {
+//                    for (int ch = 0; ch < nChannels; ch++) {
+//                        int16_t sample = samples[i * nChannels + ch];
+//                        // TODO: Process the sample for channel 'ch' here...
+//                    }
+//                }
+//            } else if (m_pFrame->format == AV_SAMPLE_FMT_FLT) { // Single-precision floating-point
+//                float *samples = (float *)m_pFrame->data[0];
+//                for (int i = 0; i < nSamples; i++) {
+//                    for (int ch = 0; ch < nChannels; ch++) {
+//                        float sample = samples[i * nChannels + ch];
+//                        // TODO: Process the sample for channel 'ch' here...
+//                    }
+//                }
+//            }
+//            // Add more conditions for other sample formats as needed
+//        }
+
+        Resample(pCodecCtx, frame, m_pFrame);
     }
 
     mediaSample.m_llTimestamp = sampleIn.m_llTimestamp;
     mediaSample.m_llSyncPoint = sampleIn.m_llSyncPoint;
 
-    m_pPcmPool->Commit(mediaSample);
+    m_pFramePool->Commit(mediaSample);
 
     return S_OK;
 }
 
+int CFFmpegAudioDecoder::Resample(AVCodecContext* pCodec, CAudioFrame& audioFrame, AVFrame* pSrcFrame)
+{
+    int outAudioSampleRate = 44100;
+    AVSampleFormat outSampleFormat = AV_SAMPLE_FMT_S32;
+    AVChannelLayout outChannelLayout = AV_CHANNEL_LAYOUT_STEREO;
+    AVChannelLayout inChannelLayout;
+    outChannelLayout.nb_channels = 2;
+    inChannelLayout.nb_channels = pCodec->ch_layout.nb_channels;
 
+    if (!m_pSwrContext) {
+        /**
+         * 以下可以使用 av_opt_set_channel_layout、av_opt_set_int、av_opt_set_sample_fmt
+         * 等API设置，更加灵活
+         */
+        m_pSwrContext = swr_alloc();
+        int ret = swr_alloc_set_opts2(&m_pSwrContext, &outChannelLayout, outSampleFormat, outAudioSampleRate,
+                                      &inChannelLayout, pCodec->sample_fmt, pCodec->sample_rate, 0, nullptr);
+        if (ret != 0) {
+            return ret;
+        }
+        swr_init(m_pSwrContext);
+    }
+    // 进行音频重采样
+    int src_nb_sample = pSrcFrame->nb_samples;
+    // 为了保持从采样后 dst_nb_samples / dest_sample = src_nb_sample / src_sample_rate
+    int64_t max_dst_nb_samples = av_rescale_rnd(src_nb_sample, outAudioSampleRate, pSrcFrame->sample_rate, AV_ROUND_UP);
+    // 从采样器中会缓存一部分，获取缓存的长度
+    int64_t delay = swr_get_delay(m_pSwrContext, pSrcFrame->sample_rate);
+    int64_t dst_nb_samples = av_rescale_rnd(delay + pSrcFrame->nb_samples, outAudioSampleRate, pSrcFrame->sample_rate,
+                                            AV_ROUND_UP);
+    if (!audioFrame.m_pFrame) {
+        audioFrame.Alloc(dst_nb_samples, outAudioSampleRate, outSampleFormat, outChannelLayout);
+    }
+
+    if (dst_nb_samples > max_dst_nb_samples) {
+        // 需要重新分配buffer
+        std::cout << "需要重新分配buffer" << std::endl;
+        audioFrame.Alloc(dst_nb_samples, outAudioSampleRate, outSampleFormat, outChannelLayout);
+        max_dst_nb_samples = dst_nb_samples;
+    }
+    // 重采样
+    int ret = swr_convert(m_pSwrContext, audioFrame.m_pFrame->data, dst_nb_samples,
+                          const_cast<const uint8_t **>(audioFrame.m_pFrame->data), audioFrame.m_pFrame->nb_samples);
+
+    if (ret < 0) {
+        std::cout << "重采样失败" << std::endl;
+    } else {
+        // 每帧音频数据量的大小
+        int data_size = av_get_bytes_per_sample(static_cast<AVSampleFormat>(audioFrame.m_pFrame->format));
+
+        std::cout << "重采样成功：" << ret << "----dst_nb_samples:" << dst_nb_samples  << "---data_size:" << data_size << std::endl;
+        // 交错模式保持写入
+        // 注意不要用 i < out_frame->nb_samples， 因为重采样出来的点数不一定就是out_frame->nb_samples
+        for (int i = 0; i < ret; i++) {
+            for (int ch = 0; ch < audioFrame.m_pFrame->ch_layout.nb_channels; ch++) {
+                // 需要储存为pack模式
+//                fwrite(audioFrame.m_pFrame->data[ch] + data_size * i, 1, data_size, pcm_out);
+            }
+        }
+    }
+}
 
 
 

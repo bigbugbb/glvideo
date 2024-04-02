@@ -16,8 +16,10 @@ extern "C" {
 #include "libavformat/avformat.h"
 #include "libavformat/url.h"
 #include "libswscale/swscale.h"
+#include "libswresample/swresample.h"
 #include "libavutil/mathematics.h"
 #include "libavutil/imgutils.h"
+#include "libavutil/opt.h"
 #include "libavcodec/avcodec.h"
 #include "libavdevice/avdevice.h"
     
