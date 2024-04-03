@@ -6,8 +6,7 @@
 //  Copyright (c) 2011年 qvod. All rights reserved.
 //
 
-#ifndef QVOD_FFmpegAudioDecoder_h
-#define QVOD_FFmpegAudioDecoder_h
+#pragma once
 
 #include "../SamplePool.h"
 #include "../MediaObject.h"
@@ -63,4 +62,3 @@ protected:
     SwrContext*     m_pSwrContext;
 };
 
-#endif

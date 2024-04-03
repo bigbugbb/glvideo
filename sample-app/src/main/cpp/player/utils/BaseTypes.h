@@ -6,8 +6,7 @@
 //  Copyright (c) 2011年 qvod. All rights reserved.
 //
 
-#ifndef QVOD_BaseTypes_h
-#define QVOD_BaseTypes_h
+#pragma once
 
 //namespace ios_qvod_player
 //{
@@ -163,5 +162,3 @@ printf(format,##args)
 #endif
 
 //}
-
-#endif

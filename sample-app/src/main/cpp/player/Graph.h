@@ -6,8 +6,7 @@
 //  Copyright (c) 2011年 qvod. All rights reserved.
 //
 
-#ifndef QVOD_Graph_h
-#define QVOD_Graph_h
+#pragma once
 
 #define MAX_V       20
 
@@ -144,4 +143,3 @@ private:
     int*  m_Edges[MAX_V];
 };
 
-#endif

@@ -6,8 +6,7 @@
 //  Copyright (c) 2011年 qvod. All rights reserved.
 //
 
-#ifndef QVOD_MediaObject_h
-#define QVOD_MediaObject_h
+#pragma once
 
 #include "RefClock.h"
 #include "ISamplePool.h"
@@ -139,4 +138,3 @@ protected:
     void* m_pOwner;
 };
 
-#endif

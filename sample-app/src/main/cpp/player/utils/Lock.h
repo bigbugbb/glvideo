@@ -6,8 +6,7 @@
 //  Copyright (c) 2011年 qvod. All rights reserved.
 //
 
-#ifndef QVOD_Lock_h
-#define QVOD_Lock_h
+#pragma once
 
     
 #include "BaseTypes.h"
@@ -87,4 +86,3 @@ int AtomDec(atom_t *value);
 
 } /* end of namespace ios_qvod_player */
 
-#endif

@@ -6,8 +6,7 @@
 //  Copyright (c) 2011年 qvod. All rights reserved.
 //
 
-#ifndef QVOD_Error_h
-#define QVOD_Error_h
+#pragma once
 
 //namespace ios_qvod_player
 //{
@@ -42,4 +41,3 @@ err_t GetLastError();
     
 //} /* end of namespace ios_qvod_player */
 
-#endif

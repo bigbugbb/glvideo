@@ -6,8 +6,7 @@
 //  Copyright (c) 2011年 qvod. All rights reserved.
 //
 
-#ifndef QVOD_Time_h
-#define QVOD_Time_h
+#pragma once
 
 #include "BaseTypes.h"
 
@@ -41,4 +40,3 @@ int GetTimeStr(char *dst_buf);
     
 //} /* end of namespace ios_qvod_player */
 
-#endif

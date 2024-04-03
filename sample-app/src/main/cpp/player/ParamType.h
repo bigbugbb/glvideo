@@ -2,8 +2,7 @@
 // Created by Administrator on 2024/3/14.
 //
 
-#ifndef QVOD_ParamType_h
-#define QVOD_ParamType_h
+#pragma once
 
 // 用于获取或设置播放器属性
 #define PLAYER_GET_STATE                   0  //获得播放器状态：
@@ -23,4 +22,3 @@
 #define PLAYER_GET_VIDEO_FPS              14  //获得视频流的fps
 #define PLAYER_SET_VIDEO_LOOP_FILTER      15
 
-#endif // QVOD_ParamType_h

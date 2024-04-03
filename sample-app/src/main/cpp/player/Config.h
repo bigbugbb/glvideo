@@ -6,8 +6,7 @@
 //  Copyright (c) 2012年 qvod. All rights reserved.
 //
 
-#ifndef QvodPlayer_Config_h
-#define QvodPlayer_Config_h
+#pragma once
 
 //#define PLAYER_DEBUG
 //#define LOG_TO_FILE
@@ -18,4 +17,3 @@
 #define ANDROID
 #endif
 
-#endif

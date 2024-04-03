@@ -238,7 +238,7 @@ int CFFmpegVideoDecoder::Decode(AVPacket* pPacket, AVCodecContext* pCodecCtx, co
     
     int nRet = avcodec_receive_frame(pCodecCtx, m_pFrame);
 
-    CFrame& frame = *(CFrame*)mediaSample.m_pExten;
+    CVideoFrame& frame = *(CVideoFrame*)mediaSample.m_pExten;
     // resize & re-allocate the memory used for buffering decoded frames
     if (nRet == 0) {
         if (frame.m_nWidth != m_pFrame->width || frame.m_nHeight != m_pFrame->height) {
@@ -287,7 +287,7 @@ int CFFmpegVideoDecoder::Decode(AVPacket* pPacket, AVCodecContext* pCodecCtx, co
         AVFrame* pRGB = &frame.m_frame;
         sws_scale(m_pSwsCtx, m_videoFrame.data, m_videoFrame.linesize, 0, m_nHeight, pRGB->data, pRGB->linesize);
 #else
-        av_image_copy(frame.m_frame.data, frame.m_frame.linesize,
+        av_image_copy(frame.m_pFrame->data, frame.m_pFrame->linesize,
                       (const uint8_t **)m_pFrame->data, m_pFrame->linesize, pCodecCtx->pix_fmt, m_nWidth, m_nHeight);
 #endif
     }

@@ -6,8 +6,7 @@
 //  Copyright (c) 2011年 qvod. All rights reserved.
 //
 
-#ifndef QVOD_FFmpegData_h
-#define QVOD_FFmpegData_h
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
@@ -79,4 +78,3 @@ struct AudioInfo
     AVRational   avrTimebase;
 };
 
-#endif

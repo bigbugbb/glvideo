@@ -6,11 +6,9 @@
 //  Copyright (c) 2011年 qvod. All rights reserved.
 //
 
-#ifndef QVOD_ComponentsListener_h
-#define QVOD_ComponentsListener_h
+#pragma once
 
 class CMediaObject;
 
 //int VideoDecoder_WaitKeyFrame(CMediaObject* pObj, void* pParam);
 
-#endif

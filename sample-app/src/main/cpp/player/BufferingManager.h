@@ -6,8 +6,7 @@
 //  Copyright (c) 2011年 qvod. All rights reserved.
 //
 
-#ifndef QVOD_BufferingManager_h
-#define QVOD_BufferingManager_h
+#pragma once
 
 #include <vector>
 using std::vector;
@@ -72,4 +71,3 @@ private:
     CallbackData*   m_pcbdSpd;
 };
 
-#endif

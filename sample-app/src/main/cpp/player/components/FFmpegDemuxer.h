@@ -6,8 +6,7 @@
 //  Copyright (c) 2011年 qvod. All rights reserved.
 //
 
-#ifndef QVOD_Demux_h
-#define QVOD_Demux_h
+#pragma once
 
 #include <string.h>
 using std::string;
@@ -112,4 +111,3 @@ private:
     BOOL        m_bDiscard;
 };
 
-#endif

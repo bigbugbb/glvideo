@@ -6,8 +6,7 @@
 //  Copyright (c) 2011年 qvod. All rights reserved.
 //
 
-#ifndef QVOD_SysConsts_h
-#define QVOD_SysConsts_h
+#pragma once
 
 #include "Config.h"
 #include "CallbackType.h"
@@ -60,4 +59,3 @@ const int EVENT_VIDEO_ONLY              = 17;
 const int EVENT_DISCARD_VIDEO_PACKET    = 18;
 const int EVENT_AUDIO_NEED_DATA         = 19;
 
-#endif

@@ -6,8 +6,7 @@
 //  Copyright (c) 2011年 qvod. All rights reserved.
 //
 
-#ifndef QVOD_GUIDs_h
-#define QVOD_GUIDs_h
+#pragma once
 
 #include "../Utils.h"
 
@@ -47,4 +46,3 @@ const GUID GUID_PREVIEW_VIDEO_RENDERER = {
     0xd54463e7, 0x81f0, 0x40ca, 0x94, 0x3d, 0x45, 0xe9, 0x60, 0xfb, 0xd8, 0x3b
 };
 
-#endif

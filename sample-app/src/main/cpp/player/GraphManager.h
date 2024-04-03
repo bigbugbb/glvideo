@@ -6,8 +6,7 @@
 //  Copyright (c) 2011年 qvod. All rights reserved.
 //
 
-#ifndef QVOD_GraphManager_h
-#define QVOD_GraphManager_h
+#pragma once
 
 #include "Message.h"
 #include "MediaGraph.h"
@@ -65,4 +64,3 @@ protected:
     IReferenceClockControl* m_pRefClockCtrl;
 };
 
-#endif

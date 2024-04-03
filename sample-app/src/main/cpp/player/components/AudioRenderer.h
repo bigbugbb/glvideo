@@ -6,8 +6,7 @@
 //  Copyright (c) 2011年 qvod. All rights reserved.
 //
 
-#ifndef QVOD_AudioRenderer_h
-#define QVOD_AudioRenderer_h
+#pragma once
 
 #include "../MediaObject.h"
 #include "Pools.h"
@@ -65,4 +64,3 @@ protected:
     CAudioFramePool    m_FramePool;
 };
 
-#endif

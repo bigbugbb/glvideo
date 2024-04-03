@@ -6,8 +6,7 @@
 //  Copyright (c) 2011年 __MyCompanyName__. All rights reserved.
 //
 
-#ifndef QVOD_Message_h
-#define QVOD_Message_h
+#pragma once
 
 #include "Utils.h"
 
@@ -98,4 +97,3 @@ protected:
     std::list<Message> m_listMsgs;
 };
 
-#endif

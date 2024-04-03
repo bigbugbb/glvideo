@@ -6,8 +6,7 @@
 //  Copyright (c) 2011年 qvod. All rights reserved.
 //
 
-#ifndef QVOD_MemRing_h
-#define QVOD_MemRing_h
+#pragma once
 
 #include "Utils.h"
 using ios_qvod_player::CLock;
@@ -48,5 +47,3 @@ protected:
     
     CLock   m_csLock;
 };
-
-#endif

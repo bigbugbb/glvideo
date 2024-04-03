@@ -6,8 +6,7 @@
 //  Copyright (c) 2011年 qvod. All rights reserved.
 //
 
-#ifndef QVOD_SamplePool_h
-#define QVOD_SamplePool_h
+#pragma once
 
 #include "ISamplePool.h"
 #include "MemRing.h"
@@ -40,4 +39,3 @@ private:
     CMemRing  m_ring;
 };
 
-#endif

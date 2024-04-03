@@ -6,8 +6,7 @@
 //  Copyright (c) 2011年 qvod. All rights reserved.
 //
 
-#ifndef QVOD_Thread_h
-#define QVOD_Thread_h
+#pragma once
 
 #include <pthread.h>
 
@@ -61,4 +60,3 @@ int WaitForMultiThreads(int nCount, const thread_t *handles);
     
 } /* end of namespace ios_qvod_player */
 
-#endif

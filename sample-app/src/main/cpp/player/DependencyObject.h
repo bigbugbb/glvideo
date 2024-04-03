@@ -6,8 +6,7 @@
 //  Copyright (c) 2012年 qvod. All rights reserved.
 //
 
-#ifndef QvodPlayer_DependencyObject_h
-#define QvodPlayer_DependencyObject_h
+#pragma once
 
 #include "BaseObject.h"
 #include "Utils.h"
@@ -32,4 +31,3 @@ protected:
     IDependency*  m_pDepend;
 };
 
-#endif

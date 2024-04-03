@@ -6,8 +6,7 @@
 //  Copyright (c) 2011年 qvod. All rights reserved.
 //
 
-#ifndef QVOD_IQvodPlayer_h
-#define QVOD_IQvodPlayer_h
+#pragma once
 
 #include "Utils.h"
 
@@ -27,4 +26,3 @@ struct IQvodPlayer
     virtual int ReceiveRequest(int nType, int nParam1, int nParam2, void* pUserData, void* pReserved) = 0;
 };
 
-#endif

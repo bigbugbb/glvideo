@@ -28,6 +28,8 @@ CVideoRenderer::CVideoRenderer(const GUID& guid, IDependency* pDepend, int* pRes
     m_pCapturer = CFrameCapturer::GetInstance(pDepend);
     AssertValid(m_pCapturer);
     m_pCapturer->SetDependency(pDepend);
+
+    m_queueFrames.push(nullptr);
     
     PrepareSeek(FALSE);
 }

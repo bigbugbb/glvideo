@@ -6,8 +6,7 @@
 //  Copyright (c) 2011年 qvod. All rights reserved.
 //
 
-#ifndef QVOD_FFmpegVideoDecoder_h
-#define QVOD_FFmpegVideoDecoder_h
+#pragma once
 
 #include "../SamplePool.h"
 #include "../MediaObject.h"
@@ -83,5 +82,3 @@ protected:
     VideoInfo*      m_pVideo;
     AVCodecContext* m_pCodecCtx;
 };
-
-#endif

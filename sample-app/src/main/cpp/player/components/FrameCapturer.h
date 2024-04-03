@@ -6,8 +6,7 @@
 //  Copyright (c) 2012年 qvod. All rights reserved.
 //
 
-#ifndef QvodPlayer_FrameCapturer_h
-#define QvodPlayer_FrameCapturer_h
+#pragma once
 
 #include "../Message.h"
 #include "../MediaObject.h"
@@ -40,4 +39,3 @@ protected:
     CMessageQueue     m_MsgQueue;
 };
 
-#endif

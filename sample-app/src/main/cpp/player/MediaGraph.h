@@ -6,8 +6,7 @@
 //  Copyright (c) 2011年 qvod. All rights reserved.
 //
 
-#ifndef QVOD_MediaGraph_h
-#define QVOD_MediaGraph_h
+#pragma once
 
 #include "Graph.h"
 #include "DependencyObject.h"
@@ -41,4 +40,3 @@ protected:
     map<GUID, CMediaObject*> m_mapObjs;
 };
 
-#endif

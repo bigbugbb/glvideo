@@ -1,5 +1,4 @@
-#ifndef GLVIDEO_FFMPEG_PLAYER_H
-#define GLVIDEO_FFMPEG_PLAYER_H
+#pragma once
 
 #include <jni.h>
 #include <android/log.h>
@@ -100,4 +99,3 @@ JNIEXPORT jint JNICALL FFmpegPlayer_seek(JNIEnv *env, jclass clazz, jdouble offs
  */
 JNIEXPORT jint JNICALL FFmpegPlayer_pause(JNIEnv *env, jclass clazz);
 
-#endif /* GLVIDEO_FFMPEG_PLAYER_H */

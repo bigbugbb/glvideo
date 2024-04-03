@@ -284,7 +284,7 @@ int CAudioRenderer::BeginFlush()
     
     m_ASync.Signal();
     Lock();
-    m_PcmPool.Flush();
+    m_FramePool.Flush();
     
     return S_OK;
 }

@@ -6,8 +6,7 @@
 //  Copyright (c) 2011年 qvod. All rights reserved.
 //
 
-#ifndef QVOD_BaseObject_h
-#define QVOD_BaseObject_h
+#pragma once
 
 #include "Config.h"
 #include "SysConsts.h"
@@ -61,4 +60,3 @@ class CBaseObject
 #endif
 };
 
-#endif

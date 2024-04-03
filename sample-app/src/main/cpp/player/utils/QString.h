@@ -6,8 +6,7 @@
 //  Copyright (c) 2011年 qvod. All rights reserved.
 //
 
-#ifndef QVOD_QString_h
-#define QVOD_QString_h
+#pragma once
 
 
 #include "BaseTypes.h"
@@ -19,12 +18,8 @@ namespace ios_qvod_player
 
 
 #include <string.h>
-//#include <string>
 #include <stdlib.h>
 #include <tchar.h>
-
-#define QVOD_ATOI			atoi
-#define QVOD_ATOI64			_atoi64
 
 /* TCHAR */
 typedef LPVOID				LPVOID;
@@ -40,14 +35,9 @@ typedef LPCWSTR				LPCWSTR;
 
 
 #include <string.h>
-//#include <string>
 #include <stdlib.h>
 #include <wchar.h>
 #include <ctype.h>
-//#include <iconv.h>
-
-#define QVOD_ATOI			atoi
-#define QVOD_ATOI64			atoll
 
 typedef const wchar_t*		LPCWSTR;
     
@@ -73,47 +63,17 @@ typedef char*				LPSTR;
 
 #endif /* non _UNICODE  end */
 
-
-typedef const wchar_t*		QVOD_LPCWSTR;
-
-
 char* itoa(int value, char* str, int radix);
 int memcpy_s(void *dest, size_t numberOfElements, const void *src, size_t count);
 int strcpy_s(char *dest, size_t numberOfElements, const char *src);
 
 #define sprintf_s snprintf /* need modify */
 
-
 #endif /***************** posix end *****************/
-
-
 
 int strupr(char *str);
 int lstrlenW(LPCWSTR str);
 int lstrlen(LPCTSTR str);
-int WriteToOddAddress(unsigned char *oddAddress, unsigned char *data, int length);
-int ReadFromOddAddress(unsigned char *oddAddress, unsigned char *data, int length);
-
-
-
-/* INI file */
-void LTruncate(char *pString, char *szFill);
-void RTruncate(char *pString, char *szFill);
-DWORD GetPrivateProfileString(LPCTSTR lpAppName,
-									   LPCTSTR lpKeyName,
-									   LPCTSTR lpDefault,
-									   LPTSTR lpReturnedString,
-									   DWORD nSize,
-									   LPCTSTR lpFileName);
-UINT GetPrivateProfileInt(LPCTSTR lpAppName,
-								   LPCTSTR lpKeyName,
-								   int nDefault,
-								   LPCTSTR lpFileName);
-BOOL WritePrivateProfileString(LPCTSTR lpAppName,
-                                        LPCTSTR lpKeyName,
-                                        LPCTSTR lpString,
-                                        LPCTSTR lpFileName);
 
 } /* end of namespace ios_qvod_player */
 
-#endif

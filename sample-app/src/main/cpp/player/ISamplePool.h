@@ -6,8 +6,7 @@
 //  Copyright (c) 2011年 qvod. All rights reserved.
 //
 
-#ifndef QVOD_ISamplePool_h
-#define QVOD_ISamplePool_h
+#pragma once
 
 #include "Utils.h"
 
@@ -31,6 +30,3 @@ struct ISamplePool
                               POOL_PROPERTIES *pActual) = 0;
 };
 
-
-
-#endif

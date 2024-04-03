@@ -6,8 +6,7 @@
 //  Copyright (c) 2011年 qvod. All rights reserved.
 //
 
-#ifndef QVOD_Event_h
-#define QVOD_Event_h
+#pragma once
 
 #include <sys/time.h>
 #include <errno.h>
@@ -126,4 +125,3 @@ protected:
     
 //}
 
-#endif

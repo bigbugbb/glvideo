@@ -6,8 +6,7 @@
 //  Copyright (c) 2012年 qvod. All rights reserved.
 //
 
-#ifndef QvodPlayer_Pools_h
-#define QvodPlayer_Pools_h
+#pragma once
 
 #include "Frame.h"
 #include "../SamplePool.h"
@@ -39,9 +38,9 @@ public:
     virtual ~CAudioFramePool();
     
     int Flush();
+    int Reset();
     
 protected:
     CAudioFrame m_Frames[FRAME_POOL_SIZE];
 };
 
-#endif

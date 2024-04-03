@@ -6,8 +6,7 @@
 //  Copyright (c) 2011年 qvod. All rights reserved.
 //
 
-#ifndef QVOD_PlayerGraphManager_h
-#define QVOD_PlayerGraphManager_h
+#pragma once
 
 #include "GraphManager.h"
 #include <vector>
@@ -53,4 +52,3 @@ private:
     CBufferingManager* m_pBufMgr;
 };
 
-#endif

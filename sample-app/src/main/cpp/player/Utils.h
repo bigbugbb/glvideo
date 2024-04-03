@@ -6,8 +6,7 @@
 //  Copyright (c) 2011年 qvod. All rights reserved.
 //
 
-#ifndef QVOD_Utinities_h
-#define QVOD_Utinities_h
+#pragma once
 
 #include "Config.h"
 #include "utils/BaseTypes.h"
@@ -18,4 +17,3 @@
 #include "utils/QString.h"
 #include "utils/Thread.h"
 
-#endif

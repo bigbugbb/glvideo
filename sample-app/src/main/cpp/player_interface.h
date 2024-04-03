@@ -6,8 +6,7 @@
 //  Copyright (c) 2011年 qvod. All rights reserved.
 //
 
-#ifndef PlayerInterface_h
-#define PlayerInterface_h
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
@@ -80,4 +79,3 @@ int SendRequest(int nType, int nParam1, int nParam2, void* pUserData, void* pRes
 }
 #endif
 
-#endif

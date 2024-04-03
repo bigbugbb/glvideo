@@ -6,8 +6,7 @@
 //  Copyright (c) 2011年 qvod. All rights reserved.
 //
 
-#ifndef QVOD_CallbackManager_h
-#define QVOD_CallbackManager_h
+#pragma once
 
 #include "DependencyObject.h"
 #include <map>
@@ -45,4 +44,3 @@ protected:
     std::map<int, CallbackData*> m_mapCallbacks;
 };
 
-#endif

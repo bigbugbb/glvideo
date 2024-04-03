@@ -6,8 +6,7 @@
 //  Copyright (c) 2011年 qvod. All rights reserved.
 //
 
-#ifndef QVOD_Frame_h
-#define QVOD_Frame_h
+#pragma once
 
 #include "Global.h"
 #include "../DependencyObject.h"
@@ -20,6 +19,7 @@ class CFrame : public CDependencyObject
     friend class CFramePool;
 public:
 
+    int           m_nType;
     BOOL          m_bShow;
     int           m_nDuration;
     int           m_nWidth;
@@ -55,4 +55,3 @@ public:
     virtual void Free();
 };
 
-#endif

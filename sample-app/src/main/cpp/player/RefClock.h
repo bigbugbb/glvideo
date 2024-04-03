@@ -6,8 +6,7 @@
 //  Copyright (c) 2011年 qvod. All rights reserved.
 //
 
-#ifndef QVOD_RefClock_h
-#define QVOD_RefClock_h
+#pragma once
 
 #include "DependencyObject.h"
 #include "Utils.h"
@@ -83,4 +82,3 @@ protected:
     double  m_lfTimebase;
 };
 
-#endif

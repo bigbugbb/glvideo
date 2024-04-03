@@ -6,8 +6,7 @@
 //  Copyright (c) 2011年 qvod. All rights reserved.
 //
 
-#ifndef QVOD_QvodPlayer_h
-#define QVOD_QvodPlayer_h
+#pragma once
 
 #include "IQvodPlayer.h"
 #include "DependencyObject.h"
@@ -101,4 +100,3 @@ protected:
     CPreviewGraphManager* m_pPreviewManager;
 };
 
-#endif

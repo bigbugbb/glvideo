@@ -6,12 +6,12 @@
 //  Copyright (c) 2011年 qvod. All rights reserved.
 //
 
-#ifndef QVOD_VideoRenderer_h
-#define QVOD_VideoRenderer_h
+#pragma once
 
 #include "../MediaObject.h"
 #include "Pools.h"
 #include "FrameCapturer.h"
+#include "../utils/BlockingQueue.h"
 
 
 class CVideoRenderer : public CSink,
@@ -66,6 +66,7 @@ protected:
     double      m_lfSeekTime;
     
     CVideoFramePool m_FramePool;
+    BlockingQueue<AVFrame*> m_queueFrames;
     
     IQualityControl*   m_pQCtrl;
     CFrameCapturer*    m_pCapturer;
@@ -82,4 +83,3 @@ private:
     CLock       m_csPreSeek;
 };
 
-#endif
