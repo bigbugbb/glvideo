@@ -65,16 +65,14 @@ protected:
     LONGLONG    m_llStartPTS;
     double      m_lfSeekTime;
     
-    CVideoFramePool m_FramePool;
-    BlockingQueue<AVFrame*> m_queueFrames;
-    
+    CFramePool  m_FramePool;
+
     IQualityControl*   m_pQCtrl;
     CFrameCapturer*    m_pCapturer;
-    
-#ifdef ANDROID
+
     AVPixelFormat m_eDstFmt;
     SwsContext*   m_pSwsCtx;
-#endif
+
 private:
     void PrepareSeek(BOOL bPrepare = TRUE);
     BOOL IsPreparingSeek();

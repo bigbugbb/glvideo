@@ -250,7 +250,7 @@ int CFFmpegAudioDecoder::Decode(AVPacket* pPacket, AVCodecContext* pCodecCtx, co
     while (avcodec_receive_frame(pCodecCtx, m_pFrame) == 0) {
         int nChannels = m_pFrame->ch_layout.nb_channels;
         int nSamples = m_pFrame->nb_samples;
-        CAudioFrame& frame = *(CAudioFrame*)mediaSample.m_pExten;
+        CFrame& frame = *(CFrame*)mediaSample.m_pExten;
 
 //        if (av_sample_fmt_is_planar(pCodecCtx->sample_fmt)) {
 //            for (int i = 0; i < nChannels; ++i) {
@@ -290,7 +290,7 @@ int CFFmpegAudioDecoder::Decode(AVPacket* pPacket, AVCodecContext* pCodecCtx, co
     return S_OK;
 }
 
-int CFFmpegAudioDecoder::Resample(AVCodecContext* pCodec, CAudioFrame& audioFrame, AVFrame* pSrcFrame)
+int CFFmpegAudioDecoder::Resample(AVCodecContext* pCodec, CFrame& audioFrame, AVFrame* pSrcFrame)
 {
     int outAudioSampleRate = 44100;
     AVSampleFormat outSampleFormat = AV_SAMPLE_FMT_S32;
@@ -317,7 +317,7 @@ int CFFmpegAudioDecoder::Resample(AVCodecContext* pCodec, CAudioFrame& audioFram
     int src_nb_sample = pSrcFrame->nb_samples;
     int64_t dst_nb_samples = av_rescale_rnd(src_nb_sample, outAudioSampleRate, pSrcFrame->sample_rate, AV_ROUND_UP);
     if (!audioFrame.m_pFrame->data[0]) {
-        audioFrame.Alloc(dst_nb_samples, outAudioSampleRate, outSampleFormat, outChannelLayout);
+//        audioFrame.Alloc(dst_nb_samples, outAudioSampleRate, outSampleFormat, outChannelLayout);
     }
     int ret = swr_convert(m_pSwrContext, audioFrame.m_pFrame->data, dst_nb_samples,(const uint8_t **)pSrcFrame->data, src_nb_sample);
 

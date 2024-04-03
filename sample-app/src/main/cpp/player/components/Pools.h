@@ -19,28 +19,15 @@ public:
 
 const int FRAME_POOL_SIZE = 6;
 
-class CVideoFramePool : public CSamplePool
+class CFramePool : public CSamplePool
 {
 public:
-    CVideoFramePool();
-    virtual ~CVideoFramePool();
-    
-    int Flush();
-    int Reset();
-protected:
-    CVideoFrame m_Frames[FRAME_POOL_SIZE];
-};
+    CFramePool();
+    virtual ~CFramePool();
 
-class CAudioFramePool : public CSamplePool
-{
-public:
-    CAudioFramePool();
-    virtual ~CAudioFramePool();
-    
     int Flush();
     int Reset();
-    
 protected:
-    CAudioFrame m_Frames[FRAME_POOL_SIZE];
+    CFrame  m_Frames[FRAME_POOL_SIZE];
 };
 

@@ -20,17 +20,13 @@ CVideoRenderer::CVideoRenderer(const GUID& guid, IDependency* pDepend, int* pRes
     m_lfTimebase = 0;
     m_lfSeekTime = 0;
     m_pQCtrl  = NULL;
-#ifdef ANDROID
     m_pSwsCtx = NULL;
     m_eDstFmt = AV_PIX_FMT_RGB565;
-#endif
 
     m_pCapturer = CFrameCapturer::GetInstance(pDepend);
     AssertValid(m_pCapturer);
     m_pCapturer->SetDependency(pDepend);
 
-    m_queueFrames.push(nullptr);
-    
     PrepareSeek(FALSE);
 }
 
@@ -192,12 +188,12 @@ int CVideoRenderer::Unload()
  
     m_FramePool.Reset();
     PrepareSeek(FALSE);
-#ifdef ANDROID
+
     if (m_pSwsCtx) { // used on android
         sws_freeContext(m_pSwsCtx);
         m_pSwsCtx = NULL;
     }
-#endif
+
     CMediaObject::Unload();
     return S_OK;
 }
@@ -304,11 +300,8 @@ int CVideoRenderer::OnReceive(CMediaSample& sample)
 inline
 void CVideoRenderer::DeliverFrame(CFrame* pFrame)
 {
-#ifdef iOS
-    NotifyEvent(EVENT_DELIVER_FRAME, 0, 0, pFrame->m_frame);
-#else
     NotifyEvent(EVENT_DELIVER_FRAME, 0, 0, pFrame->m_pFrame);
-#endif
+
     if (m_bCapture) { // no need to lock
         m_pCapturer->CaptureFrame(this, pFrame->m_pFrame);
         m_bCapture = FALSE;
@@ -319,7 +312,6 @@ void CVideoRenderer::DeliverFrame(CFrame* pFrame)
 int CVideoRenderer::DeliverFrameReflection(BYTE* pDst, void* pSrc, int nStride)
 {
     //Log("DisplayVideoFrame\n");
-#ifdef ANDROID
     AVFrame* pYUV = (AVFrame*)pSrc;
     BYTE* pOut[4] = { pDst, NULL, NULL, NULL };
     int nLinesize[4] = { nStride, 0, 0, 0 };
@@ -331,7 +323,7 @@ int CVideoRenderer::DeliverFrameReflection(BYTE* pDst, void* pSrc, int nStride)
 		return E_FAIL;
 	}
     int nResult = sws_scale(m_pSwsCtx, pYUV->data, pYUV->linesize, 0, pYUV->height, pOut, nLinesize);
-#endif
+
     //Log("DisplayVideoFrame end\n");
 	return S_OK;
 }

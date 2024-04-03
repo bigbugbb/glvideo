@@ -61,6 +61,6 @@ protected:
     
     LONGLONG    m_llStartPTS;
     LONGLONG    m_llCurrentPTS;
-    CAudioFramePool    m_FramePool;
+    CFramePool  m_FramePool;
 };
 

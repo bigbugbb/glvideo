@@ -47,7 +47,7 @@ protected:
     virtual THREAD_RETURN ThreadProc();
     int Decode(AVPacket* pPacket, AVCodecContext* pCodecCtx, const CMediaSample& sampleIn);
 
-    int Resample(AVCodecContext* pCodec, CAudioFrame& audioFrame, AVFrame* pSrcFrame);
+    int Resample(AVCodecContext* pCodec, CFrame& audioFrame, AVFrame* pSrcFrame);
     void InitOutFrame(int64_t dst_nb_samples);
     
     CEvent          m_sync;

@@ -238,7 +238,7 @@ int CFFmpegVideoDecoder::Decode(AVPacket* pPacket, AVCodecContext* pCodecCtx, co
     
     int nRet = avcodec_receive_frame(pCodecCtx, m_pFrame);
 
-    CVideoFrame& frame = *(CVideoFrame*)mediaSample.m_pExten;
+    CFrame& frame = *(CFrame*)mediaSample.m_pExten;
     // resize & re-allocate the memory used for buffering decoded frames
     if (nRet == 0) {
         if (frame.m_nWidth != m_pFrame->width || frame.m_nHeight != m_pFrame->height) {
