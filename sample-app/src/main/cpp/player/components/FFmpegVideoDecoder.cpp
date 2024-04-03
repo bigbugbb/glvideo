@@ -283,13 +283,8 @@ int CFFmpegVideoDecoder::Decode(AVPacket* pPacket, AVCodecContext* pCodecCtx, co
     frame.m_bShow     = nRet == 0 && !IsWaitingKeyFrame() && !sampleIn.m_bIgnore;
     frame.m_nDuration = pPacket->duration;
     if (frame.m_bShow) {
-#ifdef iOS
-        AVFrame* pRGB = &frame.m_frame;
-        sws_scale(m_pSwsCtx, m_videoFrame.data, m_videoFrame.linesize, 0, m_nHeight, pRGB->data, pRGB->linesize);
-#else
         av_image_copy(frame.m_pFrame->data, frame.m_pFrame->linesize,
                       (const uint8_t **)m_pFrame->data, m_pFrame->linesize, pCodecCtx->pix_fmt, m_nWidth, m_nHeight);
-#endif
     }
     mediaSample.m_bIgnore     = sampleIn.m_bIgnore;
     mediaSample.m_llTimestamp = nRet == 0 ? AdjustTimestamp(m_pFrame->best_effort_timestamp, frame.m_nDuration) : pPacket->pts;

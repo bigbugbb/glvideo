@@ -31,7 +31,7 @@ protected:
     CFrame();
     virtual ~CFrame();
 
-    virtual void Free() = 0;
+    virtual void Free();
 };
 
 class CVideoFrame : public CFrame {
@@ -41,8 +41,6 @@ public:
 
     int Resize(int nWidth, int nHeight, enum AVPixelFormat ePixFmt);
     int Alloc(int nWidth, int nHeight);
-
-    virtual void Free();
 };
 
 class CAudioFrame : public CFrame {
@@ -51,7 +49,5 @@ public:
     virtual ~CAudioFrame();
 
     int Alloc(int nbSamples, int sampleRate, AVSampleFormat sampleFormat, AVChannelLayout channelLayout);
-
-    virtual void Free();
 };
 

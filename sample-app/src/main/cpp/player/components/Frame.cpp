@@ -26,6 +26,16 @@ CFrame::~CFrame()
     Free();
 }
 
+void CFrame::Free()
+{
+    if (m_pFrame->data[0]) {
+        av_freep(&m_pFrame->data[0]);
+    }
+
+    av_frame_unref(m_pFrame);
+    av_frame_free(&m_pFrame);
+}
+
 CVideoFrame::CVideoFrame()
 {
 }
@@ -66,16 +76,6 @@ int CVideoFrame::Alloc(int nWidth, int nHeight)
     return S_OK;
 }
 
-void CVideoFrame::Free()
-{
-    if (m_pFrame->data[0]) {
-        av_freep(&m_pFrame->data[0]);
-    }
-
-    av_frame_unref(m_pFrame);
-    av_frame_free(&m_pFrame);
-}
-
 CAudioFrame::CAudioFrame()
 {
 }
@@ -98,15 +98,4 @@ int CAudioFrame::Alloc(int nbSamples, int sampleRate, AVSampleFormat sampleForma
     av_frame_get_buffer(m_pFrame,0);
     av_frame_make_writable(m_pFrame);
 }
-
-void CAudioFrame::Free()
-{
-    if (m_pFrame->data[0]) {
-        av_freep(&m_pFrame->data[0]);
-    }
-
-    av_frame_unref(m_pFrame);
-    av_frame_free(&m_pFrame);
-}
-
 

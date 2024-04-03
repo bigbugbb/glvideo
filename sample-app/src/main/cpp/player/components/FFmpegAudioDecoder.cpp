@@ -296,7 +296,6 @@ int CFFmpegAudioDecoder::Resample(AVCodecContext* pCodec, CAudioFrame& audioFram
     AVSampleFormat outSampleFormat = AV_SAMPLE_FMT_S32;
     AVChannelLayout outChannelLayout = AV_CHANNEL_LAYOUT_STEREO;
     AVChannelLayout inChannelLayout;
-    outChannelLayout.nb_channels = 2;
     inChannelLayout.nb_channels = pCodec->ch_layout.nb_channels;
 
     if (!m_pSwrContext) {
@@ -308,31 +307,19 @@ int CFFmpegAudioDecoder::Resample(AVCodecContext* pCodec, CAudioFrame& audioFram
         int ret = swr_alloc_set_opts2(&m_pSwrContext, &outChannelLayout, outSampleFormat, outAudioSampleRate,
                                       &inChannelLayout, pCodec->sample_fmt, pCodec->sample_rate, 0, nullptr);
         if (ret != 0) {
+            swr_free(&m_pSwrContext);
             return ret;
         }
         swr_init(m_pSwrContext);
     }
+
     // 进行音频重采样
     int src_nb_sample = pSrcFrame->nb_samples;
-    // 为了保持从采样后 dst_nb_samples / dest_sample = src_nb_sample / src_sample_rate
-    int64_t max_dst_nb_samples = av_rescale_rnd(src_nb_sample, outAudioSampleRate, pSrcFrame->sample_rate, AV_ROUND_UP);
-    // 从采样器中会缓存一部分，获取缓存的长度
-    int64_t delay = swr_get_delay(m_pSwrContext, pSrcFrame->sample_rate);
-    int64_t dst_nb_samples = av_rescale_rnd(delay + pSrcFrame->nb_samples, outAudioSampleRate, pSrcFrame->sample_rate,
-                                            AV_ROUND_UP);
-    if (!audioFrame.m_pFrame) {
+    int64_t dst_nb_samples = av_rescale_rnd(src_nb_sample, outAudioSampleRate, pSrcFrame->sample_rate, AV_ROUND_UP);
+    if (!audioFrame.m_pFrame->data[0]) {
         audioFrame.Alloc(dst_nb_samples, outAudioSampleRate, outSampleFormat, outChannelLayout);
     }
-
-    if (dst_nb_samples > max_dst_nb_samples) {
-        // 需要重新分配buffer
-        std::cout << "需要重新分配buffer" << std::endl;
-        audioFrame.Alloc(dst_nb_samples, outAudioSampleRate, outSampleFormat, outChannelLayout);
-        max_dst_nb_samples = dst_nb_samples;
-    }
-    // 重采样
-    int ret = swr_convert(m_pSwrContext, audioFrame.m_pFrame->data, dst_nb_samples,
-                          const_cast<const uint8_t **>(audioFrame.m_pFrame->data), audioFrame.m_pFrame->nb_samples);
+    int ret = swr_convert(m_pSwrContext, audioFrame.m_pFrame->data, dst_nb_samples,(const uint8_t **)pSrcFrame->data, src_nb_sample);
 
     if (ret < 0) {
         std::cout << "重采样失败" << std::endl;
