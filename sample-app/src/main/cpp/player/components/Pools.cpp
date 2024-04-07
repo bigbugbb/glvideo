@@ -32,14 +32,13 @@ int CPacketPool::Flush()
 CFramePool::CFramePool() : CSamplePool()
 {
     POOL_PROPERTIES request, actual;
-    request.nSize  = sizeof(DWORD);
+    request.nSize  = sizeof(AVFrame*);
     request.nCount = FRAME_POOL_SIZE;
     CSamplePool::SetProperties(&request, &actual);
 
     CMediaSample sample;
     for (int i = 0; GetEmpty(sample) == S_OK; ++i) {
-        sample.m_Type   = SAMPLE_FRAME;
-        sample.m_pExten = &m_Frames[i];
+        sample.m_Type = SAMPLE_FRAME;
         Commit(sample);
     }
     Flush();
@@ -51,25 +50,15 @@ CFramePool::~CFramePool()
 
 int CFramePool::Flush()
 {
-    CSamplePool::Flush();
+    CMediaSample sample;
 
-    for (int i = 0; i < FRAME_POOL_SIZE; ++i) {
-        m_Frames[i].m_nType     = 0;
-        m_Frames[i].m_bShow     = FALSE;
-        m_Frames[i].m_nDuration = 0;
+    while (GetUnused(sample) == S_OK) {
+        AVFrame* pFrame = *(AVFrame**)sample.m_pBuf;
+        av_frame_unref(pFrame);
+        Recycle(sample);
     }
+    AssertValid(Size() == 0);
 
     return S_OK;
 }
 
-int CFramePool::Reset()
-{
-    CFramePool::Flush();
-
-    for (int i = 0; i < FRAME_POOL_SIZE; ++i) {
-        m_Frames[i].m_nWidth  = 0;
-        m_Frames[i].m_nHeight = 0;
-    }
-
-    return S_OK;
-}

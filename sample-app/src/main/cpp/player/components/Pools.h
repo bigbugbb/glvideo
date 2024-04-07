@@ -26,8 +26,5 @@ public:
     virtual ~CFramePool();
 
     int Flush();
-    int Reset();
-protected:
-    CFrame  m_Frames[FRAME_POOL_SIZE];
 };
 

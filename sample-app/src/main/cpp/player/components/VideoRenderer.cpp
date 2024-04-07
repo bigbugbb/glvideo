@@ -186,7 +186,7 @@ int CVideoRenderer::Unload()
     m_VSync.Signal();
     Close();
  
-    m_FramePool.Reset();
+    m_FramePool.Flush();
     PrepareSeek(FALSE);
 
     if (m_pSwsCtx) { // used on android

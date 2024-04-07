@@ -243,14 +243,6 @@ int CFFmpegVideoDecoder::Decode(AVPacket* pPacket, AVCodecContext* pCodecCtx, co
     if (nRet == 0) {
         if (frame.m_nWidth != m_pFrame->width || frame.m_nHeight != m_pFrame->height) {
             int nResult = S_OK;
-#ifdef ANDROID
-            m_eDstFmt = pCodecCtx->pix_fmt; // on iOS, m_eDstFmt's default value is PIX_FMT_RGB565
-#endif
-            if ((nResult = frame.Resize(m_pFrame->width, m_pFrame->height, m_eDstFmt)) != S_OK) {
-            	Log("CFFmpegVideoDecoder::Decode failed");
-                av_frame_unref(m_pFrame);
-                return nResult;
-            }
             if ((nResult = OnFrameResize(m_pFrame->width, m_pFrame->height, pCodecCtx->pix_fmt)) != S_OK) {
             	Log("CFFmpegVideoDecoder::Decode failed");
                 av_frame_unref(m_pFrame);
@@ -322,13 +314,6 @@ int CFFmpegVideoDecoder::OnFrameResize(int nWidth, int nHeight, AVPixelFormat eS
     
     if (m_nWidth != nWidth || m_nHeight != nHeight) {
         m_nWidth = nWidth; m_nHeight = nHeight;
-#ifdef iOS
-        m_pSwsCtx = sws_getCachedContext(m_pSwsCtx, nWidth, nHeight, eSrcFmt, 
-                nWidth, nHeight, m_eDstFmt, SWS_FAST_BILINEAR, NULL, NULL, NULL);
-        if (!m_pSwsCtx) {
-            return E_FAIL;
-        }
-#endif
         NotifyEvent(EVENT_UPDATE_VIDEO_FRAME_SIZE, nWidth, nHeight, NULL);
         OnVideoSizeChanged();
     }
