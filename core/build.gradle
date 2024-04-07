@@ -42,8 +42,8 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0"
 
-//    implementation "com.arthenica:ffmpeg-kit-full:5.1"
-    implementation project(path: ':ffmpeg-kit')
+    implementation "com.arthenica:ffmpeg-kit-full:5.1"
+//    implementation project(path: ':ffmpeg-kit')
 
     // CameraX Camera2 extensions
     api "androidx.camera:camera-camera2:1.2.0"

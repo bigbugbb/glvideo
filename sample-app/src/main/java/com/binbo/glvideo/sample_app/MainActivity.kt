@@ -45,8 +45,8 @@ class MainActivity : AppCompatActivity() {
     companion object {
         private const val TAG = "MainActivity"
 
-        init {
-            System.loadLibrary("ffmpeg_player")
-        }
+//        init {
+//            System.loadLibrary("ffmpeg_player")
+//        }
     }
 }
