@@ -120,9 +120,6 @@ public class ShadowFrameLayout extends FrameLayout {
 
     private void initAttributes(Context context, AttributeSet attrs) {
         TypedArray attr = getTypedArray(context, attrs, R.styleable.ShadowFrameLayout);
-        if (attr == null) {
-            return;
-        }
 
         try {
             mCornerRadius = attr.getDimension(R.styleable.ShadowFrameLayout_sl_cornerRadius, getResources().getDimension(R.dimen.default_corner_radius));
